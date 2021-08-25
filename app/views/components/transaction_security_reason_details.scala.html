@@ -1,0 +1,67 @@
+@*
+* Copyright 2021 HM Revenue & Customs
+*
+*@
+@import helpers.Formatters
+
+@this(govukTable: GovukTable)
+
+@(securityReason: SecurityReason)(implicit messages: Messages)
+
+<h3 class="govuk-heading-m govuk-!-margin-top-7">
+    @messages("cf.guarantee-account.detail.security-reason.tax-code.heading", securityReason.taxCode)
+</h3>
+
+@govukTable(Table(
+    classes = "govuk-table hmrc-responsive-table govuk-!-margin-bottom-9",
+    attributes = Map("id" -> s"reason-taxcode-${securityReason.taxCode}"),
+
+    rows = securityReason.taxTypeGroups.map { taxTypeGroup =>
+        Seq(
+            TableRow(
+                content = HtmlContent(
+                    s"""<span class="hmrc-responsive-table__heading" aria-hidden="true">Tax type</span>
+                        ${taxTypeGroup.taxTypeGroup}
+                        """
+                ),
+                classes = "govuk-table__header govuk-!-font-weight-regular",
+            ),
+            TableRow(
+                content = HtmlContent(
+                    s"""<span class="hmrc-responsive-table__heading" aria-hidden="true">Tax code</span>
+                        ${taxTypeGroup.taxType.taxType}
+                        """
+                ),
+                classes = "govuk-table__cell",
+            ),
+            TableRow(
+                content = HtmlContent(
+                    s"""<span class="hmrc-responsive-table__heading" aria-hidden="true">Amount</span>
+                        ${Formatters.formatCurrencyAmount(BigDecimal(taxTypeGroup.amounts.totalAmount))}
+                        """
+                ),
+                classes = "govuk-table__cell govuk-table__cell--numeric",
+            )
+        )
+    },
+    head = Some(Seq(
+        HeadCell(
+            content = Text(messages("cf.guarantee-account.detail.taxtype")),
+            classes = "govuk-table__header"
+        ),
+        HeadCell(
+            content = Text(messages("cf.guarantee-account.detail.taxcode")),
+            classes = "govuk-table__header"
+        ),
+        HeadCell(
+            content = Text(messages("cf.guarantee-account.detail.amount")),
+            classes = "govuk-table__header govuk-table__header--numeric"
+        )
+    )),
+    caption = Some(messages("cf.guarantee-account.detail.security-reason.tax-code.heading", securityReason.taxCode)),
+    captionClasses = "govuk-table__caption govuk-table__caption--sm govuk-visually-hidden",
+    firstCellIsHeader = true
+))
+
+
+

@@ -1,0 +1,25 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import viewmodels.ResultsPageSummary
+
+@this(
+    main_template: Layout
+)
+
+@(summary: ResultsPageSummary)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")),
+    backLink = Some(controllers.routes.GuaranteeTransactionsRequestPageController.onPageLoad.url)) {
+    <div class="govuk-form-group">
+        <h1 class="govuk-heading-xl">
+            @messages("cf.guarantee-account.transactions.result.no.transactions")
+        </h1>
+        <div class="govuk-inset-text">
+            @messages("cf.guarantee-account.transactions.result.no.data")
+            <span>@summary.rows.value.content.asHtml</span>
+        </div>
+    </div>
+}

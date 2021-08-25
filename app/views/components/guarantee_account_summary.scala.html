@@ -1,0 +1,28 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import helpers.Formatters
+@import viewmodels.GuaranteeAccountViewModel
+
+@(accountModel: GuaranteeAccountViewModel)(implicit messages: Messages)
+
+    <header class="hmrc-page-heading govuk-!-margin-bottom-0" id="account-summary">
+        <h1 class="govuk-heading-xl">@messages("cf.guarantee-account.detail.title")</h1>
+        <p class="govuk-caption-xl hmrc-caption-xl" id="account-number">
+            @messages("cf.guarantee-account.detail.account-number", accountModel.account.number)
+        </p>
+    </header>
+
+    <p class="govuk-label govuk-label--l govuk-!-margin-top-2" id="balance-available">@messages("cf.guarantee-account.detail.balance-available",
+        accountModel.balanceAvailable.getOrElse(Formatters.formatCurrencyAmount0dp(BigDecimal("0.00"))))</p>
+
+    <p class="govuk-body govuk-!-margin-bottom-2" id="account-usage">@messages("cf.guarantee-account.detail.account-usage",
+        accountModel.accountUsage.getOrElse(Formatters.formatCurrencyAmount0dp(BigDecimal("0.00"))),
+        accountModel.limit.getOrElse(Formatters.formatCurrencyAmount0dp(BigDecimal("0.00"))))</p>
+
+    <noscript>
+        <p class="govuk-visually-hidden">@messages("cf.guarantee-account.detail.balance")</p>
+        <p class="govuk-body govuk-hint govuk-!-margin-bottom-7">@messages("cf.guarantee-account.detail.updated", accountModel.updatedDateTime)</p>
+    </noscript>

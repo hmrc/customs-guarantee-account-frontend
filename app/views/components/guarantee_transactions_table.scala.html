@@ -1,0 +1,68 @@
+@*
+* Copyright 2021 HM Revenue & Customs
+*
+*@
+@import viewmodels.GuaranteeAccountTransactionsViewModel
+@import helpers.Formatters
+
+@import java.time.LocalDate
+
+@this(govukSummaryList: GovukSummaryList)
+
+@(model: GuaranteeAccountTransactionsViewModel)(implicit messages: Messages, appConfig: AppConfig)
+
+@for(transactionsByDate <- model.visibleItems) {
+    <h3 class="govuk-heading-m  govuk-!-padding-top-5 govuk-!-margin-bottom-3">
+        <span aria-hidden="true">@{
+            Formatters.dateAsDayMonthAbbrAndYear(transactionsByDate.date)
+        }</span>
+        <span class="govuk-visually-hidden">@messages("cf.guarantee-account.transactions.hidden-text", {
+            Formatters.dateAsDayMonthAbbrAndYear(transactionsByDate.date)
+        }, transactionsByDate.transactions.size) </span>
+    </h3>
+
+    @for(transaction <- transactionsByDate.transactions) {
+
+        @govukSummaryList(SummaryList(
+            attributes = Map("id" -> s"securities-${transaction.guaranteeTransaction.movementReferenceNumber}"),
+            rows = Seq(
+                SummaryListRow(
+                    key = Key(content = Text(messages("cf.guarantee-account.detail.movement-reference-number"))),
+                    value = Value(
+                        content = HtmlContent(
+                            s"""<a class="govuk-link" href="${routes.GuaranteeTransactionController.displayTransaction(transaction.guaranteeTransaction.secureMovementReferenceNumber.getOrElse(""), model.pageNumber)}">
+                                <span aria-hidden="true">${transaction.guaranteeTransaction.movementReferenceNumber}</span>
+                                <span class="govuk-visually-hidden">
+                                ${messages("cf.guarantee-account.detail.mrn-link-prefix")}
+                                ${transaction.guaranteeTransaction.movementReferenceNumber}
+                                </span>
+                                </a>"""
+                        )
+                    ),
+                    actions = None
+                ),
+                SummaryListRow(
+                    key = Key(content = Text(messages("cf.guarantee-account.detail.expires"))),
+                    value = Value(
+                        content = HtmlContent(
+                            if(transaction.guaranteeTransaction.dueDates.size > 1) {
+                                s"""${messages("cf.guarantee-account.detail.multiple-expiry.dates.1")} <br>
+                                    ${messages("cf.guarantee-account.detail.multiple-expiry.dates.2", Formatters.dateAsDayMonthAbbrAndYear(LocalDate.parse(transaction.guaranteeTransaction.dueDates.head.dueDate)))}"""
+                            } else {
+                                transaction.guaranteeTransaction.dueDates.map(_.dueDate).headOption.fold("-") { date => Formatters.dateAsDayMonthAbbrAndYear(LocalDate.parse(date)) }
+                            }
+                        )
+                    ),
+                    actions = None
+                ),
+                SummaryListRow(
+                    key = Key(content = Text(messages("cf.guarantee-account.detail.balance-remaining"))),
+                    value = Value(
+                        content = HtmlContent(Formatters.formatCurrencyAmount(transaction.guaranteeTransaction.balance))
+                    ),
+                    actions = None
+                )
+            )
+        ))
+    }
+}

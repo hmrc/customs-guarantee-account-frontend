@@ -1,0 +1,13 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@this(govukInsetText: GovukInsetText)
+
+@(msg: String, id: Option[String] = None)(implicit messages: Messages)
+
+@govukInsetText(InsetText(
+    content = Text(messages(msg)),
+    id = id
+))

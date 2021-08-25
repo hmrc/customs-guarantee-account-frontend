@@ -1,0 +1,88 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import helpers.Formatters
+
+@import viewmodels.GuaranteeAccountTransactionsViewModel
+
+@this(govukTable : GovukTable)
+
+@(model: GuaranteeAccountTransactionsViewModel)(implicit messages: Messages)
+
+@for(transaction <- model.transactions){
+
+    @for(c18Ref <- transaction.c18References) {
+        <h2 class="govuk-label--m">
+            @messages("cf.guarantee-account.detail.c18-issued", Formatters.dateAsDayMonthAndYear(c18Ref.date))
+        </h2>
+        <p class="govuk-body">@messages("cf.guarantee-account.detail.linked", transaction.guaranteeTransaction.movementReferenceNumber, Formatters.dateAsDayMonthAndYear(transaction.guaranteeTransaction.date))</p>
+        @govukTable(Table(
+            classes = "govuk-table hmrc-responsive-table govuk-!-margin-bottom-9",
+            attributes = Map("id" -> s"guarantee-c18-reference-${c18Ref.date}"),
+            rows = Seq(
+                Seq(
+                    TableRow(
+                        content = HtmlContent(
+                            s"""
+                             <span class="hmrc-responsive-table__heading" aria-hidden="true">$messages("cf.guarantee-account.detail.c18")</span>
+                            ${c18Ref.c18Reference.getOrElse("")}
+                            """
+                        ),
+                        classes = "govuk-table__header govuk-!-font-weight-regular",
+                    ),
+                    TableRow(
+                        content = HtmlContent(
+                            s"""
+                            <span class="hmrc-responsive-table__heading" aria-hidden="true">$messages("cf.guarantee-account.detail.amount")</span>
+                            ${Formatters.formatCurrencyAmount(c18Ref.originalCharge)}
+                            """
+                        ),
+                        classes = "govuk-table__cell govuk-table__cell--numeric",
+                    ),
+                    TableRow(
+                        content = HtmlContent(
+                            s"""
+                            <span class="hmrc-responsive-table__heading" aria-hidden="true">$messages("cf.guarantee-account.detail.paid")</span>
+                            ${Formatters.formatCurrencyAmount(c18Ref.dischargedAmount)}
+                            """
+                        ),
+                        classes = "govuk-table__cell govuk-table__cell--numeric",
+                    ),
+                    TableRow(
+                        content = HtmlContent(
+                            s"""
+                            <span class="hmrc-responsive-table__heading" aria-hidden="true">$messages("cf.guarantee-account.detail.remaining")</span>
+                            ${Formatters.formatCurrencyAmount(c18Ref.balance)}
+                            """
+                        ),
+                        classes = "govuk-table__cell govuk-table__cell--numeric",
+                    )
+                )
+            ),
+            head = Some(Seq(
+                HeadCell(
+                    content = Text(messages("cf.guarantee-account.detail.c18")),
+                    classes = "govuk-table__header"
+                ),
+                HeadCell(
+                    content = Text(messages("cf.guarantee-account.detail.amount")),
+                    classes = "govuk-table__header govuk-table__header--numeric"
+                ),
+                HeadCell(
+                    content = Text(messages("cf.guarantee-account.detail.paid")),
+                    classes = "govuk-table__header govuk-table__header--numeric"
+                ),
+                HeadCell(
+                    content = Text(messages("cf.guarantee-account.detail.remaining")),
+                    classes = "govuk-table__header govuk-table__header--numeric"
+                )
+            )),
+            caption = Some(messages("cf.guarantee-account.detail.c18-issued", Formatters.dateAsDayMonthAndYear(c18Ref.date))),
+            captionClasses = "govuk-visually-hidden",
+            firstCellIsHeader = true
+        ))
+
+    }
+}

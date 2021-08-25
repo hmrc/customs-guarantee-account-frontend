@@ -1,0 +1,10 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@this()
+
+@(msg: String, id: Option[String] = None, classes: String = "govuk-heading-m")(implicit messages: Messages)
+
+<h2 @{id.fold("")(id => s"id=$id")} class="@classes">@messages(msg)</h2>

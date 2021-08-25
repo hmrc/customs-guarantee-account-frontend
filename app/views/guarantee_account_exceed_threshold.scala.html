@@ -1,0 +1,46 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import viewmodels.GuaranteeAccountViewModel
+@import helpers.Formatters
+
+@this(
+        main_template: Layout,
+)
+
+@(model: GuaranteeAccountViewModel)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(appConfig.customsFinancialsFrontendHomepage), fullWidth = false) {
+
+    <header class="hmrc-page-heading govuk-!-margin-bottom-0">
+        <h1 class="govuk-heading-xl">@messages("cf.guarantee-account.detail.heading")</h1>
+        <p class="govuk-caption-xl hmrc-caption-xl" id="account-number">@messages("cf.guarantee-account.detail.account"): @{
+            model.account.number
+        }</p>
+    </header>
+    <p class="govuk-heading-l govuk-!-margin-bottom-2" id="balance-available">
+    @messages("cf.guarantee-account.detail.balance-available",
+        model.balanceAvailable.fold(Formatters.formatCurrencyAmount0dp(BigDecimal("0.00")))(amt => amt))
+    </p>
+    <p class="govuk-body govuk-!-margin-bottom-0" id="account-usage">
+    @messages("cf.guarantee-account.detail.account-usage",
+        model.accountUsage.getOrElse("0.0"),
+        model.limit.getOrElse("0.0")
+    )
+    </p>
+
+    <div class="govuk-inset-text govuk-!-margin-top-9" id="too-many-transactions">
+        <p class="govuk-body">@messages("cf.guarantee-account-detail.exceeded-threshold.p1")</p>
+        <p class="govuk-body">@messages("cf.guarantee-account-detail.exceeded-threshold.p2")</p>
+    </div>
+
+    <h2 id="missing-documents-guidance-heading" class="govuk-heading-m govuk-!-margin-top-9 govuk-!-padding-top-5">@messages("cf.guarantee-account.transactions.request.link.heading")</h2>
+    <p class="govuk-body govuk-!-padding-bottom-7">
+        <a class="govuk-link" href="@controllers.routes.GuaranteeTransactionsRequestPageController.onPageLoad">
+        @messages("cf.guarantee-account.transactions.request.link")</a>
+        @messages("cf.guarantee-account.transactions.request.link.post")
+    </p>
+
+}

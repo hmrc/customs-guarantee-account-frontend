@@ -1,0 +1,100 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import config.AppConfig
+@import views.FooterLinks
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.header.Header
+@import views.helpers.PageTitle
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.hmrcReportTechnicalIssueHelper
+
+@this(
+        govUkTemplate: GovukTemplate,
+        govUkLayout: GovukLayout,
+        govukFooter: GovukFooter,
+        govukHeader: HmrcHeader,
+        govukBackLink: GovukBackLink,
+        languageSelection: components.languageSelection,
+        phaseBanner: components.phaseBanner,
+        head: Head,
+        h2: components.h2,
+        p: components.p,
+        scripts: Scripts,
+        hmrcReportTechnicalIssueHelper: hmrcReportTechnicalIssueHelper
+)
+
+@(pageTitle: Option[String] = None,
+        headBlock: Option[Html] = None,
+        scriptsBlock: Option[Html] = None,
+        backLink: Option[String] = None,
+        fullWidth: Boolean = false,
+        help: Boolean = true
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@headerBlock = {
+@govukHeader(Header(
+    homepageUrl = appConfig.govUkHomepage,
+    serviceName = Some(messages("service.name")),
+    serviceUrl = appConfig.customsFinancialsFrontendHomepage,
+    containerClasses = "govuk-width-container",
+    signOutHref = Some(routes.LogoutController.logout().url),
+    language = messages.lang.language match {
+        case "cy" => Cy
+        case _    => En
+    }
+))
+}
+
+
+@beforeContentBlock = {
+@scripts(scriptsBlock)
+@phaseBanner("beta")
+@backLink.map { href =>
+    @govukBackLink(BackLink(href = href, content = Text(messages("service.back")), attributes = Map("id" -> "back-link")))
+}
+@languageSelection()
+}
+
+@mainContentDefault = {
+
+    @contentBlock
+
+    @if(help) {
+    <div class="govuk-!-margin-top-8">
+        @h2("help.heading", None)
+        <div id="help-message">
+            @p("help.p1")
+            @p("help.p2")
+        </div>
+    </div>
+    }
+
+    @hmrcReportTechnicalIssueHelper()
+}
+
+@footerDefault = {
+@govukFooter(new uk.gov.hmrc.govukfrontend.views.html.components.Footer(meta = Some(uk.gov.hmrc.govukfrontend.views.html.components.Meta(items = Some(FooterLinks())))))
+}
+
+@bodyEndDefault = {}
+
+@if(fullWidth) {
+    @govUkTemplate(
+    pageTitle = PageTitle.fullPageTitle(pageTitle),
+    headBlock = Some(head(headBlock)),
+    headerBlock = headerBlock,
+    beforeContentBlock = Some(beforeContentBlock),
+    footerBlock = footerDefault,
+    bodyEndBlock = Some(bodyEndDefault)
+    )(mainContentDefault)
+} else {
+    @govUkLayout(
+    pageTitle = PageTitle.fullPageTitle(pageTitle),
+    headBlock = Some(head(headBlock)),
+    headerBlock = Some(headerBlock),
+    beforeContentBlock = Some(beforeContentBlock),
+    footerBlock = Some(footerDefault),
+    bodyEndBlock = Some(bodyEndDefault)
+    )(mainContentDefault)
+}

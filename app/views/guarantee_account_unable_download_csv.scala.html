@@ -1,0 +1,30 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import config.AppConfig
+@this(
+        main_template: Layout,
+        h2: components.h2,
+        p: components.p
+)
+
+
+@(page: Option[Int])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@main_template(pageTitle = Some(messages("cf.guarantee-account.detail.unable-download-csv")), fullWidth = false, help = false) {
+
+    <h1 class="govuk-heading-l">
+        @messages("cf.guarantee-account.detail.unable-download-csv")
+    </h1>
+
+    <p class="govuk-body">
+        @messages("cf.guarantee-account.detail.try-again-later")
+    </p>
+
+    <p class="govuk-body">
+        <a href="@{controllers.routes.GuaranteeAccountController.showAccountDetails(page).url}" class="govuk-link govuk-link--no-visited-state">@messages("cf.guarantee-account-detail.back-to-guarantee-account")</a>
+    </p>
+
+
+}

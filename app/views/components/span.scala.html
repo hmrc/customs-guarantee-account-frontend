@@ -1,0 +1,14 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@this()
+
+@(key: String, visuallyHidden: Boolean)(implicit messages: Messages)
+
+@if(visuallyHidden){
+    <span class="govuk-visually-hidden">@messages(key)</span>
+} else {
+    <span>@messages(key)</span>
+}

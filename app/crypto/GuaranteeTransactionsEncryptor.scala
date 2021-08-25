@@ -1,0 +1,77 @@
+/*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ */
+
+package crypto
+
+import models._
+
+import javax.inject.Inject
+
+class GuaranteeTransactionsEncryptor @Inject()(crypto: SecureGCMCipher) {
+
+  def encryptGuaranteeTransactions(guaranteeTransactions: Seq[GuaranteeTransaction], key: String): Seq[EncryptedGuaranteeTransaction] = {
+    def e(field: String): EncryptedValue = crypto.encrypt(field, key)
+
+    guaranteeTransactions.map { transaction =>
+      EncryptedGuaranteeTransaction(
+        date = transaction.date,
+        movementReferenceNumber = e(transaction.movementReferenceNumber),
+        secureMovementReferenceNumber = transaction.secureMovementReferenceNumber,
+        balance = e(transaction.balance.toString),
+        uniqueConsignmentReference = transaction.uniqueConsignmentReference.map(e),
+        declarantEori = e(transaction.declarantEori),
+        consigneeEori = e(transaction.consigneeEori),
+        originalCharge = e(transaction.originalCharge.toString),
+        dischargedAmount = e(transaction.dischargedAmount.toString),
+        interestCharge = transaction.interestCharge.map(e),
+        c18Reference = transaction.c18Reference.map(e),
+        dueDates = encryptDueDates(transaction.dueDates, key)
+      )
+    }
+  }
+
+  private def encryptDueDates(dueDates: Seq[DueDate], key: String): Seq[EncryptedDueDate] = {
+    def e(field: String): EncryptedValue = crypto.encrypt(field, key)
+
+    dueDates.map { dueDate =>
+      EncryptedDueDate(
+        dueDate = e(dueDate.dueDate),
+        reasonForSecurity = dueDate.reasonForSecurity.map(e),
+        amounts = encryptAmounts(dueDate.amounts, key),
+        taxTypeGroups = dueDate.taxTypeGroups.map(group => encryptTaxTypeGroups(group, key))
+      )
+    }
+  }
+
+  private def encryptAmounts(amounts: Amounts, key: String): EncryptedAmounts = {
+    def e(field: String): EncryptedValue = crypto.encrypt(field, key)
+
+    EncryptedAmounts(
+      totalAmount = e(amounts.totalAmount),
+      clearedAmount = amounts.clearedAmount.map(e),
+      openAmount = amounts.openAmount.map(e),
+      updateDate = e(amounts.updateDate)
+    )
+  }
+
+  private def encryptTaxTypeGroups(taxTypeGroup: TaxTypeGroup, key: String): EncryptedTaxTypeGroup = {
+    def e(field: String): EncryptedValue = crypto.encrypt(field, key)
+
+    EncryptedTaxTypeGroup(
+      taxTypeGroup = e(taxTypeGroup.taxTypeGroup),
+      amounts = encryptAmounts(taxTypeGroup.amounts, key),
+      taxType = encryptTaxType(taxTypeGroup.taxType, key)
+    )
+  }
+
+  private def encryptTaxType(taxType: TaxType, key: String): EncryptedTaxType = {
+    def e(field: String): EncryptedValue = crypto.encrypt(field, key)
+
+    EncryptedTaxType(
+      taxType = e(taxType.taxType),
+      amounts = encryptAmounts(taxType.amounts, key)
+    )
+  }
+}

@@ -1,0 +1,12 @@
+$govuk-assets-path: "/customs/guarantee-account/assets/lib/govuk-frontend/govuk/assets/";
+$hmrc-assets-path: "/customs/guarantee-account/assets/lib/hmrc-frontend/hmrc/";
+
+@import "lib/govuk-frontend/govuk/all";
+@import "lib/hmrc-frontend/hmrc/all";
+
+@import "utils/colours";
+@import "utils/custom";
+@import "language-selection";
+
+@import "components/table";
+
