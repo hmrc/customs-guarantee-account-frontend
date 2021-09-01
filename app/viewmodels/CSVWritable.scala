@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package forms.mappings
+package viewmodels
 
-import play.api.data.FieldMapping
-import play.api.data.Forms.of
+trait CSVWritable {
+  this: Product =>
 
-import java.time.LocalDate
+  private def quote(string: String): String = s""""$string""""
 
-trait Mappings extends Formatters with Constraints {
+  def toCSVRow: String = {
+    def nestedToCSV(product: Product): String = product.productIterator.map {
+      case nestedProduct: Product => nestedToCSV(nestedProduct)
+      case string: String => quote(string)
+      case rest => rest
+    }.mkString(",")
 
-  protected def localDate(
-                           invalidKey: String,
-                           endOfMonth: Boolean,
-                           args: Seq[String]): FieldMapping[LocalDate] =
-    of(new LocalDateFormatter(invalidKey, endOfMonth, args))
+    nestedToCSV(this)
+  }
+
 }

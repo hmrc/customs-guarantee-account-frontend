@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-package forms.mappings
+package viewmodels
 
-import play.api.data.FieldMapping
-import play.api.data.Forms.of
+trait FieldNames {
 
-import java.time.LocalDate
+  def fieldNames: Seq[String]
 
-trait Mappings extends Formatters with Constraints {
-
-  protected def localDate(
-                           invalidKey: String,
-                           endOfMonth: Boolean,
-                           args: Seq[String]): FieldMapping[LocalDate] =
-    of(new LocalDateFormatter(invalidKey, endOfMonth, args))
 }

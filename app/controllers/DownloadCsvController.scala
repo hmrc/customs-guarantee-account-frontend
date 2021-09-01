@@ -1,6 +1,17 @@
 /*
  * Copyright 2021 HM Revenue & Customs
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package controllers
@@ -17,9 +28,8 @@ import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{AuditingService, DateTimeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import viewmodels.CSVWriter.Seq2CSV
 import viewmodels.GuaranteeTransactionCsvRow.GuaranteeTransactionCsvRowViewModel
-import viewmodels.ResultsPageSummary
+import viewmodels.{CSVWriter, ResultsPageSummary}
 import views.html.{guarantee_account_unable_download_csv, guarantee_transactions_no_result, guarantee_transactions_too_many_results}
 
 import java.time.LocalDate
@@ -104,7 +114,7 @@ class DownloadCsvController @Inject()(
 
   private def convertToCSV(transactions: Seq[GuaranteeTransaction])(implicit messages: Messages) = {
     val fileFooter = Some(messages("cf.guarantee-account.csv.guidance", appConfig.guaranteeAccountGuidanceUrl))
-    transactions.flatMap(_.toReportLayout).toCSVWithHeaders(makeColumnNames, fileFooter)
+    CSVWriter.toCSVWithHeaders(transactions.flatMap(_.toReportLayout),makeColumnNames, fileFooter)
   }
 
   private def makeColumnNames(columnName: String)(implicit messages: Messages): String = {
