@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-package controllers
+package viewmodels
 
-import play.api.test.Helpers._
-import utils.SpecBase
+trait FieldNames {
 
-class UnauthorisedControllerSpec extends SpecBase {
-
-  "onPageLoad" must {
-    "return OK" in {
-      val app = application.build()
-
-      running(app) {
-        val result = route(app, fakeRequest("GET", routes.UnauthorisedController.onPageLoad().url)).value
-        status(result) mustEqual OK
-      }
-    }
-  }
+  def fieldNames: Seq[String]
 
 }

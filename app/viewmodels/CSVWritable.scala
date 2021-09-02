@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package controllers
+package viewmodels
 
-import play.api.test.Helpers._
-import utils.SpecBase
+trait CSVWritable {
+  this: Product =>
 
-class UnauthorisedControllerSpec extends SpecBase {
+  private def quote(string: String): String = s""""$string""""
 
-  "onPageLoad" must {
-    "return OK" in {
-      val app = application.build()
+  def toCSVRow: String = {
+    def nestedToCSV(product: Product): String = product.productIterator.map {
+      case nestedProduct: Product => nestedToCSV(nestedProduct)
+      case string: String => quote(string)
+      case rest => rest
+    }.mkString(",")
 
-      running(app) {
-        val result = route(app, fakeRequest("GET", routes.UnauthorisedController.onPageLoad().url)).value
-        status(result) mustEqual OK
-      }
-    }
+    nestedToCSV(this)
   }
 
 }

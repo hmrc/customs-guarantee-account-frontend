@@ -18,8 +18,7 @@ package viewmodels
 
 import config.AppConfig
 import controllers.routes
-import crypto.UrlEncryption
-import models.{GuaranteeAccountTransaction, GuaranteeTransaction}
+import models.GuaranteeAccountTransaction
 
 import java.time.LocalDate
 

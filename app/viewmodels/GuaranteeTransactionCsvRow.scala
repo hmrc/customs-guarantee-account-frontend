@@ -37,7 +37,27 @@ case class GuaranteeTransactionCsvRow(date: Option[String] = None,
                                       originalCharge: Option[BigDecimal] = None,
                                       dischargedAmount: Option[BigDecimal] = None,
                                       balance: Option[BigDecimal] = None,
-                                      lastUpdated: Option[String] = None)
+                                      lastUpdated: Option[String] = None) extends CSVWritable with FieldNames {
+  override def fieldNames: Seq[String] = Seq(
+    "date",
+    "movementReferenceNumber",
+    "uniqueConsignmentReference",
+    "consigneeEori",
+    "declarantEori",
+    "totalOriginalCharge",
+    "totalDischargedAmount",
+    "totalBalance",
+    "interestCharge",
+    "c18Reference",
+    "securityReasonBreakdown",
+    "taxCode",
+    "expiryDate",
+    "originalCharge",
+    "dischargedAmount",
+    "balance",
+    "lastUpdated"
+  )
+}
 
 object GuaranteeTransactionCsvRow {
 

@@ -28,9 +28,8 @@ import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{AuditingService, DateTimeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import viewmodels.CSVWriter.Seq2CSV
 import viewmodels.GuaranteeTransactionCsvRow.GuaranteeTransactionCsvRowViewModel
-import viewmodels.ResultsPageSummary
+import viewmodels.{CSVWriter, ResultsPageSummary}
 import views.html.{guarantee_account_unable_download_csv, guarantee_transactions_no_result, guarantee_transactions_too_many_results}
 
 import java.time.LocalDate
@@ -115,7 +114,7 @@ class DownloadCsvController @Inject()(
 
   private def convertToCSV(transactions: Seq[GuaranteeTransaction])(implicit messages: Messages) = {
     val fileFooter = Some(messages("cf.guarantee-account.csv.guidance", appConfig.guaranteeAccountGuidanceUrl))
-    transactions.flatMap(_.toReportLayout).toCSVWithHeaders(makeColumnNames, fileFooter)
+    CSVWriter.toCSVWithHeaders(transactions.flatMap(_.toReportLayout),makeColumnNames, fileFooter)
   }
 
   private def makeColumnNames(columnName: String)(implicit messages: Messages): String = {

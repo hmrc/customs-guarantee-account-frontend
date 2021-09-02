@@ -19,13 +19,14 @@ package models
 import models.domain.EORI
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import viewmodels.{CSVWritable, FieldNames}
 
 import java.time.LocalDate
 
 
 case class Amounts(totalAmount: String, clearedAmount: Option[String], openAmount: Option[String], updateDate: String)
 
-case class DueDate(dueDate: String, reasonForSecurity: Option[String], amounts: Amounts, taxTypeGroups: Seq[TaxTypeGroup]){
+case class DueDate(dueDate: String, reasonForSecurity: Option[String], amounts: Amounts, taxTypeGroups: Seq[TaxTypeGroup]) {
   def securityReason: Option[SecurityReason] = {
     (reasonForSecurity, taxTypeGroups) match {
       case (_, taxTypeGroups) if taxTypeGroups.isEmpty => None
@@ -52,12 +53,24 @@ case class GuaranteeTransaction(
                                  interestCharge: Option[String],
                                  c18Reference: Option[String],
                                  dueDates: Seq[DueDate]
-                               ){
-  def moreThanOne : Boolean =  dueDates.size > 1
- }
+                               ) extends CSVWritable with FieldNames {
+  def moreThanOne: Boolean = dueDates.size > 1
 
-
-
+  override def fieldNames: Seq[String] = Seq(
+    "date",
+    "movementReferenceNumber",
+    "secureMovementReferenceNumber",
+    "balance",
+    "uniqueConsignmentReference",
+    "declarantEori",
+    "consigneeEori",
+    "originalCharge",
+    "dischargedAmount",
+    "interestCharge",
+    "c18Reference",
+    "dueDates"
+  )
+}
 
 
 case class GuaranteeAccountTransaction(guaranteeTransaction: GuaranteeTransaction, c18References: Seq[GuaranteeTransaction])
