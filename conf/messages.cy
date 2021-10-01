@@ -250,3 +250,8 @@ cf.guarantee-account.detail.mrn-link-prefix=Eich gwarant ar gyfer Cyfeirnod Symu
 cf.guarantee-account.your-securities.heading=Eich gwarantau
 cf.guarantee-account.your-securities.p=Rhestrwyd yn ôl dyddiad mewnforio
 cf.guarantee-account.transactions.hidden-text=Mae gan {0} {1} gwarant
+
+cf.customs-financials-home.recruitment-banner-heading=Helpu ni i wella’r gwasanaeth hwn
+cf.customs-financials-home.recruitment-banner-link-text=Cofrestrwch er mwyn cymryd rhan bosibl yn ein hymchwil defnyddiwr
+cf.customs-financials-home.recruitment-banner.close=Cau
+cf.customs-financials-home.recruitment-banner.hidden-text.close=Y faner ‘Helpu ni i wella’r gwasanaeth hwn’
