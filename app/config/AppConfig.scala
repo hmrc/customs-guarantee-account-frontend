@@ -53,4 +53,6 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   lazy val countdown: Int = config.get[Int]("timeout.countdown")
   lazy val fixedDateTime = config.get[Boolean]("features.fixed-systemdate-for-tests")
 
+  lazy val helpMakeGovUkBetterUrl: String = config.get[String]("urls.helpMakeGovUkBetterUrl")
+
 }
