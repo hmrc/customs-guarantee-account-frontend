@@ -46,7 +46,6 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   lazy val registerCdsUrl = config.get[String]("urls.cdsRegisterUrl")
   lazy val subscribeCdsUrl = config.get[String]("urls.cdsSubscribeUrl")
   lazy val customsFinancialsFrontendHomepage = config.get[String]("urls.customsFinancialsHomepage")
-  lazy val applicationStatusCdsUrl = config.get[String]("urls.applicationStatusUrl")
   lazy val govUkHomepage = config.get[String]("urls.govUkHome")
 
   lazy val timeout: Int = config.get[Int]("timeout.timeout")
