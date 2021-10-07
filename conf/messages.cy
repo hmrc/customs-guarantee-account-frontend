@@ -116,10 +116,7 @@ cf.not-subscribed-to-cds.detail.eori-link=Rhif Cofrestru ac Adnabod Gweithredwyr
 cf.not-subscribed-to-cds.detail.get-access-info=Os oes gennych rif EORI eisoes, mae modd
 cf.not-subscribed-to-cds.detail.get-access-link=cael mynediad at CDS (yn agor ffenestr neu dab newydd)
 cf.not-subscribed-to-cds.detail.how-to-get-access-info=Sut i gael mynediad at CDS
-cf.not-subscribed-to-cds.detail.process-application-info=Gall gymryd hyd at awr i CThEM brosesu’ch cais.
-cf.not-subscribed-to-cds.detail.already-applied-info=Os ydych eisoes wedi gwneud cais am fynediad at CDS
-cf.not-subscribed-to-cds.detail.status-info=Mae modd
-cf.not-subscribed-to-cds.detail.status-check-info=gwirio statws eich cais (yn agor ffenestr neu dab newydd)
+cf.not-subscribed-to-cds.detail.process-application-info=Gall gymryd hyd at ddwy awr i CThEM brosesu’ch cais.
 
 # Page Not Found Error
 # ----------------------------------------------------------
