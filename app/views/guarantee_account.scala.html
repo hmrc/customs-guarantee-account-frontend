@@ -34,8 +34,7 @@ guarantee_transactions_table: guarantee_transactions_table
            @guarantee_account_summary(accountModel)
 
             <p id="update-time"
-                class="govuk-body govuk-hint govuk-!-margin-bottom-7"
-                style="display:none"
+                class="govuk-body govuk-hint govuk-!-margin-bottom-7 hidden-time-update"
                 aria-hidden="true"
                 data-update-timeout="@{appConfig.guaranteeAccountTimeout}"
                 data-update-interval="@{appConfig.guaranteeAccountInterval}">

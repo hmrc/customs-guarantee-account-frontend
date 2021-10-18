@@ -1,6 +1,11 @@
 /*
     Custom CSS to stay consistent with old & new non standard components
 */
+
+.hidden-time-update {
+   display: none;
+ }
+
 .sortable-a,
 .sortable-a:focus,
 .sortable-a:hover {
