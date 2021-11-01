@@ -21,7 +21,7 @@ p:components.p
  backLink = Some(controllers.routes.GuaranteeAccountController.showAccountDetails(None).url)
 ) {
 
-@formHelper(action = controllers.routes.GuaranteeTransactionsRequestPageController.onSubmit(), 'autoComplete -> "off") {
+@formHelper(action = controllers.routes.RequestTransactionsController.onSubmit(), 'autoComplete -> "off") {
 @errorSummary(form.errors, None)
 
 @h1("cf.guarantee-account.transactions.request.heading", None)

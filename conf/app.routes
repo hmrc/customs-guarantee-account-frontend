@@ -1,19 +1,22 @@
 # microservice specific routes
 
-->         /govuk-frontend                                  govuk.Routes
-->          /hmrc-frontend                                  hmrcfrontend.Routes
-GET         /assets/*file                                   controllers.Assets.versioned(path = "/public", file: Asset)
-GET         /language/:lang                                 controllers.LanguageSwitchController.switchToLanguage(lang: models.Language)
+->          /govuk-frontend                          govuk.Routes
+->          /hmrc-frontend                           hmrcfrontend.Routes
+GET         /assets/*file                            controllers.Assets.versioned(path = "/public", file: Asset)
+GET         /language/:lang                          controllers.LanguageSwitchController.switchToLanguage(lang: models.Language)
 
-GET         /                                               controllers.GuaranteeAccountController.showAccountDetails(page: Option[Int])
-GET         /transaction/:mrn                               controllers.GuaranteeTransactionController.displayTransaction(mrn: String, page: Option[Int])
-GET         /download-csv                                   controllers.DownloadCsvController.downloadCsv(disposition: Option[String], page: Option[Int])
-GET         /download-requested-csv                         controllers.DownloadCsvController.downloadRequestedCsv(disposition: Option[String], from: String, to: String,page: Option[Int])
-GET         /request-historic-guarantee-transactions        controllers.GuaranteeTransactionsRequestPageController.onPageLoad()
-POST        /request-historic-guarantee-transactions        controllers.GuaranteeTransactionsRequestPageController.onSubmit()
-GET         /transactions-unavailable                       controllers.GuaranteeAccountController.showTransactionsUnavailable()
-GET         /account-unavailable                            controllers.GuaranteeAccountController.showAccountUnavailable
-GET         /csv-download-error                             controllers.DownloadCsvController.showUnableToDownloadCSV(pageState: Option[Int])
-GET         /not-subscribed-for-cds                         controllers.UnauthorisedController.onPageLoad
-GET         /logout-survey                                  controllers.LogoutController.logout
-GET         /logout                                         controllers.LogoutController.logoutNoSurvey
+GET         /                                        controllers.GuaranteeAccountController.showAccountDetails(page: Option[Int])
+GET         /transaction/:mrn                        controllers.GuaranteeTransactionController.displayTransaction(mrn: String, page: Option[Int])
+GET         /download-csv                            controllers.DownloadCsvController.downloadCsv(disposition: Option[String], page: Option[Int])
+GET         /download-requested-csv                  controllers.DownloadCsvController.downloadRequestedCsv(disposition: Option[String], from: String, to: String,page: Option[Int])
+
+GET         /request-guarantee-transactions          controllers.RequestTransactionsController.onPageLoad()
+POST        /request-guarantee-transactions          controllers.RequestTransactionsController.onSubmit()
+GET         /requested-guarantee-transactions        controllers.RequestedTransactionsController.onPageLoad()
+
+GET         /transactions-unavailable                controllers.GuaranteeAccountController.showTransactionsUnavailable()
+GET         /account-unavailable                     controllers.GuaranteeAccountController.showAccountUnavailable
+GET         /csv-download-error                      controllers.DownloadCsvController.showUnableToDownloadCSV(pageState: Option[Int])
+GET         /not-subscribed-for-cds                  controllers.UnauthorisedController.onPageLoad
+GET         /logout-survey                           controllers.LogoutController.logout
+GET         /logout                                  controllers.LogoutController.logoutNoSurvey
