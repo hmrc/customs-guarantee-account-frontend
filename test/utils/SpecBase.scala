@@ -29,7 +29,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper.CSRFRequest
 import play.api.test.FakeRequest
-import repositories.CacheRepository
+import repositories.{CacheRepository, RequestedTransactionsCache}
 
 class FakeMetrics extends Metrics {
   override val defaultRegistry: MetricRegistry = new MetricRegistry
@@ -39,11 +39,13 @@ class FakeMetrics extends Metrics {
 trait SpecBase extends AnyWordSpecLike with Matchers with MockitoSugar with OptionValues with ScalaFutures with IntegrationPatience {
 
   val mockCacheRepository: CacheRepository = mock[CacheRepository]
+  val mockRequestedTransactionsCache: RequestedTransactionsCache = mock[RequestedTransactionsCache]
 
   def application: GuiceApplicationBuilder = new GuiceApplicationBuilder().overrides(
       bind[IdentifierAction].to[FakeIdentifierAction],
       bind[Metrics].toInstance(new FakeMetrics),
       bind[CacheRepository].toInstance(mockCacheRepository),
+      bind[RequestedTransactionsCache].toInstance(mockRequestedTransactionsCache)
     ).configure("auditing.enabled" -> false)
     .configure("metrics.enabled" -> false)
 
