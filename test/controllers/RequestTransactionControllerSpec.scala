@@ -156,13 +156,7 @@ class RequestTransactionControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val mockRequestedTransactionsCache: RequestedTransactionsCache = mock[RequestedTransactionsCache]
-
-    val app = application
-      .overrides(
-        bind[RequestedTransactionsCache].toInstance(mockRequestedTransactionsCache)
-      )
-      .configure(
+    val app = application.configure(
         "features.fixed-systemdate-for-tests" -> "true")
       .build()
   }

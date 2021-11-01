@@ -132,7 +132,6 @@ class RequestedTransactionsControllerSpec extends SpecBase {
     val someGan = "GAN-1"
 
     val mockCustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
-    val mockRequestedTransactionsCache = mock[RequestedTransactionsCache]
 
     val guaranteeAccount = GuaranteeAccount(someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(
       BigDecimal(123000),
@@ -201,7 +200,6 @@ class RequestedTransactionsControllerSpec extends SpecBase {
 
     val app = application
       .overrides(
-        bind[RequestedTransactionsCache].toInstance(mockRequestedTransactionsCache),
         bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector)
       )
       .configure(
