@@ -12,7 +12,7 @@ GET         /download-requested-csv                  controllers.DownloadCsvCont
 
 GET         /request-guarantee-securities            controllers.RequestTransactionsController.onPageLoad()
 POST        /request-guarantee-securities            controllers.RequestTransactionsController.onSubmit()
-GET         /requested-guarantee-transactions        controllers.RequestedTransactionsController.onPageLoad()
+GET         /requested-guarantee-securities        controllers.RequestedTransactionsController.onPageLoad()
 
 GET         /transactions-unavailable                controllers.GuaranteeAccountController.showTransactionsUnavailable()
 GET         /account-unavailable                     controllers.GuaranteeAccountController.showAccountUnavailable
