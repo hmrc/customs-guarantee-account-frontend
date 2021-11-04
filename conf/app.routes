@@ -10,8 +10,8 @@ GET         /transaction/:mrn                        controllers.GuaranteeTransa
 GET         /download-csv                            controllers.DownloadCsvController.downloadCsv(disposition: Option[String], page: Option[Int])
 GET         /download-requested-csv                  controllers.DownloadCsvController.downloadRequestedCsv(disposition: Option[String], from: String, to: String,page: Option[Int])
 
-GET         /request-guarantee-transactions          controllers.RequestTransactionsController.onPageLoad()
-POST        /request-guarantee-transactions          controllers.RequestTransactionsController.onSubmit()
+GET         /request-guarantee-securities            controllers.RequestTransactionsController.onPageLoad()
+POST        /request-guarantee-securities            controllers.RequestTransactionsController.onSubmit()
 GET         /requested-guarantee-transactions        controllers.RequestedTransactionsController.onPageLoad()
 
 GET         /transactions-unavailable                controllers.GuaranteeAccountController.showTransactionsUnavailable()
