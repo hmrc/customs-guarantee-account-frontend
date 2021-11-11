@@ -12,7 +12,7 @@
 
 @(model: GuaranteeAccountViewModel)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(appConfig.customsFinancialsFrontendHomepage), fullWidth = false) {
+@main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(appConfig.customsFinancialsFrontendHomepage)) {
 
     <header class="hmrc-page-heading govuk-!-margin-bottom-0">
         <h1 class="govuk-heading-xl">@messages("cf.guarantee-account.detail.heading")</h1>
