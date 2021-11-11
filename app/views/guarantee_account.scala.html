@@ -10,7 +10,6 @@
 @import views.html.components.pager
 @import views.html.components.guarantee_transactions_table
 @import views.html.components.guarantee_c18_reference
-@import views.html.components.recruitment_banner
 
 @this(
 main_template: Layout,
@@ -24,38 +23,23 @@ guarantee_transactions_table: guarantee_transactions_table
 
 @(accountModel: GuaranteeAccountViewModel, transactionModel: GuaranteeAccountTransactionsViewModel)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(appConfig.customsFinancialsFrontendHomepage), fullWidth = true) {
+@main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(appConfig.customsFinancialsFrontendHomepage)) {
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+    @guarantee_account_summary(accountModel)
 
-           @recruitment_banner()
+    @if(transactionModel.allItems.nonEmpty) {
+        @guarantee_c18_reference(transactionModel)
+        @h2(messages("cf.guarantee-account.your-securities.heading"), Some("securities-header"), classes = "govuk-heading-l govuk-!-margin-bottom-0 govuk-!-padding-top-7")
+        @p(messages("cf.guarantee-account.your-securities.p"), "govuk-body govuk-hint govuk-!-margin-bottom-2 govuk-!-margin-top-2")
 
-           @guarantee_account_summary(accountModel)
-
-            <p id="update-time"
-                class="govuk-body govuk-hint govuk-!-margin-bottom-7 hidden-time-update"
-                aria-hidden="true"
-                data-update-timeout="@{appConfig.guaranteeAccountTimeout}"
-                data-update-interval="@{appConfig.guaranteeAccountInterval}">
-                    @messages("cf.guarantee-account.detail.updated-now")
-            </p>
-
-            @if(transactionModel.allItems.nonEmpty) {
-                @guarantee_c18_reference(transactionModel)
-                @h2(messages("cf.guarantee-account.your-securities.heading"), Some("securities-header"), classes = "govuk-heading-l govuk-!-margin-bottom-0 govuk-!-padding-top-7")
-                @p(messages("cf.guarantee-account.your-securities.p"), "govuk-body govuk-hint govuk-!-margin-bottom-2 govuk-!-margin-top-2")
-
-                <p id="download" class="govuk-body">
-                    <a id="download-link" class="govuk-link" href="@transactionModel.downloadUrl">@messages("cf.guarantee-account.detail.download") CSV</a>
-                </p>
-                @guarantee_transactions_table(transactionModel)
-                @pager(transactionModel)
-            } else {
-              @inset("cf.guarantee-account.detail.no-transactions", Some("no-guarantee-transactions"))
-            }
-        </div>
-    </div>
+        <p id="download" class="govuk-body">
+            <a id="download-link" class="govuk-link" href="@transactionModel.downloadUrl">@messages("cf.guarantee-account.detail.download") CSV</a>
+        </p>
+        @guarantee_transactions_table(transactionModel)
+        @pager(transactionModel)
+    } else {
+      @inset("cf.guarantee-account.detail.no-transactions", Some("no-guarantee-transactions"))
+    }
 
     <h2 id="missing-documents-guidance-heading" class="govuk-heading-m govuk-!-margin-top-9">@messages("cf.guarantee-account.transactions.request.link.heading")</h2>
     <p class="govuk-body govuk-!-padding-bottom-7">

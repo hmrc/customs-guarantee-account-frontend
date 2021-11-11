@@ -18,155 +18,152 @@
 
 @(accountModel: GuaranteeAccountViewModel, transaction: GuaranteeTransaction, pageNumber: Option[Int])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(routes.GuaranteeAccountController.showAccountDetails(page = pageNumber).url), fullWidth = true) {
+@main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(routes.GuaranteeAccountController.showAccountDetails(page = pageNumber).url)) {
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <header class="hmrc-page-heading govuk-!-margin-bottom-0" id="account-summary">
-                <h1 class="govuk-heading-xl">@messages("cf.guarantee-account.detail.title")</h1>
-                <p class="govuk-caption-xl hmrc-caption-xl" id="account-number">
-                @messages("cf.guarantee-account.detail.account-number", accountModel.account.number)
-                </p>
-            </header>
 
-            @h2(messages("cf.guarantee-account.your-security.heading"), Some("securities-header"), classes = "govuk-heading-l govuk-!-margin-bottom-5 govuk-!-padding-top-0")
+    <header class="hmrc-page-heading govuk-!-margin-bottom-0" id="account-summary">
+        <h1 class="govuk-heading-xl">@messages("cf.guarantee-account.detail.title")</h1>
+        <p class="govuk-caption-xl hmrc-caption-xl" id="account-number">
+        @messages("cf.guarantee-account.detail.account-number", accountModel.account.number)
+        </p>
+    </header>
+
+    @h2(messages("cf.guarantee-account.your-security.heading"), Some("securities-header"), classes = "govuk-heading-l govuk-!-margin-bottom-5 govuk-!-padding-top-0")
+
+    @govukSummaryList(SummaryList(
+        attributes = Map("id" -> "mrn"),
+        rows = Seq(
+            SummaryListRow(
+                key = Key(content = Text(messages("cf.guarantee-account.detail.movement-reference-number"))),
+                value = Value(content = HtmlContent(transaction.movementReferenceNumber)),
+                actions = None
+            ),
+            SummaryListRow(
+                key = Key(content = Text(messages("cf.guarantee-account.detail.unique-consignment-reference"))),
+                value = Value(content = HtmlContent(Html(transaction.uniqueConsignmentReference))),
+                actions = None
+            ),
+            SummaryListRow(
+                key = Key(content = Text(messages("cf.guarantee-account.detail.importDate"))),
+                value = Value(content = HtmlContent(Formatters.dateAsDayMonthAbbrAndYear(transaction.date))),
+                actions = None
+            ),
+            SummaryListRow(
+                key = Key(content = Text(messages("cf.guarantee-account.detail.expires"))),
+                value = Value(content =
+                    if(transaction.moreThanOne) {
+                        HtmlContent(messages("cf.guarantee-account.detail.multiple-expiry.dates"))
+                    } else {
+                        HtmlContent(
+                            HtmlFormat.fill(
+                                transaction.dueDates
+                                        .map(v => Html(Formatters.dateAsDayMonthAbbrAndYear(LocalDate.parse(v.dueDate))))
+                                        .to[scala.collection.immutable.Seq]
+                            )
+                        )
+                    }
+                ),
+                actions = None
+            )) ++ {
+            if(!transaction.moreThanOne) {
+                Seq(SummaryListRow(
+                    key = Key(content = Text(messages("cf.guarantee-account.detail.security-reason.tax-code"))),
+                    value = Value(content =
+                        HtmlContent(
+                            HtmlFormat.fill(
+                                transaction.dueDates
+                                        .map(_.reasonForSecurity)
+                                        .map(Html(_))
+                                        .to[scala.collection.immutable.Seq])
+                        )),
+                    actions = None
+                ))
+            } else {
+                Nil
+            }
+        }
+    ))
+
+    @govukSummaryList(SummaryList(
+        attributes = Map("id" -> "eori"),
+        rows = Seq(
+            SummaryListRow(
+                key = Key(content = Text(messages("cf.guarantee-account.detail.consignee-eori"))),
+                value = Value(content = HtmlContent(transaction.consigneeEori)),
+                actions = None
+            ),
+            SummaryListRow(
+                key = Key(content = Text(messages("cf.guarantee-account.detail.declarant-eori"))),
+                value = Value(content = HtmlContent(transaction.declarantEori)),
+                actions = None
+            )
+        )))
+
+    @govukSummaryList(SummaryList(
+        attributes = Map("id" -> "charges"),
+        rows = Seq(
+            SummaryListRow(
+                key = Key(content = Text(messages("cf.guarantee-account.detail.original-charge"))),
+                value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(transaction.originalCharge))),
+                actions = None
+            ),
+            SummaryListRow(
+                key = Key(content = Text(messages("cf.guarantee-account.detail.discharged-amount"))),
+                value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(transaction.dischargedAmount))),
+                actions = None
+            ),
+            SummaryListRow(
+                key = Key(content = Text(messages("cf.guarantee-account.detail.balance-remaining"))),
+                value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(transaction.balance))),
+                actions = None
+            ),
+            SummaryListRow(
+                key = Key(content = Text(messages("cf.guarantee-account.csv.interestCharge"))),
+                value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(transaction.interestCharge.fold(BigDecimal(0))(BigDecimal.apply)))),
+                actions = None
+            )
+        )))
+
+    @if(transaction.moreThanOne) {
+        <h3 class="govuk-heading-m  govuk-!-padding-top-4 govuk-!-margin-bottom-5">@messages("cf.guarantee-account.detail.expiry-dates")</h3>
+
+        @for(dueDate <- transaction.dueDates) {
 
             @govukSummaryList(SummaryList(
-                attributes = Map("id" -> "mrn"),
+                attributes = Map("id" -> s"expires-${dueDate.reasonForSecurity.getOrElse("")}"),
                 rows = Seq(
-                    SummaryListRow(
-                        key = Key(content = Text(messages("cf.guarantee-account.detail.movement-reference-number"))),
-                        value = Value(content = HtmlContent(transaction.movementReferenceNumber)),
-                        actions = None
-                    ),
-                    SummaryListRow(
-                        key = Key(content = Text(messages("cf.guarantee-account.detail.unique-consignment-reference"))),
-                        value = Value(content = HtmlContent(Html(transaction.uniqueConsignmentReference))),
-                        actions = None
-                    ),
-                    SummaryListRow(
-                        key = Key(content = Text(messages("cf.guarantee-account.detail.importDate"))),
-                        value = Value(content = HtmlContent(Formatters.dateAsDayMonthAbbrAndYear(transaction.date))),
-                        actions = None
-                    ),
                     SummaryListRow(
                         key = Key(content = Text(messages("cf.guarantee-account.detail.expires"))),
-                        value = Value(content =
-                            if(transaction.moreThanOne) {
-                                HtmlContent(messages("cf.guarantee-account.detail.multiple-expiry.dates"))
-                            } else {
-                                HtmlContent(
-                                    HtmlFormat.fill(
-                                        transaction.dueDates
-                                                .map(v => Html(Formatters.dateAsDayMonthAbbrAndYear(LocalDate.parse(v.dueDate))))
-                                                .to[scala.collection.immutable.Seq]
-                                    )
-                                )
-                            }
-                        ),
-                        actions = None
-                    )) ++ {
-                    if(!transaction.moreThanOne) {
-                        Seq(SummaryListRow(
-                            key = Key(content = Text(messages("cf.guarantee-account.detail.security-reason.tax-code"))),
-                            value = Value(content =
-                                HtmlContent(
-                                    HtmlFormat.fill(
-                                        transaction.dueDates
-                                                .map(_.reasonForSecurity)
-                                                .map(Html(_))
-                                                .to[scala.collection.immutable.Seq])
-                                )),
-                            actions = None
-                        ))
-                    } else {
-                        Nil
-                    }
-                }
-            ))
-
-            @govukSummaryList(SummaryList(
-                attributes = Map("id" -> "eori"),
-                rows = Seq(
-                    SummaryListRow(
-                        key = Key(content = Text(messages("cf.guarantee-account.detail.consignee-eori"))),
-                        value = Value(content = HtmlContent(transaction.consigneeEori)),
+                        value = Value(content = HtmlContent(Formatters.dateAsDayMonthAbbrAndYear(LocalDate.parse(dueDate.dueDate)))),
                         actions = None
                     ),
                     SummaryListRow(
-                        key = Key(content = Text(messages("cf.guarantee-account.detail.declarant-eori"))),
-                        value = Value(content = HtmlContent(transaction.declarantEori)),
+                        key = Key(content = Text(messages("cf.guarantee-account.detail.security-reason.tax-code"))),
+                        value = Value(content = HtmlContent(Html(dueDate.reasonForSecurity))),
                         actions = None
-                    )
-                )))
-
-            @govukSummaryList(SummaryList(
-                attributes = Map("id" -> "charges"),
-                rows = Seq(
+                    ),
                     SummaryListRow(
                         key = Key(content = Text(messages("cf.guarantee-account.detail.original-charge"))),
-                        value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(transaction.originalCharge))),
+                        value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(BigDecimal(dueDate.amounts.totalAmount)))),
                         actions = None
                     ),
                     SummaryListRow(
                         key = Key(content = Text(messages("cf.guarantee-account.detail.discharged-amount"))),
-                        value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(transaction.dischargedAmount))),
+                        value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(dueDate.amounts.clearedAmount.fold(BigDecimal(0))(BigDecimal.apply)))),
                         actions = None
                     ),
                     SummaryListRow(
                         key = Key(content = Text(messages("cf.guarantee-account.detail.balance-remaining"))),
-                        value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(transaction.balance))),
-                        actions = None
-                    ),
-                    SummaryListRow(
-                        key = Key(content = Text(messages("cf.guarantee-account.csv.interestCharge"))),
-                        value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(transaction.interestCharge.fold(BigDecimal(0))(BigDecimal.apply)))),
+                        value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(dueDate.amounts.openAmount.fold(BigDecimal(0))(BigDecimal.apply)))),
                         actions = None
                     )
-                )))
+                )
+            ))
 
-            @if(transaction.moreThanOne) {
-                <h3 class="govuk-heading-m  govuk-!-padding-top-4 govuk-!-margin-bottom-5">@messages("cf.guarantee-account.detail.expiry-dates")</h3>
-
-                @for(dueDate <- transaction.dueDates) {
-
-                    @govukSummaryList(SummaryList(
-                        attributes = Map("id" -> s"expires-${dueDate.reasonForSecurity.getOrElse("")}"),
-                        rows = Seq(
-                            SummaryListRow(
-                                key = Key(content = Text(messages("cf.guarantee-account.detail.expires"))),
-                                value = Value(content = HtmlContent(Formatters.dateAsDayMonthAbbrAndYear(LocalDate.parse(dueDate.dueDate)))),
-                                actions = None
-                            ),
-                            SummaryListRow(
-                                key = Key(content = Text(messages("cf.guarantee-account.detail.security-reason.tax-code"))),
-                                value = Value(content = HtmlContent(Html(dueDate.reasonForSecurity))),
-                                actions = None
-                            ),
-                            SummaryListRow(
-                                key = Key(content = Text(messages("cf.guarantee-account.detail.original-charge"))),
-                                value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(BigDecimal(dueDate.amounts.totalAmount)))),
-                                actions = None
-                            ),
-                            SummaryListRow(
-                                key = Key(content = Text(messages("cf.guarantee-account.detail.discharged-amount"))),
-                                value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(dueDate.amounts.clearedAmount.fold(BigDecimal(0))(BigDecimal.apply)))),
-                                actions = None
-                            ),
-                            SummaryListRow(
-                                key = Key(content = Text(messages("cf.guarantee-account.detail.balance-remaining"))),
-                                value = Value(content = HtmlContent(Formatters.formatCurrencyAmount(dueDate.amounts.openAmount.fold(BigDecimal(0))(BigDecimal.apply)))),
-                                actions = None
-                            )
-                        )
-                    ))
-
-                    @(dueDate.securityReason.map(transaction_security_reason_details(_)))
-                }
-            } else {
-                @(transaction.dueDates.map(_.securityReason.map(transaction_security_reason_details(_))))
-            }
-        </div>
-    </div>
+            @(dueDate.securityReason.map(transaction_security_reason_details(_)))
+        }
+    } else {
+        @(transaction.dueDates.map(_.securityReason.map(transaction_security_reason_details(_))))
+    }
 
 }
