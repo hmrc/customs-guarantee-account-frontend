@@ -27,6 +27,7 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
 
 import java.time.LocalDate
+import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -62,11 +63,12 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
           retrieveOpenGuaranteeTransactionsDetailUrl,
           openGuaranteeTransactionsRequest
         ).flatMap { transactions =>
-          cacheRepository.set(gan, transactions).map { successfulWrite =>
+          val transactionsWithUUID = transactions.map(_.copy(secureMovementReferenceNumber = Some(UUID.randomUUID().toString)))
+          cacheRepository.set(gan, transactionsWithUUID).map { successfulWrite =>
             if (!successfulWrite) {
               logger.error("Failed to store data in the session cache defaulting to the api response")
             }
-            Right(transactions)
+            Right(transactionsWithUUID)
           }
         }
     }.recover {

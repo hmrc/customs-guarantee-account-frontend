@@ -21,7 +21,6 @@ import cats.instances.future._
 import config.{AppConfig, ErrorHandler}
 import connectors.{CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested, UnknownException}
 import controllers.actions.IdentifierAction
-import crypto.UrlEncryption
 import helpers.DateFormatters
 import models._
 import models.request.IdentifierRequest
@@ -41,7 +40,6 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
                                            apiConnector: CustomsFinancialsApiConnector,
                                            dateTimeService: DateTimeService,
                                            guaranteeAccount: guarantee_account,
-                                           urlEncryption: UrlEncryption,
                                            guaranteeAccountNotAvailable: guarantee_account_not_available,
                                            tooManyResults: guarantee_account_exceed_threshold,
                                            guaranteeAccountTransactionsNotAvailable: guarantee_account_transactions_not_available
@@ -74,8 +72,7 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
           case UnknownException => Redirect(routes.GuaranteeAccountController.showTransactionsUnavailable())
         }
         case Right(transactions) =>
-          val encryptedMrnTransactions = transactions.map(v => v.copy(secureMovementReferenceNumber = Some(urlEncryption.encrypt(v.movementReferenceNumber))))
-          val (nonC18Transactions, c18Transactions) = encryptedMrnTransactions.partition(_.c18Reference.isEmpty)
+          val (nonC18Transactions, c18Transactions) = transactions.partition(_.c18Reference.isEmpty)
           val filteredTransactions = nonC18Transactions.map { transaction =>
             GuaranteeAccountTransaction(
               transaction,

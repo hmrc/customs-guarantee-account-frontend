@@ -6,7 +6,7 @@ GET         /assets/*file                            controllers.Assets.versione
 GET         /language/:lang                          controllers.LanguageSwitchController.switchToLanguage(lang: models.Language)
 
 GET         /                                        controllers.GuaranteeAccountController.showAccountDetails(page: Option[Int])
-GET         /transaction/:mrn                        controllers.GuaranteeTransactionController.displayTransaction(mrn: String, page: Option[Int])
+GET         /transaction/:ref                        controllers.GuaranteeTransactionController.displayTransaction(ref: String, page: Option[Int])
 GET         /download-csv                            controllers.DownloadCsvController.downloadCsv(disposition: Option[String], page: Option[Int])
 GET         /download-requested-csv                  controllers.DownloadCsvController.downloadRequestedCsv(disposition: Option[String], from: String, to: String,page: Option[Int])
 

@@ -17,7 +17,6 @@
 package controllers
 
 import connectors.{AccountStatusOpen, CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested, UnknownException}
-import crypto.UrlEncryption
 import models._
 import play.api.http.Status
 import play.api.inject.bind
@@ -44,12 +43,10 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         .thenReturn(Future.successful(Right(ganTransactions)))
 
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
-      when(mockUrlEncryption.decrypt(any)).thenReturn("19GB000056HG5w746")
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
-          bind[UrlEncryption].toInstance(mockUrlEncryption)
         )
         .configure(
           "application.guarantee-account.numberOfItemsPerPage" -> "10")
@@ -65,12 +62,10 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
     "return Page Not Found if the account does not exist" in new Setup {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(None))
-      when(mockUrlEncryption.decrypt(any)).thenReturn("19GB000056HG5w746")
 
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
-          bind[UrlEncryption].toInstance(mockUrlEncryption)
         )
         .build()
 
@@ -84,7 +79,6 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
     "display too may results page if more than 5000 securities are returned" in new Setup {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
-      when(mockUrlEncryption.decrypt(any)).thenReturn("19GB000056HG5w746")
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Left(TooManyTransactionsRequested)))
 
@@ -94,7 +88,6 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
-          bind[UrlEncryption].toInstance(mockUrlEncryption)
         )
         .build()
 
@@ -110,7 +103,6 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
     "display show transactions unavailable for runtime exception" in new Setup {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
-      when(mockUrlEncryption.decrypt(any)).thenReturn("19GB000056HG5w746")
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Left(UnknownException)))
 
@@ -118,7 +110,6 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
-          bind[UrlEncryption].toInstance(mockUrlEncryption)
         )
         .build()
 
@@ -132,7 +123,6 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
     "display no transactions avaialable for NoTransactionsAvailable" in new Setup {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
-      when(mockUrlEncryption.decrypt(any)).thenReturn("19GB000056HG5w746")
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Left(NoTransactionsAvailable)))
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
@@ -140,7 +130,6 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
-          bind[UrlEncryption].toInstance(mockUrlEncryption),
           bind[DateTimeService].toInstance(mockDateTimeService)
         )
         .build()
@@ -155,7 +144,6 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
     "display empty transactions when there is no MRN match the decrypted value" in new Setup {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
-      when(mockUrlEncryption.decrypt("19GB000056HG5w745")).thenReturn("19GB000056HG5w745")
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Right(ganTransactions)))
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
@@ -163,7 +151,6 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
-          bind[UrlEncryption].toInstance(mockUrlEncryption),
           bind[DateTimeService].toInstance(mockDateTimeService)
         )
         .build()
@@ -184,7 +171,6 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
     val mockDateTimeService = mock[DateTimeService]
     val mockCustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
     val mockAuditingService: AuditingService = mock[AuditingService]
-    val mockUrlEncryption: UrlEncryption = mock[UrlEncryption]
 
     val guaranteeAccount = GuaranteeAccount(someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(
       BigDecimal(123000),

@@ -91,7 +91,7 @@ object GuaranteeTransaction {
     (
       (__ \ "date").read[LocalDate] and
         (__ \ "movementReferenceNumber").read[String] and
-        (__ \ "secureMovementReferenceNumber").readNullable[String] and
+        (__ \ "movementReferenceNumberUUID").readNullable[String] and
         ((__ \ "balance").read[BigDecimal] or defaultToZero) and
         (__ \ "uniqueConsignmentReference").readNullable[String] and
         (__ \ "declarantEori").read[String] and
