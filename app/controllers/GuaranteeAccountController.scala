@@ -58,7 +58,7 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
       result.merge.recover {
         case NonFatal(t) =>
           log.error(s"Unable to retrieve account details: ${t.getMessage}")
-          Redirect(routes.GuaranteeAccountController.showAccountUnavailable())
+          Redirect(routes.GuaranteeAccountController.showAccountUnavailable)
       }
     }
 
@@ -95,7 +95,7 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
     result.merge.recover {
       case NonFatal(e) =>
         log.error(s"Unable to retrieve account details: ${e.getMessage}")
-        Redirect(routes.GuaranteeAccountController.showAccountUnavailable())
+        Redirect(routes.GuaranteeAccountController.showAccountUnavailable)
     }
   }
 

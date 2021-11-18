@@ -17,25 +17,18 @@
 package controllers
 
 import config.{AppConfig, ErrorHandler}
-import connectors.{CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested, UnknownException}
 import controllers.actions.IdentifierAction
 import forms.GuaranteeTransactionsRequestPageFormProvider
-import models.request.IdentifierRequest
-import models.{GuaranteeAccount, GuaranteeTransactionDates}
-import org.slf4j.LoggerFactory
+import models.GuaranteeTransactionDates
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.RequestedTransactionsCache
-import services.DateTimeService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import viewmodels._
 import views.html._
 
-import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.control.NonFatal
 
 class RequestTransactionsController @Inject()(
                                                identify: IdentifierAction,

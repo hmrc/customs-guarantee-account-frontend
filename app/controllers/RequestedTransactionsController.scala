@@ -59,7 +59,7 @@ class RequestedTransactionsController @Inject()(
 
     result.merge.recover { case e =>
       logger.error(s"Unable to retrieve account details: ${e.getMessage}")
-      Redirect(routes.GuaranteeAccountController.showAccountUnavailable())
+      Redirect(routes.GuaranteeAccountController.showAccountUnavailable)
     }
   }
 
@@ -67,7 +67,7 @@ class RequestedTransactionsController @Inject()(
     apiConnector.retrieveRequestedGuaranteeTransactionsDetail(account.number, onlyOpenItems = true, from, to).map {
       case Left(error) => error match {
         case NoTransactionsAvailable => Ok(noResults(new ResultsPageSummary(from, to)))
-        case TooManyTransactionsRequested => Ok(tooManyResults(new ResultsPageSummary(from, to), controllers.routes.RequestTransactionsController.onPageLoad().url))
+        case TooManyTransactionsRequested => Ok(tooManyResults(new ResultsPageSummary(from, to), controllers.routes.RequestTransactionsController.onPageLoad.url))
         case UnknownException => Ok(guaranteeAccountTransactionsNotAvailable(GuaranteeAccountViewModel(account, dateTimeService.localDateTime())))
       }
       case Right(_) => Ok(resultView(new ResultsPageSummary(from, to), controllers.routes.GuaranteeAccountController.showAccountDetails(None).url))
