@@ -16,10 +16,7 @@
 
 package viewmodels
 
-import models.{GuaranteeAccountTransaction, GuaranteeTransaction}
 import play.api.i18n.Messages
-
-import java.time.LocalDate
 
 /**
   * This Paginated trait should be mixed into any ViewModels that require pagination.

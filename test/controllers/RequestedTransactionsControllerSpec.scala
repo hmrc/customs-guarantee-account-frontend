@@ -16,18 +16,17 @@
 
 package controllers
 
-import connectors.{AccountStatusOpen, CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested, UnknownException}
-import models.{Amounts, DueDate, GeneralGuaranteeBalance, GuaranteeAccount, GuaranteeTransaction, GuaranteeTransactionDates, TaxType, TaxTypeGroup}
+import connectors._
+import models._
 import play.api.http.Status
 import play.api.inject.bind
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.RequestedTransactionsCache
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
 
-import java.time.{LocalDate, Month}
+import java.time._
 import scala.concurrent.Future
 
 class RequestedTransactionsControllerSpec extends SpecBase {
@@ -37,12 +36,12 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       .thenReturn(Future.successful(None))
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
-      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
+      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad.url)
 
     running(app) {
       val result = route(app, request).value
       status(result) mustBe SEE_OTHER
-      redirectLocation(result).value mustBe routes.RequestTransactionsController.onPageLoad().url
+      redirectLocation(result).value mustBe routes.RequestTransactionsController.onPageLoad.url
     }
   }
 
@@ -57,7 +56,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       .thenReturn(Future.successful(Left(NoTransactionsAvailable)))
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
-      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
+      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad.url)
 
     running(app) {
       val result = route(app, request).value
@@ -77,7 +76,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       .thenReturn(Future.successful(Left(TooManyTransactionsRequested)))
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
-      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
+      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad.url)
 
     running(app) {
       val result = route(app, request).value
@@ -97,7 +96,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       .thenReturn(Future.successful(Left(UnknownException)))
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
-      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
+      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad.url)
 
     running(app) {
       val result = route(app, request).value
@@ -118,7 +117,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       .thenThrow(new RuntimeException())
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
-      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
+      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad.url)
 
     running(app) {
       val result = route(app, request).value
