@@ -188,7 +188,7 @@ cf.guarantee-account.transactions.request.link.post = o gyfnod penodol o amser a
 cf.guarantee-account.transactions.request.title = Pa warantau cyfrif gwarant sydd eu hangen arnoch?
 cf.guarantee-account.transactions.request.heading = Pa warantau cyfrif gwarant sydd eu hangen arnoch?
 cf.guarantee-account.transactions.request.from =O
-cf.guarantee-account.transactions.request.date.hint = Er enghraifft, 3 2019
+cf.guarantee-account.transactions.request.date.hint = Er enghraifft, 3 2019.
 cf.guarantee-account.transactions.request.to = Hyd at
 cf.guarantee-account.transactions.request.continue = Yn eich blaen
 date.month=Mis
@@ -245,7 +245,7 @@ cf.pager.items=canlyniadau
 cf.guarantee-account.detail.expiry-dates=Dyddiadau dod i ben
 cf.guarantee-account.detail.mrn-link-prefix=Eich gwarant ar gyfer Cyfeirnod Symud
 cf.guarantee-account.your-securities.heading=Eich gwarantau
-cf.guarantee-account.your-securities.p=Rhestrwyd yn ôl dyddiad mewnforio
+cf.guarantee-account.your-securities.p=Rhestrwyd yn ôl dyddiad mewnforio.
 cf.guarantee-account.transactions.hidden-text=Mae gan {0} {1} gwarant
 
 cf.customs-financials-home.recruitment-banner-heading=Helpu ni i wella’r gwasanaeth hwn
