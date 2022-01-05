@@ -17,20 +17,16 @@
 @import viewmodels.ResultsPageSummary
 
 @this(
-    main_template: Layout
+    main_template: Layout,
+        h1: components.h1,
+        inset: components.inset
 )
 
 @(summary: ResultsPageSummary)(implicit request: Request[_], messages: Messages)
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")),
     backLink = Some(controllers.routes.RequestTransactionsController.onPageLoad.url)) {
-    <div class="govuk-form-group">
-        <h1 class="govuk-heading-xl">
-            @messages("cf.guarantee-account.transactions.result.no.transactions")
-        </h1>
-        <div class="govuk-inset-text">
-            @messages("cf.guarantee-account.transactions.result.no.data")
-            <span>@summary.rows.value.content.asHtml</span>
-        </div>
-    </div>
+
+    @h1("cf.guarantee-account.transactions.result.no.transactions", h1Class = "govuk-heading-xl")
+    @inset("cf.guarantee-account.transactions.result.no.data", additionalContent = Some(summary.rows.value.content.asHtml.toString))
 }

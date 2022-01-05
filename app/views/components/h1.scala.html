@@ -16,6 +16,6 @@
 
 @this()
 
-@(msg: String, id: Option[String])(implicit messages: Messages)
+@(msg: String, id: Option[String] = None, h1Class: String = "govuk-heading-l")(implicit messages: Messages)
 
-<h1 @{id.fold("")(id => s"id=$id")} class="govuk-heading-l">@messages(msg)</h1>
+<h1 @{id.fold("")(id => s"id=$id")} class="@h1Class">@messages(msg)</h1>

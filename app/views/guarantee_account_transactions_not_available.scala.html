@@ -20,23 +20,12 @@
 
 @this(
         main_template: Layout,
-        h2: components.h2,
-        p: components.p
+        inset: components.inset
 )
 
 @(accountModel: GuaranteeAccountViewModel)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(appConfig.customsFinancialsFrontendHomepage)) {
-
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        @guarantee_account_summary(accountModel)
-
-        <div class="govuk-inset-text govuk-!-margin-bottom-9" id="no-transactions-available">
-            @messages("cf.guarantee-account.detail.transactions-not-available")
-        </div>
-
-    </div>
-
-</div>
+    @guarantee_account_summary(accountModel, showBalance = true)
+    @inset("cf.guarantee-account.detail.transactions-not-available")
 }

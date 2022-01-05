@@ -18,39 +18,19 @@
 
 @this(
         main_template: Layout,
-        govukSummaryList: GovukSummaryList
+        govukSummaryList: GovukSummaryList,
+        h1: components.h1,
+        p: components.p,
+        link: components.link,
+        summaryList: components.summaryList
 )
 
 @(summary: ResultsPageSummary, returnLink: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")),
     backLink = Some(controllers.routes.RequestTransactionsController.onPageLoad.url)) {
-
-    <div class="govuk-form-group">
-        <h1 class="govuk-heading-xl">
-        @messages("cf.guarantee-account.transactions.result.transaction")
-        </h1>
-        <p class="govuk-body">@messages("cf.guarantee-account.transactions.result.download.transactions")</p>
-        <dl class="govuk-summary-list govuk-!margin-top-7 govuk-!-padding-bottom-7">
-            <div class="govuk-summary-list__row govuk-!-margin-bottom-9">
-                <dt class="govuk-summary-list__value">
-                @summary.rows.value.content.asHtml
-                </dt>
-                <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link" href="@summary.rows.actions.head.items.head.href">
-                        <span class="govuk-visually-hidden"> @summary.rows.actions.head.items.head.visuallyHiddenText</span>
-                        <span> @messages("cf.guarantee-account.detail.csv")</span>
-                    </a>
-                </dd>
-            </div>
-        </dl>
-
-        <p class="govuk-body">
-            <a href="@{
-                returnLink
-            }" class="govuk-link">
-            @messages("cf.guarantee-account.transactions.request.link.label")
-            </a>
-        </p>
-    </div>
+        @h1("cf.guarantee-account.transactions.result.transaction", h1Class = "govuk-heading-xl")
+        @p("cf.guarantee-account.transactions.result.download.transactions")
+        @summaryList(summary)
+        @link("cf.guarantee-account.transactions.request.link.label", returnLink)
 }

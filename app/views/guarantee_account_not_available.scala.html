@@ -18,23 +18,13 @@
 
 @this(
         main_template: Layout,
-        h2: components.h2,
-        p: components.p
+        h1: components.h1,
+        inset: components.inset
 )
 
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(appConfig.customsFinancialsFrontendHomepage)) {
-
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl">
-            @messages("cf.guarantee-account.detail.title")
-        </h1>
-
-        <div class="govuk-inset-text govuk-!-margin-bottom-9" id="account-not-available">
-            @messages("cf.guarantee-account.detail.account-not-available")
-        </div>
-    </div>
-</div>
+    @h1("cf.guarantee-account.detail.title", h1Class = "govuk-heading-xl")
+    @inset("cf.guarantee-account.detail.account-not-available")
 }

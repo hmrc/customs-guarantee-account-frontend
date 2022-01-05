@@ -16,25 +16,20 @@
 
 @this(
         main_template: Layout,
-        h2: components.h2,
-        p: components.p
+        h1: components.h1,
+        p: components.p,
+        link: components.link
 )
 
 
 @(page: Option[Int])(implicit request: Request[_], messages: Messages)
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.unable-download-csv")), helpAndSupport = false) {
 
-    <h1 class="govuk-heading-l">
-        @messages("cf.guarantee-account.detail.unable-download-csv")
-    </h1>
-
-    <p class="govuk-body">
-        @messages("cf.guarantee-account.detail.try-again-later")
-    </p>
-
-    <p class="govuk-body">
-        <a href="@{controllers.routes.GuaranteeAccountController.showAccountDetails(page).url}" class="govuk-link govuk-link--no-visited-state">@messages("cf.guarantee-account-detail.back-to-guarantee-account")</a>
-    </p>
-
-
+    @h1("cf.guarantee-account.detail.unable-download-csv")
+    @p("cf.guarantee-account.detail.try-again-later")
+    @link(
+        linkMessage = "cf.guarantee-account-detail.back-to-guarantee-account",
+        location = controllers.routes.GuaranteeAccountController.showAccountDetails(page).url,
+        linkClass = "govuk-link govuk-link--no-visited-state"
+    )
 }

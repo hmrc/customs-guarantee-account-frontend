@@ -14,11 +14,19 @@
  * limitations under the License.
  *@
 
-@this(govukInsetText: GovukInsetText)
+@this(hmrcNewTabLink: HmrcNewTabLink)
 
-@(msg: String, id: Option[String] = None, additionalContent: Option[String] = None)(implicit messages: Messages)
+@(linkMessage: String, href: String, preLinkMessage: Option[String] = None)(implicit messages: Messages, appConfig: AppConfig)
 
-@govukInsetText(InsetText(
-    content = Text(messages(msg) + additionalContent.map(v => s" $v").getOrElse("")),
-    id = id
-))
+<p class="govuk-body">
+    @preLinkMessage.map(messages(_))
+    @hmrcNewTabLink(
+        NewTabLink(
+            language = Some(messages.lang.toString),
+            classList = Some("govuk-link"),
+            href=Some(href),
+            text=messages(linkMessage)
+        )
+    )
+    .
+</p>

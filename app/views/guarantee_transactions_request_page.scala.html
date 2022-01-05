@@ -15,48 +15,43 @@
  *@
 
 @this(
-main_template: Layout,
-formHelper: FormWithCSRF,
-inputDate: components.inputDate,
-button: components.button,
-errorSummary: components.errorSummary,
-h1: components.h1,
-p:components.p
+        main_template: Layout,
+        formHelper: FormWithCSRF,
+        inputDate: components.inputDate,
+        button: components.button,
+        inset: components.inset,
+        errorSummary: components.errorSummary,
+        h1: components.h1,
+        p: components.p
 )
 
 @(form: Form[_])(implicit request: Request[_], messages: Messages)
 
 @main_template(
- pageTitle =  Some(s"${messages("cf.guarantee-account.transactions.request.title")} - ${messages("cf.guarantee-account.detail.title")}"),
- backLink = Some(controllers.routes.GuaranteeAccountController.showAccountDetails(None).url)
+    pageTitle = Some(s"${messages("cf.guarantee-account.transactions.request.title")} - ${messages("cf.guarantee-account.detail.title")}"),
+    backLink = Some(controllers.routes.GuaranteeAccountController.showAccountDetails(None).url)
 ) {
 
-@formHelper(action = controllers.routes.RequestTransactionsController.onSubmit(), 'autoComplete -> "off") {
-@errorSummary(form.errors, None)
-
-@h1("cf.guarantee-account.transactions.request.heading", None)
- <div id="six-months-hint" class="govuk-inset-text govuk-!-margin-top-4 govuk-!-margin-bottom-6">
-  @messages("cf.guarantee-account.transactions.request.hint")
- </div>
-
-@inputDate(
-form,
-messages("cf.guarantee-account.transactions.request.from"),
-hintText = Some(messages("cf.guarantee-account.transactions.request.date.hint")),
-id = "start",
-legendAsPageHeading = false,
-legendHiddenContent = Some(messages("cf.guarantee-account.transactions.request.whichStartDate.hidden"))
-)
-
-@inputDate(
-form,
-messages("cf.guarantee-account.transactions.request.to"),
-hintText = Some(messages("cf.guarantee-account.transactions.request.date.hint")),
-id = "end",
-legendAsPageHeading = false,
-legendHiddenContent = Some(messages("cf.guarantee-account.transactions.request.whichEndDate.hidden"))
-)
-
-@button(messages("cf.guarantee-account.transactions.request.continue"))
-}
+    @formHelper(action = controllers.routes.RequestTransactionsController.onSubmit(), 'autoComplete -> "off") {
+        @errorSummary(form.errors, None)
+        @h1("cf.guarantee-account.transactions.request.heading", None)
+        @inset("cf.guarantee-account.transactions.request.hint")
+        @inputDate(
+            form,
+            messages("cf.guarantee-account.transactions.request.from"),
+            hintText = Some(messages("cf.guarantee-account.transactions.request.date.hint")),
+            id = "start",
+            legendAsPageHeading = false,
+            legendHiddenContent = Some(messages("cf.guarantee-account.transactions.request.whichStartDate.hidden"))
+        )
+        @inputDate(
+            form,
+            messages("cf.guarantee-account.transactions.request.to"),
+            hintText = Some(messages("cf.guarantee-account.transactions.request.date.hint")),
+            id = "end",
+            legendAsPageHeading = false,
+            legendHiddenContent = Some(messages("cf.guarantee-account.transactions.request.whichEndDate.hidden"))
+        )
+        @button(messages("cf.guarantee-account.transactions.request.continue"))
+    }
 }
