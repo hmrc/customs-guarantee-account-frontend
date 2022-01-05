@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 @import helpers.Formatters
 @import java.time.LocalDate
 @import play.twirl.api.HtmlFormat
+@import views.html.components.guarantee_account_summary
 
 @this(
         main_template: Layout,
@@ -31,13 +32,7 @@
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(routes.GuaranteeAccountController.showAccountDetails(page = pageNumber).url)) {
 
-
-    <header class="hmrc-page-heading govuk-!-margin-bottom-0" id="account-summary">
-        <h1 class="govuk-heading-xl">@messages("cf.guarantee-account.detail.title")</h1>
-        <p class="govuk-caption-xl hmrc-caption-xl" id="account-number">
-        @messages("cf.guarantee-account.detail.account-number", accountModel.account.number)
-        </p>
-    </header>
+    @guarantee_account_summary(accountModel, showBalance = false)
 
     @h2(messages("cf.guarantee-account.your-security.heading"), Some("securities-header"), classes = "govuk-heading-l govuk-!-margin-bottom-5 govuk-!-padding-top-0")
 

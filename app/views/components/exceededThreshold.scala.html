@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models
+@this()
 
-package object domain {
-  type EORI = String
-  type LinkId = String
-  type GAN = String
-}
+@(firstMessage: String, secondMessage:String)(implicit messages: Messages)
+
+<div class="govuk-inset-text govuk-!-margin-top-9" id="too-many-transactions">
+    <p class="govuk-body">@messages(firstMessage)</p>
+    <p class="govuk-body">@messages(secondMessage)</p>
+</div>

@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 main_template: Layout,
 h2: components.h2,
 p: components.p,
+link: components.link,
 inset: components.inset,
 guarantee_c18_reference: guarantee_c18_reference,
 guarantee_transactions_table: guarantee_transactions_table
@@ -36,26 +37,25 @@ guarantee_transactions_table: guarantee_transactions_table
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(appConfig.customsFinancialsFrontendHomepage)) {
 
-    @guarantee_account_summary(accountModel)
+    @guarantee_account_summary(accountModel, showBalance = true)
 
     @if(transactionModel.allItems.nonEmpty) {
         @guarantee_c18_reference(transactionModel)
-        @h2(messages("cf.guarantee-account.your-securities.heading"), Some("securities-header"), classes = "govuk-heading-l govuk-!-margin-bottom-0 govuk-!-padding-top-7")
-        @p(messages("cf.guarantee-account.your-securities.p"), "govuk-body govuk-hint govuk-!-margin-bottom-2 govuk-!-margin-top-2")
-
-        <p id="download" class="govuk-body">
-            <a id="download-link" class="govuk-link" href="@transactionModel.downloadUrl">@messages("cf.guarantee-account.detail.download") CSV</a>
-        </p>
+        @h2("cf.guarantee-account.your-securities.heading", Some("securities-header"), classes = "govuk-heading-l govuk-!-margin-bottom-0 govuk-!-padding-top-7")
+        @p("cf.guarantee-account.your-securities.p", "govuk-body govuk-hint govuk-!-margin-bottom-2 govuk-!-margin-top-2")
+        @link("cf.guarantee-account.detail.download", transactionModel.downloadUrl, Some("download-link"), pId = Some("download"))
         @guarantee_transactions_table(transactionModel)
         @pager(transactionModel)
     } else {
       @inset("cf.guarantee-account.detail.no-transactions", Some("no-guarantee-transactions"))
     }
 
-    <h2 id="missing-documents-guidance-heading" class="govuk-heading-m govuk-!-margin-top-9">@messages("cf.guarantee-account.transactions.request.link.heading")</h2>
-    <p class="govuk-body govuk-!-padding-bottom-7">
-        <a class="govuk-link" href="@controllers.routes.RequestTransactionsController.onPageLoad">@messages("cf.guarantee-account.transactions.request.link")</a>
-        @messages("cf.guarantee-account.transactions.request.link.post")
-    </p>
+    @h2("cf.guarantee-account.transactions.request.link.heading", Some("missing-documents-guidance-heading"), "govuk-heading-m govuk-!-margin-top-9")
 
+    @link(
+        linkMessage = "cf.guarantee-account.transactions.request.link",
+        location = controllers.routes.RequestTransactionsController.onPageLoad.url,
+        pClass = "govuk-body govuk-!-padding-bottom-7",
+        postLinkMessage = Some("cf.guarantee-account.transactions.request.link.post")
+    )
 }
