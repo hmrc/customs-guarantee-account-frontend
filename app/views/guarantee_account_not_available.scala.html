@@ -26,5 +26,5 @@
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(appConfig.customsFinancialsFrontendHomepage)) {
     @h1("cf.guarantee-account.detail.title", h1Class = "govuk-heading-xl")
-    @inset("cf.guarantee-account.detail.account-not-available")
+    @inset("cf.guarantee-account.detail.account-not-available", id = Some("account-not-available"))
 }

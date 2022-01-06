@@ -27,5 +27,5 @@
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(appConfig.customsFinancialsFrontendHomepage)) {
     @guarantee_account_summary(accountModel, showBalance = true)
-    @inset("cf.guarantee-account.detail.transactions-not-available")
+    @inset("cf.guarantee-account.detail.transactions-not-available", id = Some("no-transactions-available"))
 }
