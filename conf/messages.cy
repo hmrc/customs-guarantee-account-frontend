@@ -214,6 +214,16 @@ cf.form.error.startDate.date-earlier-than-system-start-date=Mae’n rhaid i’r 
 cf.form.error.endDate.date-earlier-than-system-start-date=Mae’n rhaid i’r dyddiad ‘i’ fod ar neu ar ôl mis Hydref 2019
 cf.form.error.start.date-number-invalid=Nodwch ddyddiad ‘o’ dilys
 cf.form.error.end.date-number-invalid=Nodwch ddyddiad ‘i’ dilys
+
+cf.form.error.start.month.date-number-invalid=Nodwch o ba fis yr ydych am chwilio
+cf.form.error.start.year.date-number-invalid=Nodwch o ba flwyddyn yr ydych am chwilio
+cf.form.error.end.month.date-number-invalid=Nodwch hyd at ba fis yr ydych am chwilio
+cf.form.error.end.year.date-number-invalid=Nodwch hyd at ba flwyddyn rydych am chwilio
+cf.form.error.start.date-missing=Nodwch o ba fis a blwyddyn yr ydych am chwilio
+cf.form.error.end.date-missing=Nodwch hyd at ba fis a blwyddyn rydych am chwilio
+cf.form.error.month.invalid=Nodwch rif rhwng 1 a 12
+cf.form.error.year.invalid=Nodwch flwyddyn go iawn
+
 cf.form.error.start-future-date=Ni all y dyddiad ‘o’ fod yn y dyfodol
 cf.form.error.end-future-date=Ni all y dyddiad ‘i’ fod yn y dyfodol
 cf.form.error.start-after-end=Ni all y dyddiad ‘o’ fod ar ôl y dyddiad ‘i’

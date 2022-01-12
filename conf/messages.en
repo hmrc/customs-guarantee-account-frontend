@@ -221,6 +221,16 @@ cf.form.error.startDate.date-earlier-than-system-start-date=The from date must b
 cf.form.error.endDate.date-earlier-than-system-start-date=The to date must be on or after October 2019
 cf.form.error.start.date-number-invalid=Enter a valid from date
 cf.form.error.end.date-number-invalid=Enter a valid to date
+
+cf.form.error.start.month.date-number-invalid=Enter the month you want to search from
+cf.form.error.start.year.date-number-invalid=Enter the year you want to search from
+cf.form.error.start.date-missing=Enter the month and year you want to search from
+cf.form.error.end.month.date-number-invalid=Enter the month you want to search to
+cf.form.error.end.year.date-number-invalid=Enter the year you want to search to
+cf.form.error.end.date-missing=Enter the month and year you want to search to
+cf.form.error.month.invalid=Enter a number between 1 and 12
+cf.form.error.year.invalid=Enter a real year
+
 cf.form.error.start-future-date=The from date cannot be in the future
 cf.form.error.end-future-date=The to date cannot be in the future
 cf.form.error.start-after-end=The from date cannot be after the to date
@@ -256,4 +266,4 @@ cf.guarantee-account.transactions.hidden-text={0} has {1} securities
 cf.customs-financials-home.recruitment-banner-heading=Help us improve this service
 cf.customs-financials-home.recruitment-banner-link-text=Sign up to be a potential user research participant
 cf.customs-financials-home.recruitment-banner.close=Close
-cf.customs-financials-home.recruitment-banner.hidden-text.close=the help us improve this service banner
+cf.customs-financials-home.recruitment-banner.hidden-text.close=the help us improve this service banner``
