@@ -28,7 +28,7 @@ class GuaranteeTransactionsRequestPageFormProvider @Inject()(implicit clock: Clo
   def apply(): Form[GuaranteeTransactionDates] = {
     Form(mapping(
       "start" -> localDate(
-        invalidKey = "cf.form.error.end.date-number-invalid",
+        invalidKey = "cf.form.error.start.date-number-invalid",
         invalidMonth = "cf.form.error.month.invalid",
         invalidYear = "cf.form.error.year.invalid",
         emptyStartMonth = "cf.form.error.start.month.date-number-invalid",

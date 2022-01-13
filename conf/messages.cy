@@ -198,7 +198,7 @@ cf.guarantee-account.transactions.result.transaction=Gwarantau eich cyfrif gwara
 cf.guarantee-account.transactions.result.download.transactions=Lawrlwythwch eich gwarantau – bydd eich chwiliad yn cael ei golli pan fyddwch yn cau ffenestr eich porwr.
 cf.guarantee-account.detail.csv=CSV
 cf.guarantee-account.transactions.request.link.label=Yn ôl i’r cyfrif gwarant
-cf.guarantee-account.transactions.request.hint=Bydd gwarantau yn cael eu chwilio yn ôl y dyddiad mewnforio.
+cf.guarantee-account.transactions.request.hint=Gallwch wneud cais am warantau cyfrif gwarant sy’n dyddio’n ôl i fis Hydref 2019.
 cf.guarantee-account.transactions.result.too.many.results=Mae gormod o ganlyniadau yn sgil eich chwiliad
 cf.guarantee-account.transactions.result.between=Gwnaethoch ofyn am warantau cyfrif gwarant rhwng
 cf.guarantee-account.transactions.result.search.again=Chwiliwch eto gydag ystod lai o ran dyddiadau
@@ -210,7 +210,7 @@ cf.guarantee-account.transactions.request.whichStartDate.hidden = ar gyfer pa dd
 
 cf.form.error.start.date-too-far-in-past=Ni all y dyddiad ‘o’ fod yn fwy na 6 o flynyddoedd ers nawr.
 cf.form.error.end.date-too-far-in-past=Ni all y dyddiad ‘i’ fod yn fwy na 6 o flynyddoedd ers nawr.
-cf.form.error.startDate.date-earlier-than-system-start-date=Mae’n rhaid i’r dyddiad ‘o’ fod ar neu ar ôl mis Hydref 2019
+cf.form.error.startDate.date-earlier-than-system-start-date=Ni allwch nodi dyddiad cyn mis Hydref 2019
 cf.form.error.endDate.date-earlier-than-system-start-date=Mae’n rhaid i’r dyddiad ‘i’ fod ar neu ar ôl mis Hydref 2019
 cf.form.error.start.date-number-invalid=Nodwch ddyddiad ‘o’ dilys
 cf.form.error.end.date-number-invalid=Nodwch ddyddiad ‘i’ dilys
@@ -225,7 +225,7 @@ cf.form.error.month.invalid=Nodwch rif rhwng 1 a 12
 cf.form.error.year.invalid=Nodwch flwyddyn go iawn
 
 cf.form.error.start-future-date=Ni all y dyddiad ‘o’ fod yn y dyfodol
-cf.form.error.end-future-date=Ni all y dyddiad ‘i’ fod yn y dyfodol
+cf.form.error.end-future-date=Mae’n rhaid i’r dyddiad rydych am chwilio hyd ato fod heddiw neu yn y gorffennol
 cf.form.error.start-after-end=Ni all y dyddiad ‘o’ fod ar ôl y dyddiad ‘i’
 cf.form.error.end-before-start=Ni all y dyddiad ‘i’ fod cyn y dyddiad ‘o’
 
