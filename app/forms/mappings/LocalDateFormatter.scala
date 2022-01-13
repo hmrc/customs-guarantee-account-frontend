@@ -38,15 +38,17 @@ private[mappings] class LocalDateFormatter(
   private val fieldKeys: List[String] = List("month", "year")
 
   private def toDate( key: String, month: Int, year: Int ) =
-    Try(LocalDate.of(year, month, 1)) match {
-      case Success(date) =>
-        Right(LocalDate.of(year, month, if (endOfMonth) date.lengthOfMonth() else 1))
-      case Failure(_) =>
-        key match {
-          case "month" => Left(Seq(FormError(key, invalidMonth, args)))
-          case _ => Left(Seq(FormError(key, invalidYear, args)))
+    validMonth(month) match {
+      case true =>
+        Try(LocalDate.of(year, month, 1)) match {
+          case Success(date) =>
+            Right(date)
+          case Failure(_) =>
+            Left(Seq(FormError(key, invalidYear, args)))
         }
+      case _ => Left(Seq(FormError(key, invalidMonth, args)))
     }
+
 
   private def formatDate( key: String, data: Map[String, String] ): Either[Seq[FormError], LocalDate] = {
 
@@ -102,6 +104,11 @@ private[mappings] class LocalDateFormatter(
         }
     }
   }
+
+  private def validMonth(month: Int): Boolean = {
+    month > 0 && month < 13
+    }
+
 
   override def unbind( key: String, value: LocalDate ): Map[String, String] =
     Map(
