@@ -23,7 +23,6 @@ import java.time.LocalDate
 import scala.util.{Failure, Success, Try}
 
 private[mappings] class LocalDateFormatter(
-                                            invalidKey: String,
                                             invalidMonth: String,
                                             invalidYear: String,
                                             emptyStartMonth: String,
@@ -37,12 +36,12 @@ private[mappings] class LocalDateFormatter(
                                           ) extends Formatter[LocalDate] with Formatters {
   private val fieldKeys: List[String] = List("month", "year")
 
-  private def toDate( key: String, month: Int, year: Int ) =
+  private def toDate( key: String, month: Int, year: Int ): Either[Seq[FormError], LocalDate] =
     validMonth(month) match {
       case true =>
         Try(LocalDate.of(year, month, 1)) match {
           case Success(date) =>
-            Right(date)
+            Right(LocalDate.of(year, month, if (endOfMonth) date.lengthOfMonth() else 1))
           case Failure(_) =>
             Left(Seq(FormError(key, invalidYear, args)))
         }

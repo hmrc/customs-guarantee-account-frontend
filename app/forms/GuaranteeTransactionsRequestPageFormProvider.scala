@@ -28,7 +28,6 @@ class GuaranteeTransactionsRequestPageFormProvider @Inject()(implicit clock: Clo
   def apply(): Form[GuaranteeTransactionDates] = {
     Form(mapping(
       "start" -> localDate(
-        invalidKey = "cf.form.error.start.date-number-invalid",
         invalidMonth = "cf.form.error.month.invalid",
         invalidYear = "cf.form.error.year.invalid",
         emptyStartMonth = "cf.form.error.start.month.date-number-invalid",
@@ -43,7 +42,6 @@ class GuaranteeTransactionsRequestPageFormProvider @Inject()(implicit clock: Clo
         .verifying(checkDates("cf.form.error.startDate.date-earlier-than-system-start-date","cf.form.error.start.date-too-far-in-past")),
 
       "end" -> localDate(
-        invalidKey = "cf.form.error.end.date-number-invalid",
         invalidMonth = "cf.form.error.month.invalid",
         invalidYear = "cf.form.error.year.invalid",
         emptyStartMonth = "cf.form.error.start.month.date-number-invalid",
