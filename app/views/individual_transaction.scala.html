@@ -40,12 +40,18 @@
         attributes = Map("id" -> "mrn"),
         rows = Seq(
             SummaryListRow(
-                key = Key(content = Text(messages("cf.guarantee-account.detail.movement-reference-number"))),
+                key = Key(content = HtmlContent(
+                    s"""<abbr title="${messages("cf.guarantee-account.detail.movement-reference-number.abbr")}">
+                         ${messages("cf.guarantee-account.detail.movement-reference-number")}
+                         </abbr>""")),
                 value = Value(content = HtmlContent(transaction.movementReferenceNumber)),
                 actions = None
             ),
             SummaryListRow(
-                key = Key(content = Text(messages("cf.guarantee-account.detail.unique-consignment-reference"))),
+                key = Key(content = HtmlContent(
+                    s"""<abbr title="${messages("cf.guarantee-account.detail.unique-consignment-reference.abbr")}">
+                         ${messages("cf.guarantee-account.detail.unique-consignment-reference")}
+                         </abbr>""")),
                 value = Value(content = HtmlContent(Html(transaction.uniqueConsignmentReference))),
                 actions = None
             ),
@@ -94,12 +100,18 @@
         attributes = Map("id" -> "eori"),
         rows = Seq(
             SummaryListRow(
-                key = Key(content = Text(messages("cf.guarantee-account.detail.consignee-eori"))),
+                key = Key(content = HtmlContent(
+                    s"""<abbr title="${messages("cf.guarantee-account.detail.consignee-eori.abbr")}">
+                         ${messages("cf.guarantee-account.detail.consignee-eori")}
+                         </abbr>""")),
                 value = Value(content = HtmlContent(transaction.consigneeEori)),
                 actions = None
             ),
             SummaryListRow(
-                key = Key(content = Text(messages("cf.guarantee-account.detail.declarant-eori"))),
+                key = Key(content = HtmlContent(
+                    s"""<abbr title="${messages("cf.guarantee-account.detail.declarant-eori.abbr")}">
+                         ${messages("cf.guarantee-account.detail.declarant-eori")}
+                         </abbr>""")),
                 value = Value(content = HtmlContent(transaction.declarantEori)),
                 actions = None
             )
