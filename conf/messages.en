@@ -53,7 +53,7 @@ cf.guarantee-account-detail.back-to-guarantee-account=Back to General Guarantee 
 cf.guarantee-account.detail.account=Account
 cf.guarantee-account-detail.exceeded-threshold.p1=There are too many open securities to display consecutively.
 cf.guarantee-account-detail.exceeded-threshold.p2=You can view your open and closed securities from a narrower date period by using the search feature below.
-cf.guarantee-account.detail.csv-definition=Comma-Separated Values. Can be used with most spreadsheet programs.
+cf.guarantee-account.detail.csv-definition=Download CSV file.
 cf.guarantee-account.detail.amount=Amount
 cf.guarantee-account.detail.c18=C18
 
@@ -202,7 +202,7 @@ date.month=Month
 date.year=Year
 date.range = {0} to {1}
 cf.guarantee-account.transactions.result.transaction=Your guarantee account securities
-cf.guarantee-account.transactions.result.download.transactions=Please download your securities, your search will be lost when you close the browser window.
+cf.guarantee-account.transactions.result.download.transactions=You must download your securities CSV before you close your browser window.
 cf.guarantee-account.detail.csv=CSV
 cf.guarantee-account.transactions.request.link.label=Back to guarantee account
 cf.guarantee-account.transactions.request.hint=Securities will be searched by date of import.

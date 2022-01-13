@@ -52,7 +52,7 @@ cf.guarantee-account-detail.back-to-guarantee-account=Yn ôl i’r cyfrif gwaran
 cf.guarantee-account.detail.account=Cyfrif
 cf.guarantee-account-detail.exceeded-threshold.p1=Mae gormod o warantau agored i’w harddangos yn olynol.
 cf.guarantee-account-detail.exceeded-threshold.p2=Gallwch fwrw golwg dros eich gwarantau agored a chaeedig o gyfnod byrrach drwy ddefnyddio’r nodwedd chwilio isod.
-cf.guarantee-account.detail.csv-definition=Gwerthoedd wedi’u gwahanu gan goma. Gellir defnyddio CSV gyda’r rhan fwyaf o raglenni taenlen.
+cf.guarantee-account.detail.csv-definition=Lawrlwytho’r ffeil CSV.
 
 # Guarantee Account CSV headings (mapped dynamically from case class fields)
 cf.guarantee-account.csv.movementReferenceNumber=Cyfeirnod Symud (MRN)
@@ -195,7 +195,7 @@ date.month=Mis
 date.year=Blwyddyn
 date.range = {0} i fis {1}
 cf.guarantee-account.transactions.result.transaction=Gwarantau eich cyfrif gwarant
-cf.guarantee-account.transactions.result.download.transactions=Lawrlwythwch eich gwarantau – bydd eich chwiliad yn cael ei golli pan fyddwch yn cau ffenestr eich porwr.
+cf.guarantee-account.transactions.result.download.transactions=Mae’n rhaid i chi lawrlwytho’ch CSV gwarantau cyn i chi gau ffenestr eich porwr.
 cf.guarantee-account.detail.csv=CSV
 cf.guarantee-account.transactions.request.link.label=Yn ôl i’r cyfrif gwarant
 cf.guarantee-account.transactions.request.hint=Bydd gwarantau yn cael eu chwilio yn ôl y dyddiad mewnforio.
