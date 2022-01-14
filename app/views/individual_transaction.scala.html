@@ -18,7 +18,7 @@
 @import helpers.Formatters
 @import java.time.LocalDate
 @import play.twirl.api.HtmlFormat
-@import views.html.components.guarantee_account_summary
+@import views.html.components.security_header
 
 @this(
         main_template: Layout,
@@ -32,9 +32,7 @@
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(routes.GuaranteeAccountController.showAccountDetails(page = pageNumber).url)) {
 
-    @guarantee_account_summary(accountModel, showBalance = false)
-
-    @h2(messages("cf.guarantee-account.your-security.heading"), Some("securities-header"), classes = "govuk-heading-l govuk-!-margin-bottom-5 govuk-!-padding-top-0")
+    @security_header(accountModel)
 
     @govukSummaryList(SummaryList(
         attributes = Map("id" -> "mrn"),
