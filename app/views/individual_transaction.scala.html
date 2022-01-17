@@ -99,16 +99,18 @@
         rows = Seq(
             SummaryListRow(
                 key = Key(content = HtmlContent(
-                    s"""<abbr title="${messages("cf.guarantee-account.detail.consignee-eori.abbr")}">
-                         ${messages("cf.guarantee-account.detail.consignee-eori")}
-                         </abbr>""")),
+                    s"""${messages("cf.guarantee-account.detail.consignee")}
+                         <abbr title="${messages("cf.guarantee-account.detail.eori.abbr")}">
+                            ${messages("cf.guarantee-account.detail.eori")}
+                         </abbr>""") ),
                 value = Value(content = HtmlContent(transaction.consigneeEori)),
                 actions = None
             ),
             SummaryListRow(
                 key = Key(content = HtmlContent(
-                    s"""<abbr title="${messages("cf.guarantee-account.detail.declarant-eori.abbr")}">
-                         ${messages("cf.guarantee-account.detail.declarant-eori")}
+                    s"""${messages("cf.guarantee-account.detail.declarant")}
+                        <abbr title="${messages("cf.guarantee-account.detail.eori.abbr")}">
+                         ${messages("cf.guarantee-account.detail.eori")}
                          </abbr>""")),
                 value = Value(content = HtmlContent(transaction.declarantEori)),
                 actions = None
