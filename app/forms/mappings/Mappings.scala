@@ -24,8 +24,16 @@ import java.time.LocalDate
 trait Mappings extends Formatters with Constraints {
 
   protected def localDate(
-                           invalidKey: String,
+                           invalidMonth: String,
+                           invalidYear: String,
+                           emptyStartMonth: String,
+                           emptyStartYear: String,
+                           emptyEndMonth: String,
+                           emptyEndYear: String,
+                           emptyStartDate: String,
+                           emptyEndDate: String,
                            endOfMonth: Boolean,
                            args: Seq[String]): FieldMapping[LocalDate] =
-    of(new LocalDateFormatter(invalidKey, endOfMonth, args))
+    of(new LocalDateFormatter(invalidMonth, invalidYear, emptyStartMonth,
+      emptyStartYear, emptyEndMonth, emptyEndYear, emptyStartDate, emptyEndDate, endOfMonth, args))
 }

@@ -20,7 +20,6 @@ import forms.mappings.Mappings
 import models.GuaranteeTransactionDates
 import play.api.data.Form
 import play.api.data.Forms.mapping
-
 import java.time.Clock
 import javax.inject.Inject
 
@@ -29,14 +28,28 @@ class GuaranteeTransactionsRequestPageFormProvider @Inject()(implicit clock: Clo
   def apply(): Form[GuaranteeTransactionDates] = {
     Form(mapping(
       "start" -> localDate(
-        invalidKey = "cf.form.error.start.date-number-invalid",
+        invalidMonth = "cf.form.error.month.invalid",
+        invalidYear = "cf.form.error.year.invalid",
+        emptyStartMonth = "cf.form.error.start.month.date-number-invalid",
+        emptyStartYear = "cf.form.error.start.year.date-number-invalid",
+        emptyStartDate = "cf.form.error.start.date-missing",
+        emptyEndMonth = "cf.form.error.end.month.date-number-invalid",
+        emptyEndYear = "cf.form.error.end.year.date-number-invalid",
+        emptyEndDate = "cf.form.error.end.date-missing",
         endOfMonth = false,
         args = Seq.empty
       ).verifying(equalToOrBeforeToday("cf.form.error.start-future-date"))
         .verifying(checkDates("cf.form.error.startDate.date-earlier-than-system-start-date","cf.form.error.start.date-too-far-in-past")),
 
       "end" -> localDate(
-        invalidKey = "cf.form.error.end.date-number-invalid",
+        invalidMonth = "cf.form.error.month.invalid",
+        invalidYear = "cf.form.error.year.invalid",
+        emptyStartMonth = "cf.form.error.start.month.date-number-invalid",
+        emptyStartYear = "cf.form.error.start.year.date-number-invalid",
+        emptyStartDate = "cf.form.error.start.date-missing",
+        emptyEndMonth = "cf.form.error.end.month.date-number-invalid",
+        emptyEndYear = "cf.form.error.end.year.date-number-invalid",
+        emptyEndDate = "cf.form.error.end.date-missing",
         endOfMonth = true,
         args = Seq.empty
       ).verifying(equalToOrBeforeToday("cf.form.error.end-future-date"))
