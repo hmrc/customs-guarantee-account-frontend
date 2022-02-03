@@ -107,6 +107,16 @@ timeout.message=Am resymau diogelwch, cewch eich allgofnodi oír gwasanaeth hwn 
 timeout.keepAlive=Parhau i fod wediích mewngofnodi
 timeout.signOut=Allgofnodi
 
+# Page Not Found Error
+# ----------------------------------------------------------
+cf.error.not-found.title=Heb ddod o hyd iír dudalen
+cf.error.not-found.heading=Heb ddod o hyd iír dudalen
+cf.error.not-found.message.address-typed-wrong=Os gwnaethoch deipioír cyfeiriad gwe, gwiriwch ei fod yn gywir.
+cf.error.not-found.message.address-pasted-wrong=Os gwnaethoch ludoír cyfeiriad gwe, gwiriwch eich bod wedi copÔoír cyfeiriad yn llawn.
+cf.error.not-found.message.go-to-home-page-text1=Neu ewch iír
+cf.error.not-found.message.go-to-home-page-text2=hafan.
+cf.accounts.view-customs-account=Bwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
+
 # Unauthorised
 # ----------------------------------------------------------
 cf.not-subscribed-to-cds.detail.title=Heb gofrestru ‚ír Gwasanaeth Datgan Tollau (CDS)

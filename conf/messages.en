@@ -107,6 +107,16 @@ timeout.message = For security reasons, you will be signed out of this service i
 timeout.keepAlive = Stay signed in
 timeout.signOut = Sign out
 
+# Page Not Found Error
+# ----------------------------------------------------------
+cf.error.not-found.title=Page not found
+cf.error.not-found.heading=Page not found
+cf.error.not-found.message.address-typed-wrong=If you typed the web address, check it is correct.
+cf.error.not-found.message.address-pasted-wrong=If you pasted the web address, check you copied the entire address.
+cf.error.not-found.message.go-to-home-page-text1=Or go to the
+cf.error.not-found.message.go-to-home-page-text2=home page.
+cf.accounts.view-customs-account=View your customs financial accounts
+
 # Unauthorised
 # ----------------------------------------------------------
 cf.not-subscribed-to-cds.detail.title=Not registered with CDS
