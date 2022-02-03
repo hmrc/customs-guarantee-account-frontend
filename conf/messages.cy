@@ -2,50 +2,45 @@ language.cymraeg = Cymraeg
 language.english = English
 language.change.english=Change the language to English
 
-service.back=Yn ôl
-service.name=Bwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
-service.homePageUrl = /customs-guarantee-account-frontend
-service.text=Dymaích gwasanaeth newydd
-
-footer.cookies.text=Cwcis
-footer.cookies.url = /help/cookies
-footer.privacy.text=Polisi preifatrwydd
-footer.privacy.url = /help/privacy
-footer.termsConditions.text=Telerau ac amodau
-footer.termsConditions.url = /help/terms-and-conditions
-footer.govukHelp.text=Help wrth ddefnyddio GOV.UK
-footer.govukHelp.url = https://www.gov.uk/help
-footer.accessibility-statement.text=Datganiad hygyrchedd
-footer.accessibility-statement.url = /accessibility-statement/customs-financials
-
 # Guarantee Account Detail View
 cf.guarantee-account.detail.title=Cyfrif gwarant cyffredinol
 cf.guarantee-account.detail.heading=Cyfrif gwarant cyffredinol
+cf.guarantee-account.your-securities.heading=Eich gwarantau
+cf.guarantee-account.your-securities.p=Rhestrwyd yn ôl dyddiad mewnforio.
+cf.guarantee-account.detail.download=Lawrlwytho gwarantau agored fel CSV
+cf.guarantee-account.detail.no-transactions=Does dim gwarantau byw gennych ar eich cyfrif.
 cf.guarantee-account.detail.balance-available={0} ar gael
 cf.guarantee-account.detail.account-number=Cyfrif: {0}
 cf.guarantee-account.detail.account-usage=Defnyddio {0} o {1}
-cf.guarantee-account.detail.transactions-heading=Eich gwarantau byw
-cf.guarantee-account.detail.download=Download open securities as CSV
-cf.guarantee-account.detail.date=Dyddiad
-cf.guarantee-account.detail.movement-reference-number=Cyfeirnod Symud (MRN)
+cf.guarantee-account.detail.balance-remaining=Y balans sy’n weddill
+cf.guarantee-account.detail.updated=Wediíi ddiweddaru {0}
+cf.guarantee-account.detail.c18-issued =Mae gennych C18 wedi’i roi ar {0}
+cf.guarantee-account.detail.linked=Cysylltiad i Gyfeirnod Symud {0} wedi’i wneud ar {1}
+cf.guarantee-account.detail.c18=C18
+cf.guarantee-account.detail.amount=Swm
+cf.guarantee-account.detail.paid=Talwyd
+cf.guarantee-account.detail.remaining=Yn weddill
+cf.guarantee-account.transactions.hidden-text=Mae gan {0} {1} gwarant
 cf.guarantee-account.detail.movement-reference-number.abbr=Cyfeirnod Symud
+cf.guarantee-account.detail.movement-reference-number=Cyfeirnod Symud (MRN)
+cf.guarantee-account.detail.mrn-link-prefix=Eich gwarant ar gyfer Cyfeirnod Symud
+cf.guarantee-account.detail.expires=Yn dod i ben
+cf.guarantee-account.detail.multiple-expiry.dates.1=Mae gan warant nifer o ddyddiadau dod i ben.
+cf.guarantee-account.detail.multiple-expiry.dates.2=Dyddiad dod i ben nesaf: {0}
+cf.guarantee-account.transactions.request.link.heading = Chwilio am warantau agored a chaeedig
+cf.guarantee-account.transactions.request.link = Chwilio am CSV o’r holl warantau
+cf.guarantee-account.transactions.request.link.post = o gyfnod penodol o amser a’i lawrlwytho.
+
+#Guarantee Account Summary
+cf.guarantee-account.detail.transactions-heading=Eich gwarantau byw
 cf.guarantee-account.detail.unique-consignment-reference=Cyfeirnod Unigryw y Llwyth (UCR)
 cf.guarantee-account.detail.unique-consignment-reference.abbr=Cyfeirnod Unigryw y Llwyth
-cf.guarantee-account.detail.balance-remaining=Y balans sy’n weddill
-cf.guarantee-account.detail.declarant-eori=EORI y datganwr
-cf.guarantee-account.detail.declarant-eori.abbr=Rhif Cofrestru ac Adnabod Gweithredwr Economaidd y datganwr
-cf.guarantee-account.detail.consignee-eori=EORI y mewnforiwr
-cf.guarantee-account.detail.consignee-eori.abbr=Rhif Cofrestru ac Adnabod Gweithredwr Economaidd y mewnforiwr
-cf.guarantee-account.detail.show-mrn=Dangos MRN
-cf.guarantee-account.detail.show-ucr=Dangos UCR
-cf.guarantee-account.detail.show-declarant=Dangos EORI y datganwr
-cf.guarantee-account.detail.show-consignee=Dangos EORI y mewnforiwr
-cf.guarantee-account.detail.show-ucr=Dangos UCR
+cf.guarantee-account.detail.eori=EORI
+cf.guarantee-account.detail.eori.abbr=Economic Operators Registration and Identification number
+cf.guarantee-account.detail.declarant=Declarant
+cf.guarantee-account.detail.consignee=Importer
 cf.guarantee-account.detail.original-charge=Tâl gwreiddiol
 cf.guarantee-account.detail.discharged-amount=Wedi’i dynnu
-cf.guarantee-account.detail.updated-now=Newydd gael ei ddiweddaru
-cf.guarantee-account.detail.updated=Wediíi ddiweddaru {0}
-cf.guarantee-account.detail.no-transactions=Does dim gwarantau byw gennych ar eich cyfrif.
 cf.guarantee-account.detail.transactions-not-available=Ni allwn ddangos eich gwarantau byw ar hyn o bryd. Rhowch gynnig arall arni yn nes ymlaen.
 cf.guarantee-account.detail.account-not-available=Ni allwn ddangos eich cyfrif ar hyn o bryd. Rhowch gynnig arall arni yn nes ymlaen.
 cf.guarantee-account.updated.time.on=ar
@@ -81,6 +76,7 @@ cf.guarantee-account.csv.lastUpdated=Diweddarwyd ddiwethaf
 cf.guarantee-account.csv.unknown=Anhysbys
 cf.guarantee-account.csv.security-reason=Rheswm dros y warant ({0} o {1})
 cf.guarantee-account.csv.filename=Gwarantau_Sydd_Ar_Agor_{0}.CSV
+cf.guarantee-account.requested.csv.filename=Gwarantau_Sydd_Ar_Agor_{0}-{1}.CSV
 cf.guarantee-account.csv.guidance=Mae arweiniad ar gyfrifon gwarantau, gan gynnwys esboniad o’r codau treth, i’w weld yn {0}
 
 # Pager
@@ -111,7 +107,7 @@ timeout.message=Am resymau diogelwch, cewch eich allgofnodi oír gwasanaeth hwn 
 timeout.keepAlive=Parhau i fod wediích mewngofnodi
 timeout.signOut=Allgofnodi
 
-# Not subscribed to CDS
+# Unauthorised
 # ----------------------------------------------------------
 cf.not-subscribed-to-cds.detail.title=Heb gofrestru ‚ír Gwasanaeth Datgan Tollau (CDS)
 cf.not-subscribed-to-cds.detail.heading=Er mwyn mynd yn eich blaen, mae angen i chi gael mynediad at y Gwasanaeth Datgan Tollau (CDS)
@@ -121,39 +117,6 @@ cf.not-subscribed-to-cds.detail.get-access-info=Os oes gennych rif EORI eisoes, 
 cf.not-subscribed-to-cds.detail.get-access-link=cael mynediad at CDS (yn agor ffenestr neu dab newydd)
 cf.not-subscribed-to-cds.detail.how-to-get-access-info=Sut i gael mynediad at CDS
 cf.not-subscribed-to-cds.detail.process-application-info=Gall gymryd hyd at ddwy awr i CThEM brosesu’ch cais.
-
-# Page Not Found Error
-# ----------------------------------------------------------
-cf.error.not-found.title=Heb ddod o hyd iír dudalen
-cf.error.not-found.heading=Heb ddod o hyd iír dudalen
-cf.error.not-found.message.address-typed-wrong=Os gwnaethoch deipioír cyfeiriad gwe, gwiriwch ei fod yn gywir.
-cf.error.not-found.message.address-pasted-wrong=Os gwnaethoch ludoír cyfeiriad gwe, gwiriwch eich bod wedi copÔoír cyfeiriad yn llawn.
-cf.error.not-found.message.go-to-home-page-text1=Neu ewch iír
-cf.error.not-found.message.go-to-home-page-text2=hafan.
-cf.accounts.view-customs-account=Bwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
-
-# Page Ordering
-# ----------------------------------------------------------
-pageSort.balance=Balans
-pageSort.originalCharge=Tâl gwreiddiol
-pageSort.dischargedAmount=Wedi’i dynnu
-pageSort.date=Dyddiad
-
-order.ascending.date=Wediíu trefnu oír hynaf iír diweddaraf
-order.descending.date=Wediíu trefnu oír diweddaraf iír hynaf
-
-order.ascending=Wediíu trefnu oír isaf iír uchaf
-order.descending=Wediíu trefnu oír uchaf iír isaf
-
-page.display.ucr = Cyfeirnod Unigryw y Llwyth (UCR)
-page.display.mrn = Cyfeirnod Symud (MRN)
-page.display.declarantEori = EORI y datganwr
-page.display.importerEori = EORI y mewnforiwr
-page.display.sentence = Yn dangos {0} a {1}
-page.label.ucr = Dangos UCR yn lle MRN
-page.label.mrn = Dangos MRN yn lle UCR
-page.label.importer.eori = Dangos rhif EORI y sawl sy’n datgan nwyddau yn lle rhif EORI y mewnforiwr
-page.label.declarant.eori = Dangos rhif EORI y mewnforiwr yn lle rhif EORI y sawl sy’n datgan nwyddau
 
 # Date Format
 # ----------------------------------------------------------
@@ -186,9 +149,6 @@ month.12=Rhagfyr
 
 # Guarantee Transactions Request
 # -------------------------------------------------
-cf.guarantee-account.transactions.request.link.heading = Chwilio am warantau agored a chaeedig
-cf.guarantee-account.transactions.request.link = Chwilio am CSV o’r holl warantau
-cf.guarantee-account.transactions.request.link.post = o gyfnod penodol o amser a’i lawrlwytho.
 cf.guarantee-account.transactions.request.title = Pa warantau cyfrif gwarant sydd eu hangen arnoch?
 cf.guarantee-account.transactions.request.heading = Pa warantau cyfrif gwarant sydd eu hangen arnoch?
 cf.guarantee-account.transactions.request.from =O
@@ -208,7 +168,6 @@ cf.guarantee-account.transactions.result.between=Gwnaethoch ofyn am warantau cyf
 cf.guarantee-account.transactions.result.search.again=Chwiliwch eto gydag ystod lai o ran dyddiadau
 cf.guarantee-account.transactions.result.no.transactions=Dim gwarantau cyfrif gwarant
 cf.guarantee-account.transactions.result.no.data=Nid oes gennym ddata o fewn y cyfnodau
-cf.guarantee-account.requested.csv.filename=Gwarantau_Sydd_Ar_Agor_{0}-{1}.CSV
 cf.guarantee-account.transactions.request.whichEndDate.hidden = ar gyfer pa ddyddiad ddod i ben sydd ei angen arnoch ar gyfer gwarantau?
 cf.guarantee-account.transactions.request.whichStartDate.hidden = ar gyfer pa ddyddiad ddechrau sydd ei angen arnoch ar gyfer gwarantau?
 
@@ -231,36 +190,21 @@ cf.form.error.end-future-date=Mae’n rhaid i’r dyddiad rydych am chwilio hyd 
 cf.form.error.start-after-end=Ni all y dyddiad ‘o’ fod ar ôl y dyddiad ‘i’
 cf.form.error.end-before-start=Ni all y dyddiad ‘i’ fod cyn y dyddiad ‘o’
 
+#Error Summary
 error.summary.title = Mae problem wedi codi
 error.browser.title.prefix = Gwall:
 
-cf.guarantee-account.detail.expires=Yn dod i ben
-cf.guarantee-account.detail.amount=Swm
+#Transaction Security Reason Details
 cf.guarantee-account.detail.security-reason.tax-code=Rheswm dros warant/Cod treth
 cf.guarantee-account.detail.taxtype=Math o dreth
 cf.guarantee-account.detail.taxcode=Cod treth
-cf.guarantee-account.detail.multiple-expiry.dates.1=Mae gan warant nifer o ddyddiadau dod i ben.
-cf.guarantee-account.detail.multiple-expiry.dates.2=Dyddiad dod i ben nesaf: {0}
-cf.guarantee-account.detail.c18=C18
-
-# TO BE TRANSLATED
 cf.guarantee-account.your-security.heading=Eich diogelwch
-cf.guarantee-account.detail.paid=Talwyd
-cf.guarantee-account.detail.c18-issued =Mae gennych C18 wedi’i roi ar {0}
-cf.guarantee-account.detail.linked=Cysylltiad i Gyfeirnod Symud {0} wedi’i wneud ar {1}
-cf.guarantee-account.detail.remaining=Yn weddill
-cf.guarantee-account.detail.download=Lawrlwytho gwarantau agored fel CSV
 cf.guarantee-account.detail.security-reason.tax-code.heading=Rheswm dros warant/dadansoddiad o god treth {0}
+
+#Individual Transactions
 cf.guarantee-account.detail.importDate=Dyddiad mewnforio
 cf.guarantee-account.detail.multiple-expiry.dates=Mae gan y warant hon nifer o ddyddiadau dod i ben
+
+#Pager
 cf.pager.items=canlyniadau
 cf.guarantee-account.detail.expiry-dates=Dyddiadau dod i ben
-cf.guarantee-account.detail.mrn-link-prefix=Eich gwarant ar gyfer Cyfeirnod Symud
-cf.guarantee-account.your-securities.heading=Eich gwarantau
-cf.guarantee-account.your-securities.p=Rhestrwyd yn ôl dyddiad mewnforio.
-cf.guarantee-account.transactions.hidden-text=Mae gan {0} {1} gwarant
-
-cf.customs-financials-home.recruitment-banner-heading=Helpu ni i wella’r gwasanaeth hwn
-cf.customs-financials-home.recruitment-banner-link-text=Cofrestrwch er mwyn cymryd rhan bosibl yn ein hymchwil defnyddiwr
-cf.customs-financials-home.recruitment-banner.close=Cau
-cf.customs-financials-home.recruitment-banner.hidden-text.close=Y faner ‘Helpu ni i wella’r gwasanaeth hwn’
