@@ -128,9 +128,9 @@ cf.error.not-found.title=Heb ddod o hyd iír dudalen
 cf.error.not-found.heading=Heb ddod o hyd iír dudalen
 cf.error.not-found.message.address-typed-wrong=Os gwnaethoch deipioír cyfeiriad gwe, gwiriwch ei fod yn gywir.
 cf.error.not-found.message.address-pasted-wrong=Os gwnaethoch ludoír cyfeiriad gwe, gwiriwch eich bod wedi copÔoír cyfeiriad yn llawn.
-cf.error.not-found.message.go-to-home-page-text1=Neu ewch iír
-cf.error.not-found.message.go-to-home-page-text2=hafan.
-cf.accounts.view-customs-account=Bwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
+cf.error.not-found.message.go-to-home-page-text1=Neu gallwch 
+cf.error.not-found.message.go-to-home-page-text2=.
+cf.accounts.view-customs-account=fwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
 
 # Page Ordering
 # ----------------------------------------------------------
