@@ -4,28 +4,16 @@ language.change.cymraeg = Newid yr iaith ir Gymraeg
 
 service.back = Back
 service.name = View your customs financial accounts
-service.homePageUrl = /customs-guarantee-account-frontend
-service.text = This is your new service
 
-footer.cookies.text = Cookies
-footer.cookies.url = /help/cookies
-footer.privacy.text = Privacy policy
-footer.privacy.url = /help/privacy
-footer.termsConditions.text = Terms and conditions
-footer.termsConditions.url = /help/terms-and-conditions
-footer.govukHelp.text = Help using GOV.UK
-footer.govukHelp.url = https://www.gov.uk/help
-footer.accessibility-statement.text = Accessibility statement
-footer.accessibility-statement.url = /accessibility-statement/customs-financials
 
 # Guarantee Account Detail View
 cf.guarantee-account.detail.title=General guarantee account
 cf.guarantee-account.detail.heading=General guarantee account
-
 cf.guarantee-account.detail.balance-available={0} available
 cf.guarantee-account.detail.account-number=Account: {0}
 cf.guarantee-account.detail.account-usage=Using {0} of {1}
 cf.guarantee-account.detail.transactions-heading=Your live guarantees
+cf.guarantee-account.detail.download=Download open securities as CSV
 cf.guarantee-account.detail.date=Date
 cf.guarantee-account.detail.expires=Expires
 cf.guarantee-account.detail.movement-reference-number=MRN
@@ -37,11 +25,6 @@ cf.guarantee-account.detail.eori=EORI
 cf.guarantee-account.detail.eori.abbr=Economic Operators Registration and Identification number
 cf.guarantee-account.detail.declarant=Declarant
 cf.guarantee-account.detail.consignee=Importer
-cf.guarantee-account.detail.show-mrn=Show MRN
-cf.guarantee-account.detail.show-ucr=Show UCR
-cf.guarantee-account.detail.show-declarant=Show Declarant EORI
-cf.guarantee-account.detail.show-consignee=Show Importer EORI
-cf.guarantee-account.detail.show-ucr=Show UCR
 cf.guarantee-account.detail.original-charge=Original charge
 cf.guarantee-account.detail.discharged-amount=Discharged
 cf.guarantee-account.detail.updated-now=Updated just now
@@ -60,7 +43,6 @@ cf.guarantee-account-detail.exceeded-threshold.p2=You can view your open and clo
 cf.guarantee-account.detail.csv-definition=Download CSV file.
 cf.guarantee-account.detail.amount=Amount
 cf.guarantee-account.detail.c18=C18
-
 
 # Guarantee Account CSV headings (mapped dynamically from case class fields)
 cf.guarantee-account.csv.movementReferenceNumber=MRN
@@ -86,12 +68,12 @@ cf.guarantee-account.csv.unknown=Unknown
 cf.guarantee-account.csv.security-reason=Security reason ({0} of {1})
 cf.guarantee-account.csv.filename=Open_Guarantees_{0}.CSV
 cf.guarantee-account.requested.csv.filename=Open_Guarantees_{0}-{1}.CSV
-
 cf.guarantee-account.csv.guidance=Guarantee account guidance, including an explanation of tax codes, can be found at {0}
 
 # Pager
 cf.pager.prev=Previous
 cf.pager.next=Next
+cf.pager.items=results
 cf.pager.summary=Showing
 cf.pager.summary.of=of
 cf.pager.summary.to=to
@@ -139,29 +121,6 @@ cf.error.not-found.message.go-to-home-page-text2=.
 cf.accounts.view-customs-account=view your customs financial accounts
 
 
-# Page Ordering
-# ----------------------------------------------------------
-pageSort.balance = Balance
-pageSort.originalCharge = Original charge
-pageSort.dischargedAmount = Discharged
-pageSort.date = Date
-
-order.ascending.date = sorted oldest first,
-order.descending.date = most recent first,
-
-order.ascending = sorted lowest first,
-order.descending = sorted highest first,
-
-page.display.ucr = UCR
-page.display.mrn = MRN
-page.display.declarantEori = declarant EORI
-page.display.importerEori = importer EORI
-page.display.sentence = showing {0} and {1}
-page.label.ucr = Show UCR instead of MRN
-page.label.mrn = Show MRN instead of UCR
-page.label.importer.eori = Show declarant EORI instead of importer EORI
-page.label.declarant.eori = Show importer EORI instead of declarant EORI
-
 # Date Format
 # ----------------------------------------------------------
 
@@ -195,8 +154,8 @@ month.12 = December
 # -------------------------------------------------
 cf.guarantee-account.transactions.request.link.heading = Search open and closed securities
 cf.guarantee-account.transactions.request.link = Search for and download a CSV of all securities
-cf.guarantee-account.transactions.request.link.post = from a specific period of time.
-cf.guarantee-account.transactions.request.title = Which guarantee account securities do you need?
+cf.guarcf.guarantee-account.transactions.request.titleantee-account.transactions.request.link.post = from a specific period of time.
+ = Which guarantee account securities do you need?
 cf.guarantee-account.transactions.request.heading = Which guarantee account securities do you need?
 cf.guarantee-account.transactions.request.from = From
 cf.guarantee-account.transactions.request.date.hint = For example, 3 2019.
@@ -218,7 +177,6 @@ cf.guarantee-account.transactions.result.no.data=We have no data within the peri
 cf.guarantee-account.transactions.request.whichEndDate.hidden = what end date do you need securities?
 cf.guarantee-account.transactions.request.whichStartDate.hidden = what start date do you need securities?
 
-
 cf.form.error.start.date-too-far-in-past=The from date cannot be older than 6 years from now.
 cf.form.error.end.date-too-far-in-past=The to date cannot be older than 6 years from now.
 cf.form.error.startDate.date-earlier-than-system-start-date=You cannot enter a date before October 2019
@@ -238,34 +196,34 @@ cf.form.error.end-future-date=The date you want to search to must be today, or i
 cf.form.error.start-after-end=The from date cannot be after the to date
 cf.form.error.end-before-start=The to date cannot be before the from date
 
+# Error Summary
 error.summary.title = There is a problem
 error.browser.title.prefix = Error:
 
-
+# Transaction Security Reason Details
 cf.guarantee-account.detail.security-reason.tax-code=Security reason/Tax code
 cf.guarantee-account.detail.taxtype=Tax type
 cf.guarantee-account.detail.taxcode=Tax code
 cf.guarantee-account.detail.multiple-expiry.dates.1=Security has multiple expiry dates.
 cf.guarantee-account.detail.multiple-expiry.dates.2=Next expiry date: {0}
 
-# translation required
+# Security Header
 cf.guarantee-account.your-security.heading=Your security
+
+# Guarantee C18 Reference
 cf.guarantee-account.detail.paid=Paid
 cf.guarantee-account.detail.c18-issued=You have a C18 issued on the {0}
 cf.guarantee-account.detail.linked=Linked to MRN  {0} made on the {1}
 cf.guarantee-account.detail.remaining=Remaining
-cf.guarantee-account.detail.download=Download open securities as CSV
+
+# Transaction Security Reason Details
 cf.guarantee-account.detail.security-reason.tax-code.heading=Security reason/tax code breakdown {0}
+
+# Individual Transactions
 cf.guarantee-account.detail.importDate=Date of import
 cf.guarantee-account.detail.multiple-expiry.dates=This security has multiple expiry dates
-cf.pager.items=results
 cf.guarantee-account.detail.expiry-dates=Expiry dates
 cf.guarantee-account.detail.mrn-link-prefix=Your security for MRN
 cf.guarantee-account.your-securities.heading=Your securities
 cf.guarantee-account.your-securities.p=Listed by date of import.
 cf.guarantee-account.transactions.hidden-text={0} has {1} securities
-
-cf.customs-financials-home.recruitment-banner-heading=Help us improve this service
-cf.customs-financials-home.recruitment-banner-link-text=Sign up to be a potential user research participant
-cf.customs-financials-home.recruitment-banner.close=Close
-cf.customs-financials-home.recruitment-banner.hidden-text.close=the help us improve this service banner
