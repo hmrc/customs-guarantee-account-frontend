@@ -154,8 +154,8 @@ month.12 = December
 # -------------------------------------------------
 cf.guarantee-account.transactions.request.link.heading = Search open and closed securities
 cf.guarantee-account.transactions.request.link = Search for and download a CSV of all securities
-cf.guarcf.guarantee-account.transactions.request.titleantee-account.transactions.request.link.post = from a specific period of time.
- = Which guarantee account securities do you need?
+cf.guarantee-account.transactions.request.link.post = from a specific period of time.
+cf.guarantee-account.transactions.request.title = Which guarantee account securities do you need?
 cf.guarantee-account.transactions.request.heading = Which guarantee account securities do you need?
 cf.guarantee-account.transactions.request.from = From
 cf.guarantee-account.transactions.request.date.hint = For example, 3 2019.
