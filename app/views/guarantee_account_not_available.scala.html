@@ -25,6 +25,6 @@
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(appConfig.customsFinancialsFrontendHomepage)) {
-    @h1("cf.guarantee-account.detail.title", h1Class = "govuk-heading-xl")
+    @h1("cf.guarantee-account.detail.title")
     @inset("cf.guarantee-account.detail.account-not-available", id = Some("account-not-available"))
 }

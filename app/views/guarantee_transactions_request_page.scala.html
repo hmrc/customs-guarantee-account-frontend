@@ -34,7 +34,7 @@
 
     @formHelper(action = controllers.routes.RequestTransactionsController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors, None)
-        @h1("cf.guarantee-account.transactions.request.heading", None)
+        @h1("cf.guarantee-account.transactions.request.heading")
         @inset("cf.guarantee-account.transactions.request.hint")
         @inputDate(
             form,
