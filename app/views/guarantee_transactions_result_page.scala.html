@@ -29,7 +29,7 @@
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")),
     backLink = Some(controllers.routes.RequestTransactionsController.onPageLoad.url)) {
-        @h1("cf.guarantee-account.transactions.result.transaction", h1Class = "govuk-heading-xl")
+        @h1("cf.guarantee-account.transactions.result.transaction")
         @p("cf.guarantee-account.transactions.result.download.transactions")
         @summaryList(summary)
         @link("cf.guarantee-account.transactions.request.link.label", returnLink)
