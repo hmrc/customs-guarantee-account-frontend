@@ -143,7 +143,9 @@
         )))
 
     @if(transaction.moreThanOne) {
-        <h3 class="govuk-heading-m  govuk-!-padding-top-4 govuk-!-margin-bottom-5">@messages("cf.guarantee-account.detail.expiry-dates")</h3>
+        <h2 class="govuk-heading-m  govuk-!-padding-top-4 govuk-!-margin-bottom-5">
+            @messages("cf.guarantee-account.detail.expiry-dates")
+        </h2>
 
         @for(dueDate <- transaction.dueDates) {
 

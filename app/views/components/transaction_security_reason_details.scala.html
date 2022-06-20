@@ -20,9 +20,9 @@
 
 @(securityReason: SecurityReason)(implicit messages: Messages)
 
-<h3 class="govuk-heading-m govuk-!-margin-top-7">
+<h2 class="govuk-heading-m govuk-!-margin-top-7">
     @messages("cf.guarantee-account.detail.security-reason.tax-code.heading", securityReason.taxCode)
-</h3>
+</h2>
 
 @govukTable(Table(
     classes = "govuk-table hmrc-responsive-table govuk-!-margin-bottom-9",
