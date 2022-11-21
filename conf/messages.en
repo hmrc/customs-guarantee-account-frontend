@@ -85,10 +85,6 @@ feedback.before = This is a new service - your
 feedback.link = feedback
 feedback.after = will help us to improve it.
 
-help.heading = Help and support
-help.p1 = If you are having issues, phone 0300 200 3701.
-help.p2 = Open 8am to 6pm, Monday to Friday (closed bank holidays).
-
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
