@@ -67,15 +67,7 @@
 
     @mainContent = {
         @contentBlock
-        @if(helpAndSupport) {
-            <div class="govuk-!-margin-top-8">
-                @h2("help.heading", None)
-                <div id="help-message">
-                    @p("help.p1")
-                    @p("help.p2")
-                </div>
-            </div>
-        }
+
         @if(deskpro) {
             @hmrcReportTechnicalIssueHelper()
         }

@@ -85,10 +85,6 @@ feedback.before=Gwasanaeth newydd yw hwn – bydd eich
 feedback.link=adborth
 feedback.after=yn ein helpu iíw wella.
 
-help.heading=Help a chymorth
-help.p1=Os ydych yn profi anawsterau, ffoniwch 0300 200 3705.
-help.p2=Ar agor 08:30 i 17:00 o ddydd Llun i ddydd Gwener (ar gau ar wyliau banc).
-
 unauthorised.title=Ni allwch gael mynediad at y gwasanaeth hwn gydaír cyfrif hwn
 unauthorised.heading=Ni allwch gael mynediad at y gwasanaeth hwn gydaír cyfrif hwn
 
