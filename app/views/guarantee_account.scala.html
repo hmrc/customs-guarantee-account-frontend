@@ -27,6 +27,7 @@ main_template: Layout,
 h2: components.h2,
 p: components.p,
 link: components.link,
+newTabLink: components.newTabLink,
 inset: components.inset,
 guarantee_c18_reference: guarantee_c18_reference,
 guarantee_transactions_table: guarantee_transactions_table
@@ -57,5 +58,15 @@ guarantee_transactions_table: guarantee_transactions_table
         location = controllers.routes.RequestTransactionsController.onPageLoad.url,
         pClass = "govuk-body govuk-!-padding-bottom-7",
         postLinkMessage = Some("cf.guarantee-account.transactions.request.link.post")
+    )
+
+
+    @h2("help.heading")
+
+    @link(
+        preLinkMessage= Some("cf.guarantee-account.transactions.request.link.text"),
+        location = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/general-guarantee-accounts",
+        pClass = "govuk-body govuk-!-margin-bottom-9",
+        linkMessage = "cf.guarantee-account.transactions.request.link.url"
     )
 }

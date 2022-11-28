@@ -85,6 +85,7 @@ feedback.before=Gwasanaeth newydd yw hwn – bydd eich
 feedback.link=adborth
 feedback.after=yn ein helpu iíw wella.
 
+help.heading=Help a chymorth
 unauthorised.title=Ni allwch gael mynediad at y gwasanaeth hwn gydaír cyfrif hwn
 unauthorised.heading=Ni allwch gael mynediad at y gwasanaeth hwn gydaír cyfrif hwn
 
@@ -148,6 +149,8 @@ month.12=Rhagfyr
 # Guarantee Transactions Request
 # -------------------------------------------------
 cf.guarantee-account.transactions.request.link.heading = Chwilio am warantau agored a chaeedig
+cf.guarantee-account.transactions.request.link.text = Os oes angen help
+cf.guarantee-account.transactions.request.link.url = arnoch cysylltwch â CThEM ynghylch cyfrifon gwarant cyffredinol (yn agor tab newydd)
 cf.guarantee-account.transactions.request.link = Chwilio am CSV o’r holl warantau
 cf.guarantee-account.transactions.request.link.post = o gyfnod penodol o amser a’i lawrlwytho.
 cf.guarantee-account.transactions.request.title = Pa warantau cyfrif gwarant sydd eu hangen arnoch?

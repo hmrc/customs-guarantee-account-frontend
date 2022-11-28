@@ -28,7 +28,7 @@
         pClass: String = "govuk-body")(implicit messages: Messages)
 
 @link = {
- <a @{linkId.fold("")(id => s"id=$id")} class="@linkClass" href="@location">@messages(linkMessage)</a>@if(linkSentence){.}
+ <a @{linkId.fold("")(id => s"id=$id")} target = "_blank" class="@linkClass" href="@location">@messages(linkMessage)</a>@if(linkSentence){.}
 }
 
 @if(pWrapped){
