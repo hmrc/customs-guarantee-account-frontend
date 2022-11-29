@@ -25,10 +25,11 @@
         postLinkMessage: Option[String] = None,
         linkSentence: Boolean = false,
         pId: Option[String] = None,
+        newTab: Boolean = false,
         pClass: String = "govuk-body")(implicit messages: Messages)
 
 @link = {
- <a @{linkId.fold("")(id => s"id=$id")} target = "_blank" class="@linkClass" href="@location">@messages(linkMessage)</a>@if(linkSentence){.}
+ <a @{linkId.fold("")(id => s"id=$id")} @if(newTab){ target = "_blank" } class="@linkClass" href="@location">@messages(linkMessage)</a>@if(linkSentence){.}
 }
 
 @if(pWrapped){
