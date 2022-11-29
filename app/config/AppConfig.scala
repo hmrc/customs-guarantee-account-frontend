@@ -33,7 +33,7 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   lazy val feedbackService = config.getOptional[String]("feedback.url").getOrElse("/feedback") +
     config.getOptional[String]("feedback.source").getOrElse("/CDS-FIN")
 
-  lazy val guaranteeAccountGuidanceUrl: String = config.get[String]("urls.guaranteeAccountGuidanceUrl")
+  lazy val viewGeneralGuaranteeAccountLink: String = config.get[String]("urls.viewGeneralGuaranteeAccountLink")
 
   val customsFinancialsApi: String = servicesConfig.baseUrl("customs-financials-api") +
     config.getOptional[String]("customs-financials-api.context").getOrElse("/customs-financials-api")
@@ -53,5 +53,7 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   lazy val fixedDateTime = config.get[Boolean]("features.fixed-systemdate-for-tests")
 
   lazy val helpMakeGovUkBetterUrl: String = config.get[String]("urls.helpMakeGovUkBetterUrl")
+
+  lazy val guaranteeAccountGuidanceUrl: String = config.get[String]("urls.guaranteeAccountGuidanceUrl")
 
 }
