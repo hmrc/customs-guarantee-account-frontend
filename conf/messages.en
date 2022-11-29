@@ -85,6 +85,7 @@ feedback.before = This is a new service - your
 feedback.link = feedback
 feedback.after = will help us to improve it.
 
+help.heading = Help and support
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
@@ -149,6 +150,8 @@ month.12 = December
 # -------------------------------------------------
 cf.guarantee-account.transactions.request.link.heading = Search open and closed securities
 cf.guarantee-account.transactions.request.link = Search for and download a CSV of all securities
+cf.guarantee-account.transactions.request.link.text = If you need help
+cf.guarantee-account.transactions.request.link.url = contact HMRC about general guarantee accounts (opens in new tab)
 cf.guarantee-account.transactions.request.link.post = from a specific period of time.
 cf.guarantee-account.transactions.request.title = Which guarantee account securities do you need?
 cf.guarantee-account.transactions.request.heading = Which guarantee account securities do you need?
