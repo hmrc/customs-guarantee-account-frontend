@@ -68,17 +68,17 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
   }
 
 
-  def auditCsvDownload( eori: String, gan: String, dateTime: LocalDateTime, dates: Option[RequestDates] )( implicit hc: HeaderCarrier, ex:ExecutionContext ) = {
+  def auditCsvDownload( eori: String, guaranteeAccountNumber: String, dateTime: LocalDateTime, dates: Option[RequestDates] )( implicit hc: HeaderCarrier, ex:ExecutionContext ) = {
 
   val eventualResult = dates match{
     case Some(value) =>
       audit(
         AuditModel("DownloadGuaranteeStatement", "Download guarantee transactions",
-          Json.toJson(GuaranteeCsvAuditData(eori, gan, "open", dateTimeAsIso8601(dateTime), "CSV",Some(value.dateFrom), Some(value.dateTo)))))
+          Json.toJson(GuaranteeCsvAuditData(eori, guaranteeAccountNumber, "open", dateTimeAsIso8601(dateTime), "CSV",Some(value.dateFrom), Some(value.dateTo)))))
     case None =>
       audit(
         AuditModel("DownloadGuaranteeStatement", "Download guarantee transactions",
-          Json.toJson(GuaranteeCsvAuditData(eori, gan, "open", dateTimeAsIso8601(dateTime), "CSV",None, None))))
+          Json.toJson(GuaranteeCsvAuditData(eori, guaranteeAccountNumber, "open", dateTimeAsIso8601(dateTime), "CSV",None, None))))
   }
     eventualResult.map {
       case _: AuditResult.Failure => log.error("Guarantee CSV download auditing failed")
