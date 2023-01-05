@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package repositories
 
-
 import crypto._
 import models._
 import org.joda.time.DateTime
@@ -28,11 +27,11 @@ import play.api.libs.json.{Format, Json, OFormat}
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 import uk.gov.hmrc.mongo.play.json.formats.MongoJodaFormats
-
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
                                        config: Configuration,
                                        guaranteeTransactionsEncryptor: GuaranteeTransactionsEncryptor,
