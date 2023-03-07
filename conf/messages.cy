@@ -179,6 +179,7 @@ cf.form.error.start.date-too-far-in-past=Ni all y dyddiad ‘o’ fod yn fwy na 
 cf.form.error.end.date-too-far-in-past=Ni all y dyddiad ‘i’ fod yn fwy na 6 o flynyddoedd ers nawr.
 cf.form.error.startDate.date-earlier-than-system-start-date=Ni allwch nodi dyddiad cyn mis Hydref 2019
 cf.form.error.endDate.date-earlier-than-system-start-date=Mae’n rhaid i’r dyddiad ‘i’ fod ar neu ar ôl mis Hydref 2019
+cf.form.error.date.year.length = Mae’n rhaid i’r flwyddyn gynnwys pedwar rhif
 
 cf.form.error.start.month.date-number-invalid=Nodwch o ba fis yr ydych am chwilio
 cf.form.error.start.year.date-number-invalid=Nodwch o ba flwyddyn yr ydych am chwilio

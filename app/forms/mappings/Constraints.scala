@@ -40,10 +40,15 @@ trait Constraints {
     taxYearFor(currentDate).back(maximumNumberOfYears)
   }
 
-  def checkDates(systemStartDateErrorKey:String, taxYearErrorKey:String)(implicit clock: Clock): Constraint[LocalDate] = Constraint {
+  def checkDates(systemStartDateErrorKey:String, taxYearErrorKey:String, yearLengthError:String)(implicit clock: Clock): Constraint[LocalDate] = Constraint {
+
+    case date if date.getYear.toString.length() < 4 =>
+      Invalid(ValidationError(yearLengthError))
+
     case request if Period.between(request, etmpStatementsDate).toTotalMonths > 0 =>
       Invalid(ValidationError(systemStartDateErrorKey))
-    case request if minTaxYear.starts.isAfter(request.withDayOfMonth(dayOfMonthThatTaxYearStartsOn))  =>
+
+    case request if minTaxYear.starts.isAfter(request.withDayOfMonth(dayOfMonthThatTaxYearStartsOn)) =>
       Invalid(ValidationError(taxYearErrorKey))
     case _ => Valid
   }

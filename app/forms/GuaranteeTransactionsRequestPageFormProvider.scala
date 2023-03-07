@@ -39,7 +39,8 @@ class GuaranteeTransactionsRequestPageFormProvider @Inject()(implicit clock: Clo
         endOfMonth = false,
         args = Seq.empty
       ).verifying(equalToOrBeforeToday("cf.form.error.start-future-date"))
-        .verifying(checkDates("cf.form.error.startDate.date-earlier-than-system-start-date","cf.form.error.start.date-too-far-in-past")),
+        .verifying(checkDates("cf.form.error.startDate.date-earlier-than-system-start-date",
+          "cf.form.error.start.date-too-far-in-past","cf.form.error.date.year.length")),
 
       "end" -> localDate(
         invalidMonth = "cf.form.error.month.invalid",
@@ -53,7 +54,8 @@ class GuaranteeTransactionsRequestPageFormProvider @Inject()(implicit clock: Clo
         endOfMonth = true,
         args = Seq.empty
       ).verifying(equalToOrBeforeToday("cf.form.error.end-future-date"))
-        .verifying(checkDates("cf.form.error.endDate.date-earlier-than-system-start-date","cf.form.error.end.date-too-far-in-past"))
+        .verifying(checkDates("cf.form.error.endDate.date-earlier-than-system-start-date",
+          "cf.form.error.end.date-too-far-in-past","cf.form.error.date.year.length"))
     )(GuaranteeTransactionDates.apply)(GuaranteeTransactionDates.unapply)
     )
   }
