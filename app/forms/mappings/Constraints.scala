@@ -42,7 +42,7 @@ trait Constraints {
 
   def checkDates(systemStartDateErrorKey:String, taxYearErrorKey:String, yearLengthError:String)(implicit clock: Clock): Constraint[LocalDate] = Constraint {
 
-    case date if date.getYear.toString.length() < 4 =>
+    case date if date.getYear.toString.length() != 4 =>
       Invalid(ValidationError(yearLengthError))
 
     case request if Period.between(request, etmpStatementsDate).toTotalMonths > 0 =>
