@@ -38,18 +38,12 @@
         attributes = Map("id" -> "mrn"),
         rows = Seq(
             SummaryListRow(
-                key = Key(content = HtmlContent(
-                    s"""<abbr title="${messages("cf.guarantee-account.detail.movement-reference-number.abbr")}">
-                         ${messages("cf.guarantee-account.detail.movement-reference-number")}
-                         </abbr>""")),
+                key = Key(content = Text(messages("cf.guarantee-account.detail.movement-reference-number"))),
                 value = Value(content = HtmlContent(transaction.movementReferenceNumber)),
                 actions = None
             ),
             SummaryListRow(
-                key = Key(content = HtmlContent(
-                    s"""<abbr title="${messages("cf.guarantee-account.detail.unique-consignment-reference.abbr")}">
-                         ${messages("cf.guarantee-account.detail.unique-consignment-reference")}
-                         </abbr>""")),
+                key = Key(content = Text(messages("cf.guarantee-account.detail.unique-consignment-reference"))),
                 value = Value(content = HtmlContent(Html(transaction.uniqueConsignmentReference))),
                 actions = None
             ),

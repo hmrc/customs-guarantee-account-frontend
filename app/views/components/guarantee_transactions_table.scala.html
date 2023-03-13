@@ -39,10 +39,7 @@
             attributes = Map("id" -> s"securities-${transaction.guaranteeTransaction.movementReferenceNumber}"),
             rows = Seq(
                 SummaryListRow(
-                    key = Key(HtmlContent(
-                        s"""<abbr title="${messages("cf.guarantee-account.detail.movement-reference-number.abbr")}">
-                         ${messages("cf.guarantee-account.detail.movement-reference-number")}
-                         </abbr>""")),
+                    key = Key(content = Text(messages("cf.guarantee-account.detail.movement-reference-number"))),
                     value = Value(
                         content = HtmlContent(
                             s"""<a class="govuk-link" href="${routes.GuaranteeTransactionController.displayTransaction(transaction.guaranteeTransaction.secureMovementReferenceNumber.getOrElse(""), model.pageNumber)}">
