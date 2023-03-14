@@ -29,7 +29,7 @@ trait Constraints {
   lazy val dayOfMonthThatTaxYearStartsOn = 6
 
   def equalToOrBeforeToday(errorKey:String): Constraint[LocalDate] = Constraint {
-    case request if request.isAfter(currentDate)  =>
+    case request if (request.isAfter(currentDate) && request.getYear.toString.length() == 4) =>
       Invalid(ValidationError(errorKey))
     case _ => Valid
   }
