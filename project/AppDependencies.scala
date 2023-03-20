@@ -8,7 +8,7 @@ object AppDependencies {
     "uk.gov.hmrc" %% "play-frontend-hmrc" % "7.1.0-play-28",
     "org.typelevel" %% "cats-core" % "2.3.0",
     "com.typesafe.play" %% "play-json-joda" % "2.9.2",
-    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28" % "1.1.0",
+    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28" % "0.70.0",
     "org.webjars.npm" % "moment" % "2.29.1",
     "uk.gov.hmrc" %% "tax-year" % "3.0.0"
   )
