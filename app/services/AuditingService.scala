@@ -36,8 +36,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConnector) {
 
   val log: LoggerLike = Logger(this.getClass)
-  implicit val dataEventWrites: Writes[DataEvent] = Json.writes[DataEvent]
-
   val referrer: HeaderCarrier => String = _.headers(Seq(HeaderNames.REFERER)).headOption.map(_._2).getOrElse("_")
 
   def audit(auditModel: AuditModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
