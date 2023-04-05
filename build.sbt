@@ -1,4 +1,5 @@
 import scoverage.ScoverageKeys
+import uk.gov.hmrc.DefaultBuildSettings.targetJvm
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "customs-guarantee-account-frontend"
@@ -11,6 +12,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     majorVersion                     := 0,
     scalaVersion                     := "2.13.8",
+    targetJvm                        := "jvm-11",
     libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
     ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*filters.*;.*handlers.*;.*components.*;.*views.html.*;" +
       ".*javascript.*;.*Routes.*;.*GuiceInjector;" +
