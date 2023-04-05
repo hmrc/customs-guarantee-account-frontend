@@ -62,7 +62,7 @@
                             HtmlFormat.fill(
                                 transaction.dueDates
                                         .map(v => Html(Formatters.dateAsDayMonthAbbrAndYear(LocalDate.parse(v.dueDate))))
-                                        .to[scala.collection.immutable.Seq]
+                                        .toSeq
                             )
                         )
                     }
@@ -78,7 +78,7 @@
                                 transaction.dueDates
                                         .map(_.reasonForSecurity)
                                         .map(Html(_))
-                                        .to[scala.collection.immutable.Seq])
+                                        .toSeq)
                         )),
                     actions = None
                 ))

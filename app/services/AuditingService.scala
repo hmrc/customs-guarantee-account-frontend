@@ -20,13 +20,13 @@ import config.AppConfig
 import helpers.Formatters.dateTimeAsIso8601
 import models.{AuditModel, GuaranteeCsvAuditData, RequestDates}
 import play.api.http.HeaderNames
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json.Json
 import play.api.{Logger, LoggerLike}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.AuditExtensions
 import uk.gov.hmrc.play.audit.http.connector.AuditResult.{Disabled, Failure, Success}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
-import uk.gov.hmrc.play.audit.model.{DataEvent, ExtendedDataEvent}
+import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 
 import java.time.LocalDateTime
 import javax.inject.{Inject, Singleton}
@@ -36,7 +36,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConnector) {
 
   val log: LoggerLike = Logger(this.getClass)
-  implicit val dataEventWrites: Writes[DataEvent] = Json.writes[DataEvent]
 
   val referrer: HeaderCarrier => String = _.headers(Seq(HeaderNames.REFERER)).headOption.map(_._2).getOrElse("_")
 
