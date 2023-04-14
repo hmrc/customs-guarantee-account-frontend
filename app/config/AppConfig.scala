@@ -39,7 +39,6 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
     config.getOptional[String]("customs-financials-api.context").getOrElse("/customs-financials-api")
 
   lazy val mrnEncryptionKey = config.get[String]("")
-
   lazy val numberOfItemsPerPage: Int = config.get[Int]("application.guarantee-account.numberOfItemsPerPage")
   lazy val guaranteeAccountInterval: Int = config.get[Int]("application.guarantee-account.updateTime.intervalMilliseconds")
   lazy val guaranteeAccountTimeout: Int = config.get[Int]("application.guarantee-account.updateTime.timeoutMilliseconds")
@@ -47,13 +46,9 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   lazy val subscribeCdsUrl = config.get[String]("urls.cdsSubscribeUrl")
   lazy val customsFinancialsFrontendHomepage = config.get[String]("urls.customsFinancialsHomepage")
   lazy val govUkHomepage = config.get[String]("urls.govUkHome")
-
   lazy val timeout: Int = config.get[Int]("timeout.timeout")
   lazy val countdown: Int = config.get[Int]("timeout.countdown")
   lazy val fixedDateTime = config.get[Boolean]("features.fixed-systemdate-for-tests")
-
   lazy val helpMakeGovUkBetterUrl: String = config.get[String]("urls.helpMakeGovUkBetterUrl")
-
   lazy val guaranteeAccountGuidanceUrl: String = config.get[String]("urls.guaranteeAccountGuidanceUrl")
-
 }
