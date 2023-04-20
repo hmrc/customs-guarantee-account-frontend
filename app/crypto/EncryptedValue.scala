@@ -17,7 +17,6 @@
 package crypto
 
 import play.api.libs.json.{Json, OFormat}
-
 import java.security.{InvalidAlgorithmParameterException, InvalidKeyException, NoSuchAlgorithmException, SecureRandom}
 import java.util.Base64
 import javax.crypto._
