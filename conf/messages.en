@@ -225,4 +225,4 @@ cf.guarantee-account.detail.expiry-dates=Expiry dates
 cf.guarantee-account.detail.mrn-link-prefix=Your security for MRN
 cf.guarantee-account.your-securities.heading=Your securities
 cf.guarantee-account.your-securities.p=Listed by date of import.
-cf.guarantee-account.transactions.hidden-text={0} has {1} securities
+cf.guarantee-account.transactions.hidden-text= has {0} securities

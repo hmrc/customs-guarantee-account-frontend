@@ -225,4 +225,4 @@ cf.guarantee-account.detail.expiry-dates=Dyddiadau dod i ben
 cf.guarantee-account.detail.mrn-link-prefix=Eich gwarant ar gyfer Cyfeirnod Symud
 cf.guarantee-account.your-securities.heading=Eich gwarantau
 cf.guarantee-account.your-securities.p=Rhestrwyd yn ôl dyddiad mewnforio.
-cf.guarantee-account.transactions.hidden-text=Mae gan {0} {1} gwarant
+cf.guarantee-account.transactions.hidden-text=Mae gan {0} gwarant
