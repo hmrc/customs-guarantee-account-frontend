@@ -25,12 +25,10 @@
 
 @for(transactionsByDate <- model.visibleItems) {
     <h3 class="govuk-heading-m  govuk-!-padding-top-5 govuk-!-margin-bottom-3">
-        <span aria-hidden="true">@{
+        <span>@{
             Formatters.dateAsDayMonthAbbrAndYear(transactionsByDate.date)
         }</span>
-        <span class="govuk-visually-hidden">@messages("cf.guarantee-account.transactions.hidden-text", {
-            Formatters.dateAsDayMonthAbbrAndYear(transactionsByDate.date)
-        }, transactionsByDate.transactions.size) </span>
+        <span class="govuk-visually-hidden"> @messages("cf.guarantee-account.transactions.hidden-text", transactionsByDate.transactions.size) </span>
     </h3>
 
     @for(transaction <- transactionsByDate.transactions) {
