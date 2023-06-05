@@ -20,10 +20,12 @@
 @(accountModel: GuaranteeAccountViewModel, showBalance: Boolean)(implicit messages: Messages)
 
     <header class="hmrc-page-heading govuk-!-margin-bottom-0" id="account-summary">
-        <h1 class="govuk-heading-xl">@messages("cf.guarantee-account.detail.title")</h1>
-        <p class="govuk-caption-xl hmrc-caption-xl" id="account-number">
+        <h2 class="govuk-caption-xl hmrc-caption-xl" id="account-number">
             @messages("cf.guarantee-account.detail.account-number", accountModel.account.number)
-        </p>
+        </h2>
+        <h1 class="govuk-heading-xl">
+            @messages("cf.guarantee-account.detail.title")
+        </h1>
     </header>
 
     @if(showBalance) {
