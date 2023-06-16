@@ -42,20 +42,17 @@ class RequestTransactionsController @Inject()(
 
   def form: Form[GuaranteeTransactionDates] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    cache.get(request.eori).map {
-      case Some(value) => Ok(view(form.fill(value)))
-      case None => Ok(view(form))
-    }
+  def onPageLoad(): Action[AnyContent] = identify.async {
+    implicit request => for {
+      _ <- cache.clear(request.eori)
+    } yield Ok(view(form))
   }
 
   def onSubmit(): Action[AnyContent] = identify.async {
     implicit request =>
-      form.bindFromRequest().fold(
-        formWithErrors =>
+      form.bindFromRequest().fold(formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors))),
-        value =>
-          customValidation(value, form) match {
+          value => customValidation(value, form) match {
             case Some(formWithErrors) =>
               Future.successful(BadRequest(view(formWithErrors)))
             case None =>
