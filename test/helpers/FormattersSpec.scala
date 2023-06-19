@@ -24,7 +24,6 @@ import utils.SpecBase
 
 import java.time.{LocalDate, LocalDateTime}
 
-
 class FormattersSpec extends SpecBase {
 
   val app = application.build()

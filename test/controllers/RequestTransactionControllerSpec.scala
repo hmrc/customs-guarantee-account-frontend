@@ -27,8 +27,7 @@ class RequestTransactionControllerSpec extends SpecBase {
 
   "onPageLoad" should {
     "return OK with pre-populated data" in new Setup {
-      when(mockRequestedTransactionsCache.get(any))
-        .thenReturn(Future.successful(Some(GuaranteeTransactionDates(LocalDate.now(), LocalDate.now()))))
+      when(mockRequestedTransactionsCache.clear(any)).thenReturn(Future.successful(true))
 
       val request = fakeRequest(GET, routes.RequestTransactionsController.onPageLoad.url)
       running(app) {
@@ -38,8 +37,7 @@ class RequestTransactionControllerSpec extends SpecBase {
     }
 
     "return OK with no cached data" in new Setup {
-      when(mockRequestedTransactionsCache.get(any))
-        .thenReturn(Future.successful(None))
+      when(mockRequestedTransactionsCache.clear(any)).thenReturn(Future.successful(true))
 
       val request = fakeRequest(GET, routes.RequestTransactionsController.onPageLoad.url)
       running(app) {
@@ -48,6 +46,19 @@ class RequestTransactionControllerSpec extends SpecBase {
       }
     }
 
+    "return OK when clearing cache" in new Setup {
+      when(mockRequestedTransactionsCache.clear(any)).thenReturn(Future.successful(true))
+
+      val store = fakeRequest(GET, routes.RequestTransactionsController.onSubmit().url)
+      val clear = fakeRequest(GET, routes.RequestTransactionsController.onPageLoad.url)
+
+      running(app) {
+        val result = route(app, store).value
+        val test = route(app,clear).value
+        status(result) mustBe OK
+        status(test) mustBe OK
+      }
+    }
   }
 
   "onSubmit" should {
