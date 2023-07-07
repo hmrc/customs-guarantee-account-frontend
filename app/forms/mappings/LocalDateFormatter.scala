@@ -43,9 +43,9 @@ private[mappings] class LocalDateFormatter(
           case Success(date) =>
             Right(LocalDate.of(year, month, if (endOfMonth) date.lengthOfMonth() else 1))
           case Failure(_) =>
-            Left(Seq(FormError(key, invalidYear, args)))
+            Left(Seq(FormError(updateFormErrorKeys(key, month, year), invalidYear, args)))
         }
-      case _ => Left(Seq(FormError(key, invalidMonth, args)))
+      case _ => Left(Seq(FormError(updateFormErrorKeys(key, month, year), invalidMonth, args)))
     }
 
 
@@ -66,9 +66,9 @@ private[mappings] class LocalDateFormatter(
     )
 
     for {
-      month <- intMonth.bind(s"$key.month", data).right
-      year <- intYear.bind(s"$key.year", data).right
-      date <- toDate(key, month, year).right
+      month <- intMonth.bind(s"$key.month", data)
+      year <- intYear.bind(s"$key.year", data)
+      date <- toDate(key, month, year)
     } yield date
   }
 
@@ -91,15 +91,15 @@ private[mappings] class LocalDateFormatter(
         }
       case 1 =>
         (key, missingFields.head) match {
-          case ("start", "month") => Left(List(FormError(key, emptyStartMonth, args)))
-          case ("start", "year") => Left(List(FormError(key, emptyStartYear, args)))
-          case ("end", "month") => Left(List(FormError(key, emptyEndMonth, args)))
-          case ("end", "year") => Left(List(FormError(key, emptyEndYear, args)))
+          case ("start", "month") => Left(List(FormError(formErrorKeysInCaseOfEmptyOrNonNumericValues(key, data), emptyStartMonth, args)))
+          case ("start", "year") => Left(List(FormError(formErrorKeysInCaseOfEmptyOrNonNumericValues(key, data), emptyStartYear, args)))
+          case ("end", "month") => Left(List(FormError(formErrorKeysInCaseOfEmptyOrNonNumericValues(key, data), emptyEndMonth, args)))
+          case ("end", "year") => Left(List(FormError(formErrorKeysInCaseOfEmptyOrNonNumericValues(key, data), emptyEndYear, args)))
         }
       case _ =>
         (key, missingFields) match {
-          case ("start", List("month", "year")) => Left(List(FormError(key, emptyStartDate, args)))
-          case ("end", List("month","year")) => Left(List(FormError(key, emptyEndDate, args)))
+          case ("start", List("month", "year")) => Left(List(FormError(formErrorKeysInCaseOfEmptyOrNonNumericValues(key, data), emptyStartDate, args)))
+          case ("end", List("month","year")) => Left(List(FormError(formErrorKeysInCaseOfEmptyOrNonNumericValues(key, data), emptyEndDate, args)))
         }
     }
   }
@@ -114,6 +114,47 @@ private[mappings] class LocalDateFormatter(
       s"$key.month" -> value.getMonthValue.toString,
       s"$key.year" -> value.getYear.toString
     )
+
+    /**
+   * Updates the FormError key as per valid month and year criteria
+   * key is updated as below
+   * invalid month - key.month
+   * invalid year - key.year
+   *
+   * @param key Input form key
+   * @param month Month value of the input date
+   * @param year Year value of the input date
+   * @return Updated form key
+   */
+  private[mappings] def updateFormErrorKeys(key: String,
+                                            month: Int,
+                                            year: Int): String =
+    (month, year) match {
+      case (m, _) if m < 1 || m > 12 => s"$key.month"
+      case (_, y) if y < 1000 || y > 99999 => s"$key.year"
+      case _ => s"$key.month"
+    }
+
+  /**
+   * Updates the FormError key as per the given criteria
+   * key is updated as below
+   * empty month or non numeric month - key.month
+   * empty year or non numeric year - key.year
+   *
+   * @param key FormError key
+   * @param data Map of Form values
+   * @return Updated FormError key
+   */
+  private[mappings] def formErrorKeysInCaseOfEmptyOrNonNumericValues(key: String,
+                                                                     data: Map[String, String]): String = {
+
+    val monthValue = data.get(s"$key.month")
+    val yearValue = data.get(s"$key.year")
+
+    (monthValue, yearValue) match {
+      case (Some(m), _) if m.trim.isEmpty || Try(m.trim.toInt).isFailure => s"$key.month"
+      case (_, Some(y)) if y.trim.isEmpty || Try(y.trim.toInt).isFailure => s"$key.year"
+      case _ => s"$key.month"
+    }
+  }
 }
-
-
