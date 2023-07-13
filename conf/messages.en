@@ -5,6 +5,7 @@ language.change.cymraeg = Newid yr iaith ir Gymraeg
 service.back = Back
 service.name = View your customs financial accounts
 
+site.error = Error
 
 # Guarantee Account Detail View
 cf.guarantee-account.detail.title=General guarantee account

@@ -5,6 +5,7 @@ language.change.english=Change the language to English
 service.back=Yn ôl
 service.name=Bwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
 
+site.error = Gwall
 
 # Guarantee Account Detail View
 cf.guarantee-account.detail.title=Cyfrif gwarant cyffredinol
