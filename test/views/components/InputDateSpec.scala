@@ -16,79 +16,109 @@
 
 package views.components
 
+import forms.GuaranteeTransactionsRequestPageFormProvider
+import play.api.Application
 import org.scalatestplus.play._
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import play.api.Application
 import play.api.test._
 import play.api.test.Helpers._
-import play.api.i18n.{
-  DefaultMessagesApi,
-  Lang,
-  MessagesImpl,
-  Messages,
-  MessagesProvider
-}
+import play.api.i18n.{DefaultMessagesApi, Lang, Messages, MessagesImpl, MessagesProvider}
 import play.api.inject.bind
+import play.twirl.api.HtmlFormat
 import utils.SpecBase
 import views.html.components.inputDate
 
+import java.time.Clock
+import java.time.LocalDate
 
 class InputDateSpec extends SpecBase {
-
   "InpuDate component" should {
-    "render correctly with no errors" in {
-      val form =
-        new FakeForm().bind(Map("value.month" -> "07", "value.year" -> "2023"))
-      val messages = MessagesImpl(Lang.defaultLang, new DefaultMessagesApi())
 
-      val output = inputDate.render(form, "Date of Birth", messages)
+    "render correctly with no errors" in new Setup {
 
-      contentAsString(output) must include("Date of Birth")
-      contentAsString(output) must include("July")
-      contentAsString(output) must include("2023")
-      contentAsString(output) mustNot include("govuk-input--error")
+      val formWithValues = form.bind(Map(
+      "start.month" -> "01", "start.year" -> "2021","end.month" -> "10", "end.year" -> "2021"))
+      
+      running(app){ 
+        val inputDateView = app.injector.instanceOf[views.html.components.inputDate]
+        val output: HtmlFormat.Appendable = inputDateView(
+          formWithValues, "Date of Birth", id="start", legendHiddenContent = None)(messages(app))
+        val html: Document = Jsoup.parse(output.toString)
+        
+        html.getElementsByTag("h1").text() must include("Date of Birth")
+        html.getElementById("start.month").attr("value") must include("01")
+        html.getElementById("start.year").attr("value") must include("2021")
+        html.getElementsByClass("govuk-date-input__input").attr("class") mustNot include("govuk-input--error")
+      
+      }
     }
 
-    "render correctly with month error" in {
-      val form =
-        new FakeForm().bind(Map("value.month" -> "", "value.year" -> "2023"))
-      val messages = MessagesImpl(Lang.defaultLang, new DefaultMessagesApi())
+    "render correctly with month error" in new Setup {
 
-      val output = inputDate.render(form, "Date of Birth", messages)
-
-      contentAsString(output) must include("Date of Birth")
-      contentAsString(output) mustNot include("July")
-      contentAsString(output) must include("2023")
-      contentAsString(output) must include("govuk-input--error")
+      val formWithValues = form.bind(Map(
+      "start.month" -> "", "start.year" -> "2021","end.month" -> "10", "end.year" -> "2021"))
+      
+      running(app){ 
+        val inputDateView = app.injector.instanceOf[views.html.components.inputDate]
+        val output: HtmlFormat.Appendable = inputDateView(
+          formWithValues, "Date of Birth", id="start", legendHiddenContent = None)(messages(app))
+        val html: Document = Jsoup.parse(output.toString)
+        
+        html.getElementsByTag("h1").text() must include("Date of Birth")
+        html.getElementById("start.month").attr("value") mustNot include("01")
+        html.getElementById("start.year").attr("value") must include("2021")
+        html.getElementsByClass("govuk-date-input__input").attr("class") must include("govuk-input--error")
+      
+      }
     }
 
-    "render correctly with year error" in {
-      val form =
-        new FakeForm().bind(Map("value.month" -> "07", "value.year" -> ""))
-      val messages = MessagesImpl(Lang.defaultLang, new DefaultMessagesApi())
 
-      val output = inputDate.render(form, "Date of Birth", messages)
+    "render correctly with year error" in new Setup {
 
-      contentAsString(output) must include("Date of Birth")
-      contentAsString(output) must include("July")
-      contentAsString(output) mustNot include("2023")
-      contentAsString(output) must include("govuk-input--error")
+      val formWithValues = form.bind(Map(
+      "start.month" -> "01", "start.year" -> "","end.month" -> "10", "end.year" -> "2021"))
+      
+      running(app){ 
+        val inputDateView = app.injector.instanceOf[views.html.components.inputDate]
+        val output: HtmlFormat.Appendable = inputDateView(
+          formWithValues, "Date of Birth", id="start", legendHiddenContent = None)(messages(app))
+        val html: Document = Jsoup.parse(output.toString)
+        
+        html.getElementsByTag("h1").text() must include("Date of Birth")
+        html.getElementById("start.month").attr("value") must include("01")
+        html.getElementById("start.year").attr("value") mustNot include("2021")
+        html.getElementsByClass("govuk-date-input__input").attr("class") mustNot include("govuk-input--error")
+      
+      }
     }
 
-    "render correctly with both month and year errors" in {
-      val form =
-        new FakeForm().bind(Map("value.month" -> "", "value.year" -> ""))
-      val messages = MessagesImpl(Lang.defaultLang, new DefaultMessagesApi())
+    "render correctly with both month and year errors" in new Setup {
 
-      val output = inputDate.render(form, "Date of Birth", messages)
-
-      contentAsString(output) must include("Date of Birth")
-      contentAsString(output) mustNot include("July")
-      contentAsString(output) mustNot include("2023")
-      contentAsString(output) must include("govuk-input--error")
+      val formWithValues = form.bind(Map(
+      "start.month" -> "", "start.year" -> "","end.month" -> "10", "end.year" -> "2021"))
+      
+      running(app){ 
+        val inputDateView = app.injector.instanceOf[views.html.components.inputDate]
+        val output: HtmlFormat.Appendable = inputDateView(
+          formWithValues, "Date of Birth", id="start", legendHiddenContent = None)(messages(app))
+        val html: Document = Jsoup.parse(output.toString)
+        
+        html.getElementsByTag("h1").text() must include("Date of Birth")
+        html.getElementById("start.month").attr("value") mustNot include("01")
+        html.getElementById("start.year").attr("value") mustNot include("2021")
+        html.getElementsByClass("govuk-date-input__input").attr("class") must include("govuk-input--error")
+      
+      }
     }
   }
 
-  // Fake implementation of Play's Form class for testing purposes
-  class FakeForm {
-    def bind(data: Map[String, String]): FakeForm = this
+  trait Setup {
+
+    implicit val clk: Clock = Clock.systemUTC()
+    val form = new GuaranteeTransactionsRequestPageFormProvider().apply()
+  
+    val app: Application = application.build()
   }
 }
