@@ -20,8 +20,9 @@ import config.{AppConfig, ErrorHandler}
 import controllers.actions.IdentifierAction
 import forms.GuaranteeTransactionsRequestPageFormProvider
 import models.GuaranteeTransactionDates
+import play.api.Logger
 import play.api.data.Form
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.RequestedTransactionsCache
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -40,6 +41,8 @@ class RequestTransactionsController @Inject()(
                                               eh: ErrorHandler,
                                               appConfig: AppConfig) extends FrontendController(mcc) with I18nSupport {
 
+  val log: Logger = Logger(this.getClass)
+
   def form: Form[GuaranteeTransactionDates] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async {
@@ -50,10 +53,13 @@ class RequestTransactionsController @Inject()(
 
   def onSubmit(): Action[AnyContent] = identify.async {
     implicit request =>
-      form.bindFromRequest().fold(formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors))),
+      form.bindFromRequest().fold(formWithErrors => {
+        logMessageForAnalytics(request.eori, formWithErrors)
+        Future.successful(BadRequest(view(formWithErrors)))
+      },
           value => customValidation(value, form) match {
             case Some(formWithErrors) =>
+              logMessageForAnalytics(request.eori, formWithErrors)
               Future.successful(BadRequest(view(formWithErrors)))
             case None =>
               cache.set(request.eori, value).map { _ =>
@@ -74,5 +80,19 @@ class RequestTransactionsController @Inject()(
         Some(populateErrors("cf.form.error.start-after-end", "cf.form.error.end-before-start"))
       case _ => None
     }
+  }
+
+  private def logMessageForAnalytics(eori: String, formWithErrors: Form[GuaranteeTransactionDates])
+                                    (implicit messages: Messages): Unit= {
+    val errorMessages = formWithErrors.errors.map(e => messages(e.message)).mkString(",")
+
+    val startDate = formWithErrors.data.getOrElse("start.year", " ") + "-" +
+      formWithErrors.data.getOrElse("start.month", " ")
+
+    val endDate = formWithErrors.data.getOrElse("end.year", " ") + "-" +
+      formWithErrors.data.getOrElse("end.month", " ")
+
+    log.warn(s"Guarantee account, transaction request service, eori number: $eori, " +
+      s"start date: $startDate, end date: $endDate, error: $errorMessages")
   }
 }
