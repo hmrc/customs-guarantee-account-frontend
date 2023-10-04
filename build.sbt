@@ -1,6 +1,5 @@
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.DefaultBuildSettings.targetJvm
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "customs-guarantee-account-frontend"
 
@@ -36,5 +35,4 @@ lazy val microservice = Project(appName, file("."))
     // ***************
   )
   .settings(PlayKeys.playDefaultPort := 9395)
-  .settings(publishingSettings: _*)
   .settings(resolvers += Resolver.jcenterRepo)
