@@ -33,6 +33,5 @@ class MongoDateTimeFormatsSpec extends SpecBase {
   trait Setup {
     val date = LocalDateTime.now()
     val testWrites: JsValue = Json.obj("$date" -> date.atZone(ZoneOffset.UTC).toInstant.toEpochMilli)
-    }
   }
 }
