@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-package views.helpers
+package models
 
+import play.api.libs.json._
 import utils.SpecBase
-import play.api.i18n.Messages
-import play.api.test.Helpers
+import java.time.{Instant, LocalDateTime, ZoneOffset}
+import scala.concurrent.Future
 
-class PageTitleSpec extends SpecBase {
-  "fullPageTitle" should {
-    "return correct string for present title" in new Setup {
-      val res = PageTitle.fullPageTitle(Some("abc"))
-      res mustBe Some("abc - service.name - GOV.UK")
-    }
+class MongoDateTimeFormatsSpec extends SpecBase {
 
-    "return correct string for no title" in new Setup {
-      val res = PageTitle.fullPageTitle(Some(""))
-      res mustBe Some(" - service.name - GOV.UK")
+  "MongoDateTimeFormats" should {
+    "must write DateTime" in new Setup {
+      val res = MongoDateTimeFormats.localDateTimeWrite.writes(date)
+      res mustBe testWrites
     }
   }
 
   trait Setup {
-    implicit val msgs: Messages = Helpers.stubMessages()
+    val date = LocalDateTime.now()
+    val testWrites: JsValue = Json.obj("$date" -> date.atZone(ZoneOffset.UTC).toInstant.toEpochMilli)
+    }
   }
 }
