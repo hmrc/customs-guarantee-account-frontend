@@ -89,7 +89,7 @@ class DownloadCsvController @Inject()(
           result = transactions match {
             case Left(error) => error match {
               case NoTransactionsAvailable => Ok(noResults(new ResultsPageSummary(start, end)))
-              case TooManyTransactionsRequested => Ok(tooManyResults(new ResultsPageSummary(start, end), controllers.routes.RequestTransactionsController.onPageLoad.url))
+              case TooManyTransactionsRequested => Ok(tooManyResults(new ResultsPageSummary(start, end), controllers.routes.RequestTransactionsController.onPageLoad().url))
               case UnknownException => Redirect(routes.DownloadCsvController.showUnableToDownloadCSV(page))
             }
             case Right(transactions) =>

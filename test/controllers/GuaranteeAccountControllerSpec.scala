@@ -77,6 +77,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         status(result) mustEqual NOT_FOUND
       }
     }
+
     "include a link to the guarantee transactions request page when feature switch is set to true" in new Setup {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
@@ -99,8 +100,8 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         val result = route(app, request).value
         contentAsString(result) must include regex "Search for and download a CSV of all securities"
       }
-
     }
+
     "display too may results page if more than 5000 securities are returned" in new Setup {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
@@ -123,10 +124,9 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         status(result) mustEqual OK
         contentAsString(result) must include regex "There are too many open securities to display consecutively"
       }
-
     }
-
   }
+
   "showTransactionsUnavailable" should {
     "return OK" in new Setup {
 
@@ -145,11 +145,10 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         .build()
 
       running(app) {
-        val request = FakeRequest(GET, routes.GuaranteeAccountController.showTransactionsUnavailable.url)
+        val request = FakeRequest(GET, routes.GuaranteeAccountController.showTransactionsUnavailable().url)
         val result = route(app, request).value
         status(result) mustEqual OK
       }
-
     }
 
     "redirect to account unavailable page" when {
@@ -163,7 +162,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
           .build()
 
         running(app) {
-          val request = FakeRequest(GET, routes.GuaranteeAccountController.showTransactionsUnavailable.url)
+          val request = FakeRequest(GET, routes.GuaranteeAccountController.showTransactionsUnavailable().url)
           val result = route(app, request).value
           status(result) must be(Status.SEE_OTHER)
           header(LOCATION, result) must be(Some(routes.GuaranteeAccountController.showAccountUnavailable.url))
@@ -179,7 +178,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
           .build()
 
         running(app) {
-          val request = FakeRequest(GET, routes.GuaranteeAccountController.showTransactionsUnavailable.url)
+          val request = FakeRequest(GET, routes.GuaranteeAccountController.showTransactionsUnavailable().url)
           val result = route(app, request).value
           status(result) must be(Status.SEE_OTHER)
           header(LOCATION, result) must be(Some(routes.GuaranteeAccountController.showAccountUnavailable.url))
@@ -196,7 +195,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
           .build()
 
         running(app) {
-          val request = FakeRequest(GET, routes.GuaranteeAccountController.showTransactionsUnavailable.url)
+          val request = FakeRequest(GET, routes.GuaranteeAccountController.showTransactionsUnavailable().url)
           val result = route(app, request).value
           status(result) must be(Status.SEE_OTHER)
           header(LOCATION, result) must be(Some(routes.GuaranteeAccountController.showAccountUnavailable.url))

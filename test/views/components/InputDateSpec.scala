@@ -17,21 +17,13 @@
 package views.components
 
 import forms.GuaranteeTransactionsRequestPageFormProvider
-import play.api.Application
-import org.scalatestplus.play._
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.Application
-import play.api.test._
 import play.api.test.Helpers._
-import play.api.i18n.{DefaultMessagesApi, Lang, Messages, MessagesImpl, MessagesProvider}
-import play.api.inject.bind
 import play.twirl.api.HtmlFormat
 import utils.SpecBase
-import views.html.components.inputDate
-
 import java.time.Clock
-import java.time.LocalDate
 
 class InputDateSpec extends SpecBase {
   "InpuDate component" should {

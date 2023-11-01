@@ -36,12 +36,12 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       .thenReturn(Future.successful(None))
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
-      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad.url)
+      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
 
     running(app) {
       val result = route(app, request).value
       status(result) mustBe SEE_OTHER
-      redirectLocation(result).value mustBe routes.RequestTransactionsController.onPageLoad.url
+      redirectLocation(result).value mustBe routes.RequestTransactionsController.onPageLoad().url
     }
   }
 
@@ -56,7 +56,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       .thenReturn(Future.successful(Left(NoTransactionsAvailable)))
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
-      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad.url)
+      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
 
     running(app) {
       val result = route(app, request).value
@@ -76,7 +76,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       .thenReturn(Future.successful(Left(TooManyTransactionsRequested)))
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
-      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad.url)
+      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
 
     running(app) {
       val result = route(app, request).value
@@ -96,7 +96,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       .thenReturn(Future.successful(Left(UnknownException)))
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
-      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad.url)
+      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
 
     running(app) {
       val result = route(app, request).value
@@ -117,7 +117,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       .thenThrow(new RuntimeException())
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
-      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad.url)
+      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
 
     running(app) {
       val result = route(app, request).value
@@ -195,16 +195,11 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         Some("C18-2"),
         dueDates = Seq(dd))
     )
+
     val nonFatalResponse = UpstreamErrorResponse("ServiceUnavailable", Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
 
-    val app = application
-      .overrides(
+    val app = application.overrides(
         bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector)
-      )
-      .configure(
-        "features.fixed-systemdate-for-tests" -> "true")
-      .build()
-
-
+      ).configure("features.fixed-systemdate-for-tests" -> "true").build()
   }
 }

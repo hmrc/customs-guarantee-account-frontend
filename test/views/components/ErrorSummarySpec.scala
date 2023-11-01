@@ -17,7 +17,6 @@
 package views.components
 
 import helpers.FormHelper.updateFormErrorKeyForStartAndEndDate
-import org.mockito.MockitoSugar.mock
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.data.FormError
 import play.api.i18n.Messages
