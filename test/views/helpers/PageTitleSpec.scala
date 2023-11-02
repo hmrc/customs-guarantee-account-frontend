@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-package models
+package views.helpers
 
-import play.api.libs.json._
-import java.time.{Instant, LocalDateTime, ZoneOffset}
+import utils.SpecBase
+import play.api.i18n.Messages
+import play.api.test.Helpers
 
-trait MongoDateTimeFormats {
-
-  implicit val localDateTimeRead: Reads[LocalDateTime] =
-    (__ \ "$date").read[Long].map {
-      millis =>
-        LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneOffset.UTC)
+class PageTitleSpec extends SpecBase {
+  "fullPageTitle" should {
+    "return correct string for present title" in new Setup {
+      val res = PageTitle.fullPageTitle(Some("abc"))
+      res mustBe Some("abc - service.name - GOV.UK")
     }
 
-  implicit val localDateTimeWrite: Writes[LocalDateTime] = new Writes[LocalDateTime] {
-    def writes(dateTime: LocalDateTime): JsValue = Json.obj(
-      "$date" -> dateTime.atZone(ZoneOffset.UTC).toInstant.toEpochMilli
-    )
+    "return correct string for no title" in new Setup {
+      val res = PageTitle.fullPageTitle(Some(""))
+      res mustBe Some(" - service.name - GOV.UK")
+    }
+  }
+
+  trait Setup {
+    implicit val msgs: Messages = Helpers.stubMessages()
   }
 }
-
-object MongoDateTimeFormats extends MongoDateTimeFormats
