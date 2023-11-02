@@ -18,13 +18,12 @@ package models
 
 import play.api.libs.json._
 import utils.SpecBase
-import java.time.{Instant, LocalDateTime, ZoneOffset}
-import scala.concurrent.Future
+import java.time.{LocalDateTime, ZoneOffset}
 
 class MongoDateTimeFormatsSpec extends SpecBase {
 
   "MongoDateTimeFormats" should {
-    "must write DateTime" in new Setup {
+    "write DateTime" in new Setup {
       val res = MongoDateTimeFormats.localDateTimeWrite.writes(date)
       res mustBe testWrites
     }
