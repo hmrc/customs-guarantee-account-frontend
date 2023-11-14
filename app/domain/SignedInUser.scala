@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 
-package models
+package domain
 
-package object domain {
-  type EORI = String
-  type LinkId = String
-  type GAN = String
-
-  val lengthToReveal = 4
-
-  def obfuscateEori(eori: EORI): String =
-    List.fill(eori.length - lengthToReveal)("*").mkString("") + eori.takeRight(lengthToReveal)
-}
+case class SignedInUser(eori: String, allEoriHistory: Seq[EoriHistory], xiEori: Option[String])

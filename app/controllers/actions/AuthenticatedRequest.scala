@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package models
+package controllers.actions
 
-package object domain {
-  type EORI = String
-  type LinkId = String
-  type GAN = String
+import domain.SignedInUser
+import play.api.mvc.{Request, WrappedRequest}
 
-  val lengthToReveal = 4
+final case class AuthenticatedRequest[A](request: Request[A], user: SignedInUser) extends WrappedRequest[A](request)
 
-  def obfuscateEori(eori: EORI): String =
-    List.fill(eori.length - lengthToReveal)("*").mkString("") + eori.takeRight(lengthToReveal)
-}
