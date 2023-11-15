@@ -18,7 +18,7 @@ package controllers.actions
 
 import config.AppConfig
 import models.UnverifiedEmail
-import controllers.actions.AuthenticatedRequest
+import models.request.IdentifierRequest
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results._
 import play.api.mvc.{ActionFilter, Result}
@@ -30,10 +30,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 
 @Singleton
-class EmailAction @Inject()(dataStoreService: DataStoreService)(implicit val executionContext: ExecutionContext, val messagesApi: MessagesApi) extends ActionFilter[AuthenticatedRequest] with I18nSupport {
-  def filter[A](request: AuthenticatedRequest[A]): Future[Option[Result]] = {
+class EmailAction @Inject()(dataStoreService: DataStoreService)(implicit val executionContext: ExecutionContext, val messagesApi: MessagesApi) extends ActionFilter[IdentifierRequest] with I18nSupport {
+  def filter[A](request: IdentifierRequest[A]): Future[Option[Result]] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-    dataStoreService.getEmail(request.user.eori).map {
+    dataStoreService.getEmail(request.eori).map {
       case Left(value) =>
         value match {
           case UnverifiedEmail => Some(Redirect(controllers.routes.EmailController.showUnverified()))
