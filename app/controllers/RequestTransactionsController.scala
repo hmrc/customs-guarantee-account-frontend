@@ -17,7 +17,7 @@
 package controllers
 
 import config.{AppConfig, ErrorHandler}
-import controllers.actions.IdentifierAction
+import controllers.actions.{IdentifierAction, EmailAction}
 import forms.GuaranteeTransactionsRequestPageFormProvider
 import models.GuaranteeTransactionDates
 import play.api.Logger
@@ -33,6 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RequestTransactionsController @Inject()(
                                                identify: IdentifierAction,
+                                               checkEmailIsVerified: EmailAction,
                                                formProvider: GuaranteeTransactionsRequestPageFormProvider,
                                                view: guarantee_transactions_request_page,
                                                cache: RequestedTransactionsCache,
@@ -45,7 +46,7 @@ class RequestTransactionsController @Inject()(
 
   def form: Form[GuaranteeTransactionDates] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = identify.async {
+  def onPageLoad(): Action[AnyContent] = (identify andThen checkEmailIsVerified).async {
     implicit request => for {
       _ <- cache.clear(request.eori)
     } yield Ok(view(form))

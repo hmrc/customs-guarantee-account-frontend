@@ -86,7 +86,7 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
     } yield result
   }
 
-  def showTransactionsUnavailable(): Action[AnyContent] = identify async { implicit request =>
+  def showTransactionsUnavailable(): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
 
     val result = for {
       account <- fromOptionF[Future, Result, GuaranteeAccount](apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
@@ -100,7 +100,7 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
     }
   }
 
-  def showAccountUnavailable: Action[AnyContent] = identify async { implicit req =>
+  def showAccountUnavailable: Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit req =>
     Future.successful(Ok(guaranteeAccountNotAvailable()))
   }
 }
