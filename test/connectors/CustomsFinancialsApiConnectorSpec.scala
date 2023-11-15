@@ -50,6 +50,23 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       }
     }
 
+    "return unverified email" in new Setup {
+      when[Future[EmailUnverifiedResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
+        .thenReturn(Future.successful(EmailUnverifiedResponse(Some("unverified@email.com"))))
+
+      val app = application
+        .overrides(
+          bind[HttpClient].toInstance(mockHttpClient)
+        ).build()
+
+      val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+
+      running(app) {
+        val result = await(connector.isEmailUnverified(hc))
+        result mustBe "unverified@email.com"
+      }
+    }
+
     "log response time metric" in new Setup {
       when[Future[AccountsAndBalancesResponseContainer]](mockHttpClient.POST(any, any, any)(any, any, any, any))
         .thenReturn(Future.successful(traderAccounts))
