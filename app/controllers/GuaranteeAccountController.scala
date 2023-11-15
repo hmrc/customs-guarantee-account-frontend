@@ -49,7 +49,7 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
 
   val log: Logger = Logger(this.getClass)
 
-  def showAccountDetails(page: Option[Int]): Action[AnyContent] = (identify).async { implicit request =>
+  def showAccountDetails(page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
 
       val result = for {
         account <- fromOptionF[Future, Result, GuaranteeAccount](apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
