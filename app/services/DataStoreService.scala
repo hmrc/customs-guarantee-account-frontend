@@ -41,7 +41,6 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
     metricsReporter.withResponseTimeLogging("customs-data-store.get.email") {
       http.GET[EmailResponse](dataStoreEndpoint).map {
         case EmailResponse(Some(address), _, None) => Right(Email(address))
-        case EmailResponse(Some(email), _, Some(_)) => Left(UndeliverableEmail(email))
         case _ => Left(UnverifiedEmail)
       }.recover {
         case UpstreamErrorResponse(_, NOT_FOUND, _, _) => Left(UnverifiedEmail)

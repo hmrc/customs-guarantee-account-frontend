@@ -63,7 +63,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       running(app) {
         val result = await(connector.isEmailUnverified(hc))
-        result mustBe "unverified@email.com"
+        result mustBe Some("unverified@email.com")
       }
     }
 

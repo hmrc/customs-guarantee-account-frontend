@@ -40,7 +40,7 @@ class EmailController @Inject()(authenticate: IdentifierAction,
   def showUnverified():Action[AnyContent] = authenticate async { implicit request =>
 
     financialsApiConnector.isEmailUnverified.map {
-      case a => Ok(verifyEmailView(appConfig.emailFrontendUrl, Some(a)))
+      case email => Ok(verifyEmailView(appConfig.emailFrontendUrl, email))
     }
   }
 }

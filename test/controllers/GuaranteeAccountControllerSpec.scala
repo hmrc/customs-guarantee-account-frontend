@@ -23,7 +23,8 @@ import play.api.http.Status
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{AuditingService, DateTimeService}
+import services.{AuditingService, DataStoreService, DateTimeService}
+import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
 
@@ -46,10 +47,14 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
 
+      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+        .thenReturn(Future.successful(Right(Email("abc@test.com"))))
+
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
-          bind[DateTimeService].toInstance(mockDateTimeService)
+          bind[DateTimeService].toInstance(mockDateTimeService),
+          bind[DataStoreService].toInstance(mockDataStoreService)
         )
         .configure(
           "features.guarantee-account-details" -> "true",
@@ -86,10 +91,15 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         .thenReturn(Future.successful(Right(ganTransactions)))
 
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
+
+      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+        .thenReturn(Future.successful(Right(Email("abc@test.com"))))
+
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
-          bind[DateTimeService].toInstance(mockDateTimeService)
+          bind[DateTimeService].toInstance(mockDateTimeService),
+          bind[DataStoreService].toInstance(mockDataStoreService)
         )
         .configure(
           "application.guarantee-account.numberOfItemsPerPage" -> "10")
@@ -111,10 +121,14 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
 
+      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+        .thenReturn(Future.successful(Right(Email("abc@test.com"))))
+
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
-          bind[DateTimeService].toInstance(mockDateTimeService)
+          bind[DateTimeService].toInstance(mockDateTimeService),
+          bind[DataStoreService].toInstance(mockDataStoreService)
         )
         .build()
 
@@ -135,10 +149,14 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
 
+      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+        .thenReturn(Future.successful(Right(Email("abc@test.com"))))
+
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
-          bind[DateTimeService].toInstance(mockDateTimeService)
+          bind[DateTimeService].toInstance(mockDateTimeService),
+          bind[DataStoreService].toInstance(mockDataStoreService)
         )
         .configure(
           "application.guarantee-account.numberOfItemsPerPage" -> "10")
@@ -280,6 +298,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
     val mockDateTimeService = mock[DateTimeService]
     val mockCustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
     val mockAuditingService: AuditingService = mock[AuditingService]
+    val mockDataStoreService: DataStoreService = mock[DataStoreService]
 
     val guaranteeAccount = GuaranteeAccount(someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(
       BigDecimal(123000),

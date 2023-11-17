@@ -79,8 +79,8 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
     }
   }
 
-  def isEmailUnverified(implicit hc: HeaderCarrier): Future[String] = {
-    httpClient.GET[EmailUnverifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/unverified-email-display").map( res => res.unVerifiedEmail.get)
+  def isEmailUnverified(implicit hc: HeaderCarrier): Future[Option[String]] = {
+    httpClient.GET[EmailUnverifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/unverified-email-display").map( res => res.unVerifiedEmail)
   }
 
   def retrieveRequestedGuaranteeTransactionsDetail(gan: String, onlyOpenItems: Boolean, from: LocalDate, to: LocalDate)(implicit hc: HeaderCarrier): Future[Either[GuaranteeResponses, Seq[GuaranteeTransaction]]] = {
