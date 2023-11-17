@@ -20,7 +20,7 @@ import cats.data.EitherT._
 import cats.instances.future._
 import config.{AppConfig, ErrorHandler}
 import connectors.{CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested, UnknownException}
-import controllers.actions.IdentifierAction
+import controllers.actions.{IdentifierAction, EmailAction}
 import helpers.DateFormatters
 import models._
 import models.request.IdentifierRequest
@@ -37,6 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
 class GuaranteeAccountController @Inject()(identify: IdentifierAction,
+                                           checkEmailIsVerified: EmailAction,
                                            apiConnector: CustomsFinancialsApiConnector,
                                            dateTimeService: DateTimeService,
                                            guaranteeAccount: guarantee_account,
@@ -48,7 +49,7 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
 
   val log: Logger = Logger(this.getClass)
 
-  def showAccountDetails(page: Option[Int]): Action[AnyContent] = identify async { implicit request =>
+  def showAccountDetails(page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
 
       val result = for {
         account <- fromOptionF[Future, Result, GuaranteeAccount](apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
@@ -85,7 +86,7 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
     } yield result
   }
 
-  def showTransactionsUnavailable(): Action[AnyContent] = identify async { implicit request =>
+  def showTransactionsUnavailable(): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
 
     val result = for {
       account <- fromOptionF[Future, Result, GuaranteeAccount](apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
@@ -99,7 +100,7 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
     }
   }
 
-  def showAccountUnavailable: Action[AnyContent] = identify async { implicit req =>
+  def showAccountUnavailable: Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit req =>
     Future.successful(Ok(guaranteeAccountNotAvailable()))
   }
 }

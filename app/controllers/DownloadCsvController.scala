@@ -20,7 +20,7 @@ import cats.data.EitherT.{fromOptionF, liftF}
 import cats.instances.future._
 import config.{AppConfig, ErrorHandler}
 import connectors._
-import controllers.actions.IdentifierAction
+import controllers.actions.{IdentifierAction, EmailAction}
 import helpers.FileFormatters
 import models.{GuaranteeAccount, GuaranteeTransaction, RequestDates}
 import play.api.Logger
@@ -40,6 +40,7 @@ import scala.util.{Failure, Success, Try}
 
 class DownloadCsvController @Inject()(
                                        identify: IdentifierAction,
+                                       checkEmailIsVerified: EmailAction,
                                        apiConnector: CustomsFinancialsApiConnector,
                                        tooManyResults: guarantee_transactions_too_many_results,
                                        noResults: guarantee_transactions_no_result,
@@ -54,7 +55,7 @@ class DownloadCsvController @Inject()(
   val log: Logger = Logger(this.getClass)
 
   def downloadCsv(disposition: Option[String],
-                  page: Option[Int]): Action[AnyContent] = identify.async { implicit request =>
+                  page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
     val eventualMaybeGuaranteeAccount = apiConnector.getGuaranteeAccount(request.eori)
     val result = for {
       account <- fromOptionF[Future, Result, GuaranteeAccount](eventualMaybeGuaranteeAccount, NotFound(eh.notFoundTemplate))
@@ -78,7 +79,7 @@ class DownloadCsvController @Inject()(
 
   def downloadRequestedCsv(disposition: Option[String],
                            from: String, to: String,
-                           page: Option[Int]): Action[AnyContent] = identify.async { implicit request =>
+                           page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
     Try(LocalDate.parse(from), LocalDate.parse(to)) match {
       case Failure(_) => Future.successful(BadRequest)
       case Success((start, end)) =>
@@ -108,7 +109,7 @@ class DownloadCsvController @Inject()(
     }
   }
 
-  def showUnableToDownloadCSV(page: Option[Int]): Action[AnyContent] = identify { implicit req =>
+  def showUnableToDownloadCSV(page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified) { implicit req =>
     Ok(unableToDownloadCSV(page))
   }
 

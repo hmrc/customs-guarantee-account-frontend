@@ -22,7 +22,8 @@ import play.api.http.Status
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{AuditingService, DateTimeService}
+import services.{AuditingService, DataStoreService, DateTimeService}
+import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
 
@@ -43,10 +44,15 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         .thenReturn(Future.successful(Right(ganTransactions)))
 
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
+
+      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+        .thenReturn(Future.successful(Right(Email("abc@test.com"))))
+
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
+          bind[DataStoreService].toInstance(mockDataStoreService)
         )
         .configure(
           "application.guarantee-account.numberOfItemsPerPage" -> "10")
@@ -84,10 +90,14 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
 
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
 
+      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+        .thenReturn(Future.successful(Right(Email("abc@test.com"))))
+
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
+          bind[DataStoreService].toInstance(mockDataStoreService)
         )
         .build()
 
@@ -105,11 +115,14 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         .thenReturn(Future.successful(Some(guaranteeAccount)))
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Left(UnknownException)))
+      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+        .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
 
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
+          bind[DataStoreService].toInstance(mockDataStoreService)
         )
         .build()
 
@@ -126,11 +139,14 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Left(NoTransactionsAvailable)))
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
+      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+        .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
-          bind[DateTimeService].toInstance(mockDateTimeService)
+          bind[DateTimeService].toInstance(mockDateTimeService),
+          bind[DataStoreService].toInstance(mockDataStoreService)
         )
         .build()
 
@@ -147,11 +163,14 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Right(ganTransactions)))
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
+      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+        .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
       val app = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
-          bind[DateTimeService].toInstance(mockDateTimeService)
+          bind[DateTimeService].toInstance(mockDateTimeService),
+          bind[DataStoreService].toInstance(mockDataStoreService)
         )
         .build()
 
@@ -171,6 +190,7 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
     val mockDateTimeService = mock[DateTimeService]
     val mockCustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
     val mockAuditingService: AuditingService = mock[AuditingService]
+    val mockDataStoreService: DataStoreService = mock[DataStoreService]
 
     val guaranteeAccount = GuaranteeAccount(someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(
       BigDecimal(123000),

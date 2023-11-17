@@ -18,7 +18,7 @@ package connectors
 
 import config.AppConfig
 import models.request.{GuaranteeTransactionsRequest, IdentifierRequest}
-import models.{GuaranteeAccount, GuaranteeTransaction, RequestDates}
+import models.{GuaranteeAccount, GuaranteeTransaction, RequestDates, EmailUnverifiedResponse}
 import org.slf4j.LoggerFactory
 import play.api.mvc.AnyContent
 import repositories.CacheRepository
@@ -30,6 +30,7 @@ import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+
 
 class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
                                               appConfig: AppConfig,
@@ -76,6 +77,10 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
       case UpstreamErrorResponse(_, 404, _, _) => logger.info(s"No data found"); Left(NoTransactionsAvailable)
       case e => logger.error(s"Unable to download CSV :${e.getMessage}"); Left(UnknownException)
     }
+  }
+
+  def isEmailUnverified(implicit hc: HeaderCarrier): Future[Option[String]] = {
+    httpClient.GET[EmailUnverifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/unverified-email-display").map( res => res.unVerifiedEmail)
   }
 
   def retrieveRequestedGuaranteeTransactionsDetail(gan: String, onlyOpenItems: Boolean, from: LocalDate, to: LocalDate)(implicit hc: HeaderCarrier): Future[Either[GuaranteeResponses, Seq[GuaranteeTransaction]]] = {

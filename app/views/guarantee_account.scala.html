@@ -36,9 +36,9 @@ guarantee_transactions_table: guarantee_transactions_table
 @(accountModel: GuaranteeAccountViewModel, transactionModel: GuaranteeAccountTransactionsViewModel)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(appConfig.customsFinancialsFrontendHomepage)) {
-
+    
     @guarantee_account_summary(accountModel, showBalance = true)
-
+    
     @if(transactionModel.allItems.nonEmpty) {
         @guarantee_c18_reference(transactionModel)
         @h2("cf.guarantee-account.your-securities.heading", Some("securities-header"), classes = "govuk-heading-l govuk-!-margin-bottom-0 govuk-!-padding-top-7")

@@ -20,7 +20,7 @@ import cats.data.EitherT
 import cats.data.EitherT.fromOptionF
 import config.{AppConfig, ErrorHandler}
 import connectors._
-import controllers.actions.IdentifierAction
+import controllers.actions.{IdentifierAction, EmailAction}
 import models.GuaranteeAccount
 import models.request.IdentifierRequest
 import play.api.Logging
@@ -39,6 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RequestedTransactionsController @Inject()(
                                                  apiConnector: CustomsFinancialsApiConnector,
                                                  identify: IdentifierAction,
+                                                 checkEmailIsVerified: EmailAction,
                                                  dateTimeService: DateTimeService,
                                                  cache: RequestedTransactionsCache,
                                                  tooManyResults: guarantee_transactions_too_many_results,
@@ -49,7 +50,7 @@ class RequestedTransactionsController @Inject()(
                                                  mcc: MessagesControllerComponents)(implicit executionContext: ExecutionContext, appConfig: AppConfig)
   extends FrontendController(mcc) with I18nSupport with Logging {
 
-  def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
+  def onPageLoad(): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
 
     val result: EitherT[Future, Result, Result] = for {
         dates <- fromOptionF(cache.get(request.eori), Redirect(routes.RequestTransactionsController.onPageLoad()))

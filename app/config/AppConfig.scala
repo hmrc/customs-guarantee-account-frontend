@@ -37,6 +37,9 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   val customsFinancialsApi: String = servicesConfig.baseUrl("customs-financials-api") +
     config.getOptional[String]("customs-financials-api.context").getOrElse("/customs-financials-api")
 
+  lazy val customsDataStore: String = servicesConfig.baseUrl("customs-data-store") +
+    config.get[String]("microservice.services.customs-data-store.context")
+
   lazy val mrnEncryptionKey = config.get[String]("")
   lazy val numberOfItemsPerPage: Int = config.get[Int]("application.guarantee-account.numberOfItemsPerPage")
   lazy val guaranteeAccountInterval: Int = config.get[Int]("application.guarantee-account.updateTime.intervalMilliseconds")
@@ -50,4 +53,5 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   lazy val fixedDateTime = config.get[Boolean]("features.fixed-systemdate-for-tests")
   lazy val helpMakeGovUkBetterUrl: String = config.get[String]("urls.helpMakeGovUkBetterUrl")
   lazy val guaranteeAccountGuidanceUrl: String = config.get[String]("urls.guaranteeAccountGuidanceUrl")
+  lazy val emailFrontendUrl: String = config.get[String]("microservice.services.customs-email-frontend.url")
 }
