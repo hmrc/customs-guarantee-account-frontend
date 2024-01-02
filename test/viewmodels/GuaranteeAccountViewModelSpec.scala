@@ -24,15 +24,25 @@ import utils.SpecBase
 
 import java.time.LocalDateTime
 
-class GuaranteeAccountViewModelSpec extends SpecBase  {
+class GuaranteeAccountViewModelSpec extends SpecBase {
   val guaranteeAccount = GuaranteeAccount("gan", "eori", AccountStatusOpen,
-                                                 Some(GeneralGuaranteeBalance(BigDecimal(10000.50), BigDecimal(5000.10))))
+    Some(GeneralGuaranteeBalance(BigDecimal(10000.50), BigDecimal(5000.10))))
+
+  val guaranteeAccount02 = GuaranteeAccount("gan", "eori", AccountStatusOpen,
+    Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(5000.10))))
 
   implicit val appConfig = mock[AppConfig]
-  
+
   val model = GuaranteeAccountViewModel(guaranteeAccount, LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
+  val model02 = GuaranteeAccountViewModel(guaranteeAccount02, LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
 
   "GuaranteeAccountViewModel" should {
+
+    "include the usedPercentage and usedFunds" in {
+      model02.account.balances.get.usedFunds mustBe BigDecimal(-5000.1)
+      model02.account.balances.get.usedPercentage mustBe BigDecimal(0)
+    }
+
     "include the formatted available balance" in {
       model.balanceAvailable mustBe Some("£5,000.10")
     }

@@ -112,6 +112,26 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       }
     }
 
+    "return all the transactions from the API even when setting data in cache failed" in new Setup {
+      when[Future[Seq[GuaranteeTransaction]]](mockHttpClient.POST(any, any, any)(any, any, any, any))
+        .thenReturn(Future.successful(ganTransactions))
+
+      when(mockCacheRepository.get(any)).thenReturn(Future.successful(None))
+      when(mockCacheRepository.set(any, any)).thenReturn(Future.successful(false))
+
+      val app = application
+        .overrides(
+          bind[HttpClient].toInstance(mockHttpClient)
+        ).build()
+
+      val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+
+      running(app) {
+        val result = await(connector.retrieveOpenGuaranteeTransactionsDetail("gan")(implicitly))
+        result.isRight mustBe true
+      }
+    }
+
     "return all the transactions from the Cache when there is data present for the GAN" in new Setup {
       when(mockCacheRepository.get(any)).thenReturn(Future.successful(Some(ganTransactions)))
 
