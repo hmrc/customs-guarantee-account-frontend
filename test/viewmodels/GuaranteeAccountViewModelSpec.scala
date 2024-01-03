@@ -18,36 +18,70 @@ package viewmodels
 
 import config.AppConfig
 import connectors.AccountStatusOpen
-import models.{GeneralGuaranteeBalance, GuaranteeAccount}
+import models.{Amounts, DueDate, GeneralGuaranteeBalance, GuaranteeAccount, GuaranteeTransaction, TaxType, TaxTypeGroup}
 import play.api.test.Helpers
 import utils.SpecBase
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime, Month}
 
-class GuaranteeAccountViewModelSpec extends SpecBase  {
-  val guaranteeAccount = GuaranteeAccount("gan", "eori", AccountStatusOpen,
-                                                 Some(GeneralGuaranteeBalance(BigDecimal(10000.50), BigDecimal(5000.10))))
+class GuaranteeAccountViewModelSpec extends SpecBase {
 
-  implicit val appConfig = mock[AppConfig]
-  
-  val model = GuaranteeAccountViewModel(guaranteeAccount, LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
 
   "GuaranteeAccountViewModel" should {
-    "include the formatted available balance" in {
+
+    "include the usedPercentage and usedFunds" in new Setup {
+      model02.account.balances.get.usedFunds mustBe BigDecimal(-5000.1)
+      model02.account.balances.get.usedPercentage mustBe BigDecimal(0)
+    }
+
+    "return security reasons from duedates" in new Setup {
+
+      val amt = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
+      val ttg = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = TaxType("VAT", amt))
+      val dd = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"),
+        amounts = amt, taxTypeGroups = Seq(ttg))
+
+      val guranteeTxn = GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 23),
+        "19GB000056HG5w746", None, BigDecimal(45367.12),
+        Some("MGH-500000"), "GB10000", "GB20000",
+        BigDecimal(21.00), BigDecimal(11.50),
+        None, None, dueDates = Seq(dd))
+
+      model02.taxCode(guranteeTxn).head.get mustEqual ("T24")
+    }
+
+    "include the formatted available balance" in new Setup {
       model.balanceAvailable mustBe Some("£5,000.10")
     }
 
-    "include the formatted account limit" in {
+    "include the formatted account limit" in new Setup {
       model.limit mustBe Some("£10,000.50")
     }
 
-    "include the formatted account usage amount" in {
+    "include the formatted account usage amount" in new Setup {
       model.accountUsage mustBe Some("£5,000.40")
     }
 
-    "include updated date time" in {
+    "include updated date time" in new Setup {
       model.updatedDateTime mustBe "12:30 pm cf.guarantee-account.updated.time.on 8 month.4 2020"
     }
   }
-}
 
+  trait Setup {
+
+    val guaranteeAccount = GuaranteeAccount("gan", "eori", AccountStatusOpen,
+      Some(GeneralGuaranteeBalance(BigDecimal(10000.50), BigDecimal(5000.10))))
+
+    val guaranteeAccount02 = GuaranteeAccount("gan", "eori", AccountStatusOpen,
+      Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(5000.10))))
+
+    implicit val appConfig = mock[AppConfig]
+
+    val model = GuaranteeAccountViewModel(guaranteeAccount,
+      LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
+
+    val model02 = GuaranteeAccountViewModel(guaranteeAccount02,
+      LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
+  }
+  
+}

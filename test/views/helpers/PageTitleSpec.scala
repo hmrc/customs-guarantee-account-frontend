@@ -31,6 +31,11 @@ class PageTitleSpec extends SpecBase {
       val res = PageTitle.fullPageTitle(Some(""))
       res mustBe Some(" - service.name - GOV.UK")
     }
+
+    "return correct title string if title was not provided" in new Setup {
+      val res = PageTitle.fullPageTitle(None)
+      res mustBe Some("service.name - GOV.UK")
+    }
   }
 
   trait Setup {

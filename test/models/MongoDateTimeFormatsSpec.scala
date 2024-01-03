@@ -18,29 +18,31 @@ package models
 
 import play.api.libs.json._
 import utils.SpecBase
-import java.time.{Instant, LocalDateTime, ZoneOffset}
+import java.time.{LocalDateTime, ZoneOffset}
 
 class MongoDateTimeFormatsSpec extends SpecBase {
 
   "MongoDateTimeFormats" should {
 
-    //TODO - Result mismatch of res & testReads
-    "read" ignore new Setup {
-      val res = MongoDateTimeFormats.localDateTimeRead
-      res mustBe testReads
+    //TODO: try it by importing localDateTimeRead and the using Json.fromJson
+    "read datetime from json string" in new Setup {
+      val testData: JsValue = Json.parse(" {\"$date\": " + dateInMilliSeconds + "}  ")
+      val res = MongoDateTimeFormats.localDateTimeRead.reads(testData)
+
+      res.isSuccess mustBe true
+      res.get.toInstant(ZoneOffset.UTC).toEpochMilli mustEqual dateInMilliSeconds
     }
 
     "write DateTime" in new Setup {
       val res = MongoDateTimeFormats.localDateTimeWrite.writes(date)
+
       res mustBe testWrites
     }
   }
 
   trait Setup {
     val date = LocalDateTime.now()
-    val testWrites: JsValue = Json.obj("$date" -> date.atZone(ZoneOffset.UTC).toInstant.toEpochMilli)
-
-    val testReads = (__ \ "$date").read[Long].map {
-      millis => LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneOffset.UTC) }
+    val dateInMilliSeconds = date.atZone(ZoneOffset.UTC).toInstant.toEpochMilli
+    val testWrites: JsValue = Json.obj("$date" -> dateInMilliSeconds)
   }
 }

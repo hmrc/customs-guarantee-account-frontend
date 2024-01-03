@@ -16,7 +16,9 @@
 
 package services
 
+import domain.{UndeliverableInformation, UndeliverableInformationEvent}
 import models.UnverifiedEmail
+import org.joda.time.DateTime
 import org.mockito.invocation.InvocationOnMock
 import play.api.inject
 import play.api.libs.json.Json
@@ -30,6 +32,7 @@ import scala.concurrent.Future
 class DataStoreServiceSpec extends SpecBase {
 
   "Data store service" should {
+
     "return existing email" in new Setup {
       val jsonResponse = """{"address":"someemail@mail.com"}""".stripMargin
       when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
@@ -39,6 +42,24 @@ class DataStoreServiceSpec extends SpecBase {
         val response = service.getEmail(eori)
         val result = await(response)
         result mustBe Right(Email("someemail@mail.com"))
+      }
+    }
+
+    "return unverified email" in new Setup {
+      val undeliverableEventData = UndeliverableInformationEvent("someid", "someevent",
+        "someemail", "", Some(100), Some("sample"), "sample")
+
+      val emailResponse = EmailResponse(Some("sample@email.com"), Some("time"),
+        Some(UndeliverableInformation("subject-example", "ex-event-id-01", "ex-group-id-01",
+          DateTime.now(), undeliverableEventData)))
+
+      when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
+        Future.successful(emailResponse))
+
+      running(app) {
+        val response = service.getEmail(eori)
+        val result = await(response)
+        result mustBe Left(UnverifiedEmail)
       }
     }
 

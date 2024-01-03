@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.{AccountStatusOpen, CustomsFinancialsApiConnector, TooManyTransactionsRequested}
+import connectors.{AccountStatusOpen, CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested, UnknownException}
 import models._
 import org.jsoup.Jsoup.parseBodyFragment
 import play.api.http.Status
@@ -36,6 +36,66 @@ import scala.util.Random
 class GuaranteeAccountControllerSpec extends SpecBase {
 
   "show account details" should {
+
+    "return Ok when no guarantee transactions are available" in new Setup {
+
+      when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
+        .thenReturn(Future.successful(Some(guaranteeAccount)))
+
+      when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
+        .thenReturn(Future.successful(Left(NoTransactionsAvailable)))
+
+      when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
+
+      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+        .thenReturn(Future.successful(Right(Email("abc@test.com"))))
+
+      val app = application
+        .overrides(
+          bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
+          bind[DateTimeService].toInstance(mockDateTimeService),
+          bind[DataStoreService].toInstance(mockDataStoreService)
+        )
+        .configure(
+          "features.guarantee-account-details" -> "true",
+          "application.guarantee-account.numberOfItemsPerPage" -> "10")
+        .build()
+
+      running(app) {
+        val request = FakeRequest(GET, routes.GuaranteeAccountController.showAccountDetails(None).url)
+        val result = route(app, request).value
+        status(result) mustEqual OK
+      }
+    }
+
+    "return 303 redirect response when Api connector throws unknown exception" in new Setup {
+
+      when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
+        .thenReturn(Future.successful(Some(guaranteeAccount)))
+
+      when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
+        .thenReturn(Future.successful(Left(UnknownException)))
+
+      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+        .thenReturn(Future.successful(Right(Email("abc@test.com"))))
+
+      val app = application
+        .overrides(
+          bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
+          bind[DateTimeService].toInstance(mockDateTimeService),
+          bind[DataStoreService].toInstance(mockDataStoreService)
+        )
+        .configure(
+          "features.guarantee-account-details" -> "true",
+          "application.guarantee-account.numberOfItemsPerPage" -> "10")
+        .build()
+
+      running(app) {
+        val request = FakeRequest(GET, routes.GuaranteeAccountController.showAccountDetails(None).url)
+        val result = route(app, request).value
+        status(result) mustEqual SEE_OTHER
+      }
+    }
 
     "return OK" in new Setup {
 
