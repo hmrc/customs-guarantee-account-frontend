@@ -24,7 +24,6 @@ class MongoDateTimeFormatsSpec extends SpecBase {
 
   "MongoDateTimeFormats" should {
 
-    //TODO - Result mismatch of res & testReads
     "read" in new Setup {
       val testData: JsValue = Json.parse(""" {"$date": 1704228313308}  """)
       val res = MongoDateTimeFormats.localDateTimeRead.reads(testData)
@@ -40,9 +39,5 @@ class MongoDateTimeFormatsSpec extends SpecBase {
   trait Setup {
     val date = LocalDateTime.now()
     val testWrites: JsValue = Json.obj("$date" -> date.atZone(ZoneOffset.UTC).toInstant.toEpochMilli)
-
-    val testReads = (__ \ "$date").read[Long].map {
-      millis => LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneOffset.UTC)
-    }
   }
 }
