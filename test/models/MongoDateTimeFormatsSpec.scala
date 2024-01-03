@@ -24,6 +24,7 @@ class MongoDateTimeFormatsSpec extends SpecBase {
 
   "MongoDateTimeFormats" should {
 
+    //TODO: try it by importing localDateTimeRead and the using Json.fromJson
     "read datetime from json string" in new Setup {
       val testData: JsValue = Json.parse(" {\"$date\": " + dateInMilliSeconds + "}  ")
       val res = MongoDateTimeFormats.localDateTimeRead.reads(testData)
