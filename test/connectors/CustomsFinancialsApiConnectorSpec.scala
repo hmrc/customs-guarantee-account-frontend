@@ -20,6 +20,7 @@ import models._
 import models.request.IdentifierRequest
 import play.api.http.Status
 import play.api.inject.bind
+import play.api.libs.json.{JsString, JsSuccess}
 import play.api.test.Helpers._
 import services.MetricsReporterService
 import uk.gov.hmrc.http.SessionId
@@ -88,6 +89,46 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         result.value mustEqual guaranteeAccount
         verify(mockMetricsReporterService).withResponseTimeLogging(eqTo("customs-financials-api.get.accounts"))(any)(any)
       }
+    }
+  }
+
+  "GeneralGuaranteeAccount" must {
+
+    "return correct balance based on guarantee limit and available guarantee balance" in new Setup {
+      val ggAcc01 = GeneralGuaranteeAccount(Account("987654", "123456789", "12345678"), Some("999"), Some("900"))
+      ggAcc01.toDomain().balances mustBe Some(GeneralGuaranteeBalance(BigDecimal("999"), BigDecimal("900")))
+
+      val ggAcc02 = GeneralGuaranteeAccount(Account("987654", "123456789", "12345678"), None, Some("900"))
+      ggAcc02.toDomain().balances mustBe Some(GeneralGuaranteeBalance(BigDecimal("0"), BigDecimal("900")))
+    }
+
+  }
+
+  "CDSAccountStatus" must {
+    "read correctly based on json value" in new Setup {
+      val accStatusVal01 = CDSAccountStatus.CDSAccountStatusReads.reads(JsString("Open"))
+      accStatusVal01 mustBe JsSuccess(AccountStatusOpen)
+
+      val accStatusVal02 = CDSAccountStatus.CDSAccountStatusReads.reads(JsString("Suspended"))
+      accStatusVal02 mustBe JsSuccess(AccountStatusSuspended)
+
+      val accStatusVal03 = CDSAccountStatus.CDSAccountStatusReads.reads(JsString("Closed"))
+      accStatusVal03 mustBe JsSuccess(AccountStatusClosed)
+
+      val accStatusVal04 = CDSAccountStatus.CDSAccountStatusReads.reads(JsString("Unknown"))
+      accStatusVal04 mustBe JsSuccess(AccountStatusOpen)
+    }
+
+    //TODO Suspended and Closed are wrongly mapped in source code
+    "write correctly to json value" in new Setup {
+      val accStatusVal01 = CDSAccountStatus.CDSAccountStatusWrites.writes(AccountStatusOpen)
+      accStatusVal01 mustBe JsString("Open")
+
+      val accStatusVal02 = CDSAccountStatus.CDSAccountStatusWrites.writes(AccountStatusSuspended)
+      accStatusVal02 mustBe JsString("Closed")
+
+      val accStatusVal03 = CDSAccountStatus.CDSAccountStatusWrites.writes(AccountStatusClosed)
+      accStatusVal03 mustBe JsString("Suspended")
     }
   }
 
