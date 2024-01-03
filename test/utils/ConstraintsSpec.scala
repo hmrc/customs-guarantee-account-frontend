@@ -68,4 +68,3 @@ class ConstraintsSpec extends SpecBase with Constraints {
     implicit val clock: Clock = Clock.systemUTC()
   }
 }
-
