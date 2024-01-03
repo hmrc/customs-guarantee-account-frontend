@@ -23,8 +23,8 @@ class DomainSpec extends SpecBase {
   "domain model" should {
     "return obfuscated eori for correct eori" in {
       val maskedEori = domain.obfuscateEori("GB744638982000")
+
       maskedEori mustEqual ("**********2000")
     }
   }
 }
-

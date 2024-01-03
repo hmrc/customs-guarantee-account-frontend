@@ -33,8 +33,11 @@ class GuaranteeAccountViewModelSpec extends SpecBase {
 
   implicit val appConfig = mock[AppConfig]
 
-  val model = GuaranteeAccountViewModel(guaranteeAccount, LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
-  val model02 = GuaranteeAccountViewModel(guaranteeAccount02, LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
+  val model = GuaranteeAccountViewModel(guaranteeAccount,
+    LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
+
+  val model02 = GuaranteeAccountViewModel(guaranteeAccount02,
+    LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
 
   "GuaranteeAccountViewModel" should {
 
@@ -44,16 +47,18 @@ class GuaranteeAccountViewModelSpec extends SpecBase {
     }
 
     "return security reasons from duedates" in {
+
       val amt = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
       val ttg = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = TaxType("VAT", amt))
       val dd = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
+
       val guranteeTxn = GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 23),
         "19GB000056HG5w746", None, BigDecimal(45367.12),
         Some("MGH-500000"), "GB10000", "GB20000",
         BigDecimal(21.00), BigDecimal(11.50),
         None, None, dueDates = Seq(dd))
 
-      model02.taxCode(guranteeTxn)(0).get mustEqual ("T24")
+      model02.taxCode(guranteeTxn).head.get mustEqual ("T24")
     }
 
     "include the formatted available balance" in {

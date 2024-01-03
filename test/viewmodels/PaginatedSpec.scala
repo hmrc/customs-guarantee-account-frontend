@@ -17,36 +17,30 @@
 package viewmodels
 
 import config.AppConfig
-import play.api.i18n.DefaultMessagesApi
-import play.api.test.FakeRequest
+import play.api.i18n.Messages
 import utils.SpecBase
 
 class PaginatedSpec extends SpecBase {
 
   "Paginated" should {
+
     "return valid title when page summary is invoked" in new Setup {
+
       val testPage: Paginated = new Paginated {
         override val itemsGroupedByDate: Seq[GuaranteeAccountTransactionsByDate] = Seq.empty
         override val itemsPerPage: Int = 10
         override val requestedPage: Int = 1
-        override val urlForPage: Int => String = pageNumber => s"https://gov.uk/customs-guarantee-account-frontend/page/${pageNumber}"
+        override val urlForPage: Int => String = pageNumber =>
+          s"https://gov.uk/customs-guarantee-account-frontend/page/${pageNumber}"
       }
-      testPage.pageSummary(messages) mustEqual ("Showing")
-    }
 
+      testPage.pageSummary(msgs) mustBe msgs("cf.pager.summary")
+    }
   }
 
   trait Setup {
-
-    val testMessages = Map("default" -> Map(
-      "cf.guarantee-account-transactions" -> "transactions",
-      "cf.pager.summary" -> "Showing"
-    ))
-    val messagesApi = new DefaultMessagesApi(testMessages)
-    implicit val messages = messagesApi.preferred(FakeRequest("GET", "/"));
-
     val app = application.build()
+    implicit val msgs: Messages = messages(app)
     val appConfig = app.injector.instanceOf[AppConfig]
   }
 }
-

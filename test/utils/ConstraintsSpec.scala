@@ -21,6 +21,7 @@ import org.scalatest.matchers.should.Matchers._
 import forms.mappings.Constraints
 import play.api.data.validation.{Invalid, Valid, ValidationError}
 
+//TODO: To be moved to forms.mappings
 class ConstraintsSpec extends SpecBase with Constraints {
 
   "Constraints" should {
@@ -28,11 +29,13 @@ class ConstraintsSpec extends SpecBase with Constraints {
     "equalToOrBeforeToday" must {
       "valid if equal to or before today" in new Setup {
         val result = equalToOrBeforeToday("error.date").apply(ld)
+
         result mustBe Valid
       }
 
       "invalid if date is in future" in new Setup {
         val result = equalToOrBeforeToday("error.date").apply(ld.plusYears(1))
+
         result mustBe Invalid(List(ValidationError(List("error.date"))))
       }
 
@@ -42,12 +45,14 @@ class ConstraintsSpec extends SpecBase with Constraints {
       "return Invalid year error" in new Setup {
         val result = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
           .apply(LocalDate.of(18, 10, 1))
+
         result mustBe Invalid(List(ValidationError(List(yearLengthError))))
       }
 
       "return Invalid constraint for year before 2019" in new Setup {
         val result = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
           .apply(LocalDate.of(2018, 10, 1))
+
         result mustBe Invalid(List(ValidationError(List(systemStartDateErrorKey))))
       }
     }

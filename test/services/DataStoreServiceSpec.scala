@@ -46,10 +46,12 @@ class DataStoreServiceSpec extends SpecBase {
     }
 
     "return unverified email" in new Setup {
-      val undeliverableEventData = UndeliverableInformationEvent("someid", "somevent", "someemail", "", Some(100), Some("sample"), "sample")
-      val emailResponse = EmailResponse(Some("sample@email.com"),
-        Some("time"),
-        Some(UndeliverableInformation("subject-example", "ex-event-id-01", "ex-group-id-01", DateTime.now(), undeliverableEventData)))
+      val undeliverableEventData = UndeliverableInformationEvent("someid", "someevent",
+        "someemail", "", Some(100), Some("sample"), "sample")
+
+      val emailResponse = EmailResponse(Some("sample@email.com"), Some("time"),
+        Some(UndeliverableInformation("subject-example", "ex-event-id-01", "ex-group-id-01",
+          DateTime.now(), undeliverableEventData)))
 
       when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
         Future.successful(emailResponse))

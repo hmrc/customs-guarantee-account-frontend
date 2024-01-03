@@ -17,31 +17,24 @@
 package views
 
 import config.AppConfig
-import play.api.i18n.DefaultMessagesApi
-import play.api.test.FakeRequest
+import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.footer.FooterItem
 import utils.SpecBase
 
 class FooterLinksSpec extends SpecBase {
 
-  "footerlink" should {
-    "return one mock footerlink data" in new Setup {
-      val footerLinks: Seq[FooterItem] = FooterLinks()(messages, appConfig);
-      footerLinks.size mustEqual (1)
+  "apply" should {
+
+    "return correct FooterItems" in new Setup {
+      val footerLinks: Seq[FooterItem] = FooterLinks()(msges, appConfig)
+
+      footerLinks.size mustEqual (4)
     }
   }
 
   trait Setup {
-    val testMessages = Map("default" -> Map(
-      "footer.cookies.text" -> "sample",
-      "footer.cookies.url" -> "sample"
-    ))
-    val messagesApi = new DefaultMessagesApi(testMessages)
-    implicit val messages = messagesApi.preferred(FakeRequest("GET", "/"));
-
     val app = application.build()
     val appConfig = app.injector.instanceOf[AppConfig]
-
+    implicit val msges: Messages = messages(app)
   }
 }
-
