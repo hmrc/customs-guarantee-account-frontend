@@ -337,7 +337,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         val request = FakeRequest(GET, routes.GuaranteeAccountController.showAccountDetails(None).url + "?sortBy=date&order=ascending&page=5")
         val result = route(app, request).value
         val html = parseBodyFragment(contentAsString(result)).body
-        val pageNumberLinks = html.select("li.govuk-pagination__number > a").asScala
+        val pageNumberLinks = html.select("li.govuk-pagination__item > a").asScala
         withClue("html did not contain any pagination links:") {
           pageNumberLinks.size must not be (0)
         }
