@@ -41,8 +41,6 @@ class ErrorSummarySpec extends SpecBase {
 
       when(mockGovSummary.apply(any[ErrorSummary])).thenReturn(govSummaryHtmlFormat)
 
-
-      val view: errorSummary = app.injector.instanceOf[errorSummary]
       val formErrors: Seq[FormError] = Seq(FormError("start", "cf.form.error.end.year.date-number-invalid"))
 
       val result: HtmlFormat.Appendable = view(formErrors, None)
@@ -64,8 +62,6 @@ class ErrorSummarySpec extends SpecBase {
 
       when(mockGovSummary.apply(any[ErrorSummary])).thenReturn(govSummaryHtmlFormat)
 
-
-      val view: errorSummary = app.injector.instanceOf[errorSummary]
       val formErrors: Seq[FormError] = Seq(FormError("start", "cf.form.error.start.month.date-number-invalid"))
 
       val result: HtmlFormat.Appendable = view(
@@ -90,8 +86,6 @@ class ErrorSummarySpec extends SpecBase {
       val govSummaryHtmlFormat: HtmlFormat.Appendable = new GovukErrorSummary().apply(errorSum)
 
       when(mockGovSummary.apply(any[ErrorSummary])).thenReturn(govSummaryHtmlFormat)
-
-      val view: errorSummary = app.injector.instanceOf[errorSummary]
       val formErrors: Seq[FormError] = Seq(FormError("start", "cf.form.error.year.invalid"))
 
       val result: HtmlFormat.Appendable = view(
@@ -117,8 +111,6 @@ class ErrorSummarySpec extends SpecBase {
 
       when(mockGovSummary.apply(any[ErrorSummary])).thenReturn(govSummaryHtmlFormat)
 
-
-      val view: errorSummary = app.injector.instanceOf[errorSummary]
       val formErrors: Seq[FormError] = Seq(FormError("end", "cf.form.error.end-future-date"))
 
       val result: HtmlFormat.Appendable = view(
@@ -143,8 +135,6 @@ class ErrorSummarySpec extends SpecBase {
       val govSummaryHtmlFormat: HtmlFormat.Appendable = new GovukErrorSummary().apply(errorSum)
 
       when(mockGovSummary.apply(any[ErrorSummary])).thenReturn(govSummaryHtmlFormat)
-
-      val view: errorSummary = app.injector.instanceOf[errorSummary]
       val formErrors: Seq[FormError] = Seq(FormError("end", "cf.form.error.year.invalid"))
 
       val result: HtmlFormat.Appendable = view(
@@ -166,5 +156,7 @@ class ErrorSummarySpec extends SpecBase {
         val app = application.overrides(
               bind[GovukErrorSummary].toInstance(mockGovSummary)
             ).build()
+        
+        val view: errorSummary = app.injector.instanceOf[errorSummary]
     }
 }
