@@ -24,13 +24,21 @@ import java.time.{Clock, LocalDate, LocalDateTime, Period}
 
 trait Constraints {
 
-  lazy val etmpStatementsDate: LocalDate = LocalDate.of(2019, 10, 1)
+  val year = 2019
+  val month = 10
+  val day = 1
+  val compareLength = 4
+  val zero = 0
+
+  lazy val etmpStatementsDate: LocalDate = LocalDate.of(year, month, day)
   lazy val currentDate: LocalDate = LocalDateTime.now().toLocalDate
   lazy val dayOfMonthThatTaxYearStartsOn = 6
 
   def equalToOrBeforeToday(errorKey:String): Constraint[LocalDate] = Constraint {
-    case request if (request.isAfter(currentDate) && request.getYear.toString.length() == 4) =>
+
+    case request if (request.isAfter(currentDate) && request.getYear.toString.length() == compareLength) =>
       Invalid(ValidationError(errorKey))
+
     case _ => Valid
   }
 
@@ -40,12 +48,15 @@ trait Constraints {
     taxYearFor(currentDate).back(maximumNumberOfYears)
   }
 
-  def checkDates(systemStartDateErrorKey:String, taxYearErrorKey:String, yearLengthError:String)(implicit clock: Clock): Constraint[LocalDate] = Constraint {
+  def checkDates(systemStartDateErrorKey:String,
+                 taxYearErrorKey:String,
+                 yearLengthError:String)(
+    implicit clock: Clock): Constraint[LocalDate] = Constraint {
 
-    case date if date.getYear.toString.length() != 4 =>
+    case date if date.getYear.toString.length() != compareLength =>
       Invalid(ValidationError(yearLengthError))
 
-    case request if Period.between(request, etmpStatementsDate).toTotalMonths > 0 =>
+    case request if Period.between(request, etmpStatementsDate).toTotalMonths > zero =>
       Invalid(ValidationError(systemStartDateErrorKey))
 
     case request if minTaxYear().starts.isAfter(request.withDayOfMonth(dayOfMonthThatTaxYearStartsOn)) =>

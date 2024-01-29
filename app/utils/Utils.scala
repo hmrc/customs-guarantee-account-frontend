@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package models.request
+package utils
 
-import models.RequestDates
-import models.domain.GAN
-import play.api.libs.json.{Json, OWrites}
-
-case class GuaranteeTransactionsRequest(gan: GAN, openItems: Boolean, dates: Option[RequestDates])
-
-object GuaranteeTransactionsRequest {
-  implicit val OpenGuaranteeTransactionsRequestWrites: OWrites[GuaranteeTransactionsRequest] =
-    Json.writes[GuaranteeTransactionsRequest]
+object Utils {
+  val emptyString = ""
+  val comma = ","
 }

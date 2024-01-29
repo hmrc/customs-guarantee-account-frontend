@@ -52,8 +52,8 @@ class RequestedTransactionsControllerSpec extends SpecBase {
     when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
       .thenReturn(Future.successful(Some(guaranteeAccount)))
 
-    when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, any, any)(any))
-      .thenReturn(Future.successful(Left(NoTransactionsAvailable)))
+    when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(
+      eqTo(someGan), any, any, any)(any)).thenReturn(Future.successful(Left(NoTransactionsAvailable)))
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
       fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
@@ -72,8 +72,8 @@ class RequestedTransactionsControllerSpec extends SpecBase {
     when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
       .thenReturn(Future.successful(Some(guaranteeAccount)))
 
-    when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, any, any)(any))
-      .thenReturn(Future.successful(Left(TooManyTransactionsRequested)))
+    when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(
+      eqTo(someGan), any, any, any)(any)).thenReturn(Future.successful(Left(TooManyTransactionsRequested)))
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
       fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
@@ -92,8 +92,8 @@ class RequestedTransactionsControllerSpec extends SpecBase {
     when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
       .thenReturn(Future.successful(Some(guaranteeAccount)))
 
-    when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, any, any)(any))
-      .thenReturn(Future.successful(Left(UnknownException)))
+    when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(
+      eqTo(someGan), any, any, any)(any)).thenReturn(Future.successful(Left(UnknownException)))
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
       fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
@@ -101,7 +101,9 @@ class RequestedTransactionsControllerSpec extends SpecBase {
     running(app) {
       val result = route(app, request).value
       status(result) mustBe OK
-      contentAsString(result) must include regex "We are unable to show your live guarantees at the moment. Please try again later."
+
+      contentAsString(result) must include regex
+        "We are unable to show your live guarantees at the moment. Please try again later."
     }
   }
 
@@ -113,8 +115,8 @@ class RequestedTransactionsControllerSpec extends SpecBase {
     when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
       .thenReturn(Future.successful(Some(guaranteeAccount)))
 
-    when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, any, any)(any))
-      .thenThrow(new RuntimeException())
+    when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(
+      eqTo(someGan), any, any, any)(any)).thenThrow(new RuntimeException())
 
     val request: FakeRequest[AnyContentAsEmpty.type] =
       fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
@@ -129,18 +131,22 @@ class RequestedTransactionsControllerSpec extends SpecBase {
 
     val eori = "GB001"
     val someGan = "GAN-1"
-
     val mockCustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
 
-    val guaranteeAccount = GuaranteeAccount(someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(
-      BigDecimal(123000),
-      BigDecimal(123.45)
+    val guaranteeAccount = GuaranteeAccount(
+      someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(
+        BigDecimal(123000),
+        BigDecimal(123.45)
     )))
 
     val amt = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
     val tt = TaxType("VAT", amt)
     val ttg = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
-    val dd = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
+
+    val dd = DueDate(
+      dueDate = "2020-07-28",
+      reasonForSecurity = Some("T24"),
+      amounts = amt, taxTypeGroups = Seq(ttg))
 
     val ganTransactions = List(
       GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 23),
@@ -196,7 +202,8 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         dueDates = Seq(dd))
     )
 
-    val nonFatalResponse = UpstreamErrorResponse("ServiceUnavailable", Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
+    val nonFatalResponse = UpstreamErrorResponse("ServiceUnavailable",
+      Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
 
     val app = application.overrides(
         bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector)

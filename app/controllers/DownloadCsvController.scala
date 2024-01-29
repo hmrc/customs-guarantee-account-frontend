@@ -38,34 +38,47 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
-class DownloadCsvController @Inject()(
-                                       identify: IdentifierAction,
-                                       checkEmailIsVerified: EmailAction,
-                                       apiConnector: CustomsFinancialsApiConnector,
-                                       tooManyResults: guarantee_transactions_too_many_results,
-                                       noResults: guarantee_transactions_no_result,
-                                       auditingService: AuditingService,
-                                       unableToDownloadCSV: guarantee_account_unable_download_csv)
+class DownloadCsvController @Inject()(identify: IdentifierAction,
+                                      checkEmailIsVerified: EmailAction,
+                                      apiConnector: CustomsFinancialsApiConnector,
+                                      tooManyResults: guarantee_transactions_too_many_results,
+                                      noResults: guarantee_transactions_no_result,
+                                      auditingService: AuditingService,
+                                      unableToDownloadCSV: guarantee_account_unable_download_csv)
                                      (implicit ec: ExecutionContext,
                                       dateTimeService: DateTimeService,
                                       mcc: MessagesControllerComponents,
                                       eh: ErrorHandler,
-                                      appConfig: AppConfig) extends FrontendController(mcc) with I18nSupport with FileFormatters {
+                                      appConfig: AppConfig)
+  extends FrontendController(mcc) with I18nSupport with FileFormatters {
 
   val log: Logger = Logger(this.getClass)
 
   def downloadCsv(disposition: Option[String],
-                  page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
+                  page: Option[Int]): Action[AnyContent] = (
+    identify andThen checkEmailIsVerified).async { implicit request =>
+
     val eventualMaybeGuaranteeAccount = apiConnector.getGuaranteeAccount(request.eori)
+
     val result = for {
-      account <- fromOptionF[Future, Result, GuaranteeAccount](eventualMaybeGuaranteeAccount, NotFound(eh.notFoundTemplate))
-      transactions <- liftF[Future, Result, Either[GuaranteeResponses, Seq[GuaranteeTransaction]]](apiConnector.retrieveOpenGuaranteeTransactionsDetail(account.number))
+      account <- fromOptionF[Future, Result, GuaranteeAccount](
+        eventualMaybeGuaranteeAccount, NotFound(eh.notFoundTemplate))
+
+      transactions <- liftF[Future, Result,
+        Either[GuaranteeResponses, Seq[GuaranteeTransaction]]](
+        apiConnector.retrieveOpenGuaranteeTransactionsDetail(account.number))
+
       result = transactions match {
         case Left(_) =>  Redirect(routes.DownloadCsvController.showUnableToDownloadCSV(page))
         case Right(transactions) =>
           val csvContent = convertToCSV(transactions)
-          val contentHeaders = "Content-Disposition" -> s"${disposition.getOrElse("attachment")}; filename=$filenameWithDateTime"
-          val _ = auditingService.auditCsvDownload(request.eori, account.number, dateTimeService.utcDateTime(), None)
+
+          val contentHeaders = "Content-Disposition" ->
+            s"${disposition.getOrElse("attachment")}; filename=$filenameWithDateTime"
+
+          val _ = auditingService.auditCsvDownload(
+            request.eori, account.number, dateTimeService.utcDateTime(), None)
+
           Ok(csvContent).withHeaders(contentHeaders)
       }
     } yield result
@@ -79,24 +92,42 @@ class DownloadCsvController @Inject()(
 
   def downloadRequestedCsv(disposition: Option[String],
                            from: String, to: String,
-                           page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
+                           page: Option[Int]): Action[AnyContent] = (
+    identify andThen checkEmailIsVerified).async { implicit request =>
+
     Try(LocalDate.parse(from), LocalDate.parse(to)) match {
       case Failure(_) => Future.successful(BadRequest)
       case Success((start, end)) =>
         val eventualMaybeGuaranteeAccount = apiConnector.getGuaranteeAccount(request.eori)
         val result = for {
-          account <- fromOptionF[Future, Result, GuaranteeAccount](eventualMaybeGuaranteeAccount, NotFound(eh.notFoundTemplate))
-          transactions <- liftF[Future, Result, Either[GuaranteeResponses, Seq[GuaranteeTransaction]]](apiConnector.retrieveRequestedGuaranteeTransactionsDetail(account.number, onlyOpenItems = true, start, end))
+          account <- fromOptionF[Future, Result, GuaranteeAccount](
+            eventualMaybeGuaranteeAccount, NotFound(eh.notFoundTemplate))
+
+          transactions <- liftF[Future, Result,
+            Either[GuaranteeResponses, Seq[GuaranteeTransaction]]](
+            apiConnector.retrieveRequestedGuaranteeTransactionsDetail(
+              account.number, onlyOpenItems = true, start, end))
+
           result = transactions match {
             case Left(error) => error match {
               case NoTransactionsAvailable => Ok(noResults(new ResultsPageSummary(start, end)))
-              case TooManyTransactionsRequested => Ok(tooManyResults(new ResultsPageSummary(start, end), controllers.routes.RequestTransactionsController.onPageLoad().url))
+
+              case TooManyTransactionsRequested => Ok(tooManyResults(
+                new ResultsPageSummary(start, end),
+                controllers.routes.RequestTransactionsController.onPageLoad().url))
+
               case UnknownException => Redirect(routes.DownloadCsvController.showUnableToDownloadCSV(page))
             }
+
             case Right(transactions) =>
               val csvContent = convertToCSV(transactions)
-              val contentHeaders = "Content-Disposition" -> s"${disposition.getOrElse("attachment")}; filename=${filenameWithRequestDates(start, end)}"
-              val _ = auditingService.auditCsvDownload(request.eori, account.number, dateTimeService.utcDateTime(), Some(RequestDates(start, end)))
+
+              val contentHeaders = "Content-Disposition" ->
+                s"${disposition.getOrElse("attachment")}; filename=${filenameWithRequestDates(start, end)}"
+
+              val _ = auditingService.auditCsvDownload(
+                request.eori, account.number, dateTimeService.utcDateTime(), Some(RequestDates(start, end)))
+
               Ok(csvContent).withHeaders(contentHeaders)
           }
         } yield result
@@ -109,8 +140,9 @@ class DownloadCsvController @Inject()(
     }
   }
 
-  def showUnableToDownloadCSV(page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified) { implicit req =>
-    Ok(unableToDownloadCSV(page))
+  def showUnableToDownloadCSV(page: Option[Int]): Action[AnyContent] = (
+    identify andThen checkEmailIsVerified) { implicit req =>
+      Ok(unableToDownloadCSV(page))
   }
 
   private def convertToCSV(transactions: Seq[GuaranteeTransaction])(implicit messages: Messages) = {

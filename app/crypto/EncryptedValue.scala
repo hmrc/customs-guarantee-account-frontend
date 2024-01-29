@@ -103,20 +103,31 @@ class AesGCMCrypto @Inject()() {
 
   private[crypto] def getCipherInstance: Cipher = Cipher.getInstance(ALGORITHM_TO_TRANSFORM_STRING)
 
-
   private def processCipherTextFailure(ex: Throwable, method: String): Throwable = ex match {
-    case e: NoSuchAlgorithmException => throw new EncryptionDecryptionException(method, "Algorithm being requested is not available in this environment",
-      e.getMessage)
-    case e: NoSuchPaddingException => throw new EncryptionDecryptionException(method, "Padding Scheme being requested is not available this environment",
-      e.getMessage)
+    case e: NoSuchAlgorithmException => throw new EncryptionDecryptionException(method,
+      "Algorithm being requested is not available in this environment", e.getMessage)
+
+    case e: NoSuchPaddingException => throw new EncryptionDecryptionException(method,
+      "Padding Scheme being requested is not available this environment", e.getMessage)
+
     case e: InvalidKeyException => throw new EncryptionDecryptionException(method, "Key being used is not valid." +
       " It could be due to invalid encoding, wrong length or uninitialized", e.getMessage)
-    case e: InvalidAlgorithmParameterException => throw new EncryptionDecryptionException(method, "Algorithm parameters being specified are not valid",
-      e.getMessage)
-    case e: IllegalStateException => throw new EncryptionDecryptionException(method, "Cipher is in an illegal state", e.getMessage)
-    case e: UnsupportedOperationException => throw new EncryptionDecryptionException(method, "Provider might not be supporting this method", e.getMessage)
-    case e: IllegalBlockSizeException => throw new EncryptionDecryptionException(method, "Error occurred due to block size", e.getMessage)
-    case e: BadPaddingException => throw new EncryptionDecryptionException(method, "Error occurred due to padding scheme", e.getMessage)
+
+    case e: InvalidAlgorithmParameterException => throw new EncryptionDecryptionException(
+      method, "Algorithm parameters being specified are not valid", e.getMessage)
+
+    case e: IllegalStateException => throw new EncryptionDecryptionException(
+      method, "Cipher is in an illegal state", e.getMessage)
+
+    case e: UnsupportedOperationException => throw new EncryptionDecryptionException(
+      method, "Provider might not be supporting this method", e.getMessage)
+
+    case e: IllegalBlockSizeException => throw new EncryptionDecryptionException(
+      method, "Error occurred due to block size", e.getMessage)
+
+    case e: BadPaddingException => throw new EncryptionDecryptionException(
+      method, "Error occurred due to padding scheme", e.getMessage)
+
     case _ => throw new EncryptionDecryptionException(method, "Unexpected exception", ex.getMessage)
   }
 }

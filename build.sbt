@@ -17,7 +17,8 @@ lazy val microservice = Project(appName, file("."))
     scalaVersion                     := "2.13.8",
     targetJvm                        := "jvm-11",
     libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
-    ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*filters.*;.*handlers.*;.*components.*;.*views.html.*;" +
+    ScoverageKeys.coverageExcludedFiles :=
+      "<empty>;Reverse.*;.*filters.*;.*handlers.*;.*components.*;.*views.html.*;" +
       ".*javascript.*;.*Routes.*;.*GuiceInjector;" +
       ".*ControllerConfiguration;.*LanguageSwitchController",
     ScoverageKeys.coverageMinimumStmtTotal := 90,
@@ -29,9 +30,6 @@ lazy val microservice = Project(appName, file("."))
       "uk.gov.hmrc.govukfrontend.views.html.components._",
       "uk.gov.hmrc.hmrcfrontend.views.html.components._"
     ),
-    // ***************
-    // Use the silencer plugin to suppress warnings
-    // You may turn it on for `views` too to suppress warnings from unused imports in compiled twirl templates, but this will hide other warnings.
     scalacOptions += "-P:silencer:pathFilters=routes",
     scalacOptions ++= Seq("-Wunused:imports", "-Wunused:params",
       "-Wunused:patvars", "-Wunused:implicits", "-Wunused:explicits", "-Wunused:privates"),
@@ -41,7 +39,6 @@ lazy val microservice = Project(appName, file("."))
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
       "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
     )
-    // ***************
   )
   .settings(PlayKeys.playDefaultPort := 9395)
   .settings(resolvers += Resolver.jcenterRepo)

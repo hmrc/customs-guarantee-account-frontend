@@ -18,6 +18,7 @@ package forms.mappings
 
 import play.api.data.FormError
 import play.api.data.format.Formatter
+import utils.Utils.{emptyString, comma}
 
 import scala.util.control.Exception.nonFatalCatch
 
@@ -35,8 +36,9 @@ trait Formatters {
       Map(key -> value)
   }
 
-
-  private[mappings] def intFormatter(requiredKey: String, wholeNumberKey: String, nonNumericKey: String, args: Seq[String]): Formatter[Int] =
+  private[mappings] def intFormatter(requiredKey: String,
+                                     wholeNumberKey: String,
+                                     nonNumericKey: String, args: Seq[String]): Formatter[Int] =
     new Formatter[Int] {
 
       val decimalRegexp = """^-?(\d*\.\d*)$"""
@@ -46,7 +48,7 @@ trait Formatters {
       override def bind(key: String, data: Map[String, String]) =
         baseFormatter
           .bind(key, data)
-          .right.map(_.replace(",", ""))
+          .right.map(_.replace(comma, emptyString))
           .right.flatMap {
           case s if s.matches(decimalRegexp) =>
             Left(Seq(FormError(key, wholeNumberKey, args)))

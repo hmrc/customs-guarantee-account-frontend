@@ -36,9 +36,7 @@ import scala.util.Random
 class GuaranteeAccountControllerSpec extends SpecBase {
 
   "show account details" should {
-
     "return Ok when no guarantee transactions are available" in new Setup {
-
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
@@ -58,7 +56,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         )
         .configure(
           "features.guarantee-account-details" -> "true",
-          "application.guarantee-account.numberOfItemsPerPage" -> "10")
+          "application.guarantee-account.numberOfItemsPerPage" -> ten)
         .build()
 
       running(app) {
@@ -87,7 +85,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         )
         .configure(
           "features.guarantee-account-details" -> "true",
-          "application.guarantee-account.numberOfItemsPerPage" -> "10")
+          "application.guarantee-account.numberOfItemsPerPage" -> ten)
         .build()
 
       running(app) {
@@ -98,7 +96,6 @@ class GuaranteeAccountControllerSpec extends SpecBase {
     }
 
     "return OK" in new Setup {
-
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
@@ -118,7 +115,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         )
         .configure(
           "features.guarantee-account-details" -> "true",
-          "application.guarantee-account.numberOfItemsPerPage" -> "10")
+          "application.guarantee-account.numberOfItemsPerPage" -> ten)
         .build()
 
       running(app) {
@@ -162,7 +159,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
           bind[DataStoreService].toInstance(mockDataStoreService)
         )
         .configure(
-          "application.guarantee-account.numberOfItemsPerPage" -> "10")
+          "application.guarantee-account.numberOfItemsPerPage" -> ten)
         .build()
 
       running(app) {
@@ -203,7 +200,6 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
   "showTransactionsUnavailable" should {
     "return OK" in new Setup {
-
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
@@ -219,7 +215,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
           bind[DataStoreService].toInstance(mockDataStoreService)
         )
         .configure(
-          "application.guarantee-account.numberOfItemsPerPage" -> "10")
+          "application.guarantee-account.numberOfItemsPerPage" -> ten)
         .build()
 
       running(app) {
@@ -231,7 +227,9 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
     "redirect to account unavailable page" when {
       "failed to fetch account details while redirecting to transaction unavailable page" in new Setup {
-        val upstream5xxResponse = UpstreamErrorResponse("ServiceUnavailable", Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
+        val upstream5xxResponse = UpstreamErrorResponse("ServiceUnavailable",
+          Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
+
         when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
           .thenReturn(Future.failed(upstream5xxResponse))
 
@@ -264,7 +262,9 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       }
 
       "the api returns entity too large" in new Setup {
-        val errorResponse = UpstreamErrorResponse("Entity too large", Status.REQUEST_ENTITY_TOO_LARGE, Status.REQUEST_ENTITY_TOO_LARGE)
+        val errorResponse = UpstreamErrorResponse("Entity too large",
+          Status.REQUEST_ENTITY_TOO_LARGE, Status.REQUEST_ENTITY_TOO_LARGE)
+
         when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
           .thenReturn(Future.failed(errorResponse))
 
@@ -284,7 +284,6 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
   "showAccountUnavailable" should {
     "return OK" in new Setup {
-
       val app = application
         .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
         .build()
@@ -298,7 +297,6 @@ class GuaranteeAccountControllerSpec extends SpecBase {
   }
 
   "unhappy path section" should {
-
     "redirect to an error page" when {
       "the api connector throws an exception" in new Setup {
 
@@ -330,17 +328,21 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       val app = application
         .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
         .configure(
-          "application.guarantee-account.numberOfItemsPerPage" -> "10")
+          "application.guarantee-account.numberOfItemsPerPage" -> ten)
         .build()
 
       running(app) {
-        val request = FakeRequest(GET, routes.GuaranteeAccountController.showAccountDetails(None).url + "?sortBy=date&order=ascending&page=5")
+        val request = FakeRequest(GET,
+          routes.GuaranteeAccountController.showAccountDetails(None).url + "?sortBy=date&order=ascending&page=5")
+
         val result = route(app, request).value
         val html = parseBodyFragment(contentAsString(result)).body
         val pageNumberLinks = html.select("li.govuk-pagination__item > a").asScala
+
         withClue("html did not contain any pagination links:") {
-          pageNumberLinks.size must not be (0)
+          pageNumberLinks.size must not be (zero)
         }
+
         pageNumberLinks.map { pageNumberLink =>
           withClue(s"page number link $pageNumberLink must include page number") {
             pageNumberLink.attr("href") must include(s"page=" + pageNumberLink.text())
@@ -351,9 +353,10 @@ class GuaranteeAccountControllerSpec extends SpecBase {
   }
 
   trait Setup {
-
     val eori = "GB001"
     val someGan = "GAN-1"
+    val ten = "10"
+    val zero = 0
 
     val mockDateTimeService = mock[DateTimeService]
     val mockCustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
