@@ -37,21 +37,32 @@ class GuaranteeTransactionController @Inject()(identify: IdentifierAction,
                                                dateTimeService: DateTimeService,
                                                view: individual_transaction,
                                                errorHandler: ErrorHandler,
-                                               mcc: MessagesControllerComponents)(implicit execution: ExecutionContext, val appConfig: AppConfig) extends FrontendController(mcc) with I18nSupport {
+                                               mcc: MessagesControllerComponents)(
+  implicit execution: ExecutionContext, val appConfig: AppConfig) extends FrontendController(mcc) with I18nSupport {
 
-  def displayTransaction(ref: String, page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
+  def displayTransaction(ref: String, page: Option[Int]): Action[AnyContent] = (
+    identify andThen checkEmailIsVerified).async { implicit request =>
+
     apiConnector.getGuaranteeAccount(request.eori).flatMap {
       case None => Future.successful(NotFound(errorHandler.notFoundTemplate))
       case Some(account) => apiConnector.retrieveOpenGuaranteeTransactionsDetail(account.number).map {
         case Left(value) => value match {
-          case NoTransactionsAvailable => Ok(guaranteeAccount(GuaranteeAccountViewModel(account, dateTimeService.localDateTime()), GuaranteeAccountTransactionsViewModel(Seq.empty, page)))
-          case TooManyTransactionsRequested => Ok(tooManyResults(GuaranteeAccountViewModel(account, dateTimeService.localDateTime())))
+          case NoTransactionsAvailable => Ok(guaranteeAccount(
+            GuaranteeAccountViewModel(account, dateTimeService.localDateTime()),
+            GuaranteeAccountTransactionsViewModel(Seq.empty, page)))
+
+          case TooManyTransactionsRequested => Ok(tooManyResults(
+            GuaranteeAccountViewModel(account, dateTimeService.localDateTime())))
+
           case UnknownException => Redirect(routes.GuaranteeAccountController.showTransactionsUnavailable())
         }
         case Right(transactions) =>
           transactions.find(_.secureMovementReferenceNumber.contains(ref)) match {
-            case Some(value) => Ok(view(GuaranteeAccountViewModel(account, dateTimeService.localDateTime()), value, page))
-            case None => Ok(guaranteeAccount(GuaranteeAccountViewModel(account, dateTimeService.localDateTime()), GuaranteeAccountTransactionsViewModel(Seq.empty, page)))
+            case Some(value) => Ok(view(GuaranteeAccountViewModel(
+              account, dateTimeService.localDateTime()), value, page))
+
+            case None => Ok(guaranteeAccount(GuaranteeAccountViewModel(
+              account, dateTimeService.localDateTime()), GuaranteeAccountTransactionsViewModel(Seq.empty, page)))
           }
       }
     }

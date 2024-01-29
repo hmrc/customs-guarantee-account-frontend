@@ -32,7 +32,7 @@ object FormHelper {
    * @return Updated FormError key
    */
   def updateFormErrorKeyForStartAndEndDate(): (String, String) => String = (key: String, errorMsg: String) => {
-    
+
     val olderStartDateKey = "cf.form.error.start.date-too-far-in-past"
     val earlierStartDateKey = "cf.form.error.startDate.date-earlier-than-system-start-date"
     val futureStartDateKey = "cf.form.error.start-future-date"
@@ -45,15 +45,25 @@ object FormHelper {
     val invalidEndMonthKey = "cf.form.error.end.month.date-number-invalid"
     val invalidEndYearKey = "cf.form.error.end.year.date-number-invalid"
 
-    
-    val startDateMsgKeyList = List(olderStartDateKey,earlierStartDateKey,futureStartDateKey,invalidStartMonthKey,invalidStartYearKey)
-    val endDateMsgKeyList = List(olderEndDateKey, earlierEndDateKey, futureEndDateKey, invalidEndMonthKey, invalidEndYearKey)
+    val startDateMsgKeyList = List(
+      olderStartDateKey,
+      earlierStartDateKey,
+      futureStartDateKey,
+      invalidStartMonthKey,invalidStartYearKey)
+
+    val endDateMsgKeyList = List(
+      olderEndDateKey,
+      earlierEndDateKey,
+      futureEndDateKey,
+      invalidEndMonthKey,
+      invalidEndYearKey)
 
     if ((key.equals("start") || key.equals("end"))) {
-      if (startDateMsgKeyList.contains(errorMsg) || endDateMsgKeyList.contains(errorMsg))
+      if (startDateMsgKeyList.contains(errorMsg) || endDateMsgKeyList.contains(errorMsg)) {
         s"$key.month"
-      else
+      } else {
         s"$key.year"
+      }
     } else {
       key
     }

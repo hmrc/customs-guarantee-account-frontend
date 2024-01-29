@@ -50,8 +50,10 @@ trait Formatters {
           .bind(key, data)
           .right.map(_.replace(comma, emptyString))
           .right.flatMap {
+
           case s if s.matches(decimalRegexp) =>
             Left(Seq(FormError(key, wholeNumberKey, args)))
+
           case s =>
             nonFatalCatch
               .either(s.toInt)

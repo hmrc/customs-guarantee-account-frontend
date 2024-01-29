@@ -44,15 +44,19 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
                                            guaranteeAccountNotAvailable: guarantee_account_not_available,
                                            tooManyResults: guarantee_account_exceed_threshold,
                                            guaranteeAccountTransactionsNotAvailable: guarantee_account_transactions_not_available
-                                          )(implicit mcc: MessagesControllerComponents, ec: ExecutionContext, eh: ErrorHandler, appConfig: AppConfig)
+                                          )(implicit mcc: MessagesControllerComponents,
+                                            ec: ExecutionContext, eh: ErrorHandler, appConfig: AppConfig)
   extends FrontendController(mcc) with I18nSupport with DateFormatters {
 
   val log: Logger = Logger(this.getClass)
 
-  def showAccountDetails(page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
+  def showAccountDetails(page: Option[Int]): Action[AnyContent] = (
+    identify andThen checkEmailIsVerified).async { implicit request =>
 
       val result = for {
-        account <- fromOptionF[Future, Result, GuaranteeAccount](apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
+        account <- fromOptionF[Future, Result, GuaranteeAccount](
+          apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
+
         page <- liftF[Future, Result, Result](showAccountWithTransactionDetails(account, page))
       } yield page
 
@@ -63,15 +67,23 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
       }
     }
 
-  private def showAccountWithTransactionDetails(account: GuaranteeAccount, page: Option[Int])(implicit req: IdentifierRequest[AnyContent]): Future[Result] = {
+  private def showAccountWithTransactionDetails(account: GuaranteeAccount, page: Option[Int])(
+    implicit req: IdentifierRequest[AnyContent]): Future[Result] = {
+
     for {
       transactions <- apiConnector.retrieveOpenGuaranteeTransactionsDetail(account.number)
       result = transactions match {
         case Left(error) => error match {
-          case NoTransactionsAvailable => Ok(guaranteeAccount(GuaranteeAccountViewModel(account, dateTimeService.localDateTime()), GuaranteeAccountTransactionsViewModel(Seq.empty, page)))
-          case TooManyTransactionsRequested => Ok(tooManyResults(GuaranteeAccountViewModel(account, dateTimeService.localDateTime())))
+          case NoTransactionsAvailable => Ok(guaranteeAccount(
+            GuaranteeAccountViewModel(account, dateTimeService.localDateTime()),
+            GuaranteeAccountTransactionsViewModel(Seq.empty, page)))
+
+          case TooManyTransactionsRequested => Ok(tooManyResults(
+            GuaranteeAccountViewModel(account, dateTimeService.localDateTime())))
+
           case UnknownException => Redirect(routes.GuaranteeAccountController.showTransactionsUnavailable())
         }
+
         case Right(transactions) =>
           val (nonC18Transactions, c18Transactions) = transactions.partition(_.c18Reference.isEmpty)
           val filteredTransactions = nonC18Transactions.map { transaction =>
@@ -86,12 +98,15 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
     } yield result
   }
 
-  def showTransactionsUnavailable(): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
+  def showTransactionsUnavailable(): Action[AnyContent] = (
+    identify andThen checkEmailIsVerified).async { implicit request =>
 
     val result = for {
-      account <- fromOptionF[Future, Result, GuaranteeAccount](apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
+      account <- fromOptionF[Future, Result, GuaranteeAccount](
+        apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
     } yield
-      Ok(guaranteeAccountTransactionsNotAvailable(GuaranteeAccountViewModel(account, dateTimeService.localDateTime())))
+      Ok(guaranteeAccountTransactionsNotAvailable(GuaranteeAccountViewModel(
+        account, dateTimeService.localDateTime())))
 
     result.merge.recover {
       case NonFatal(e) =>

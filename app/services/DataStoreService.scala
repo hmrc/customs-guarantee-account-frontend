@@ -31,11 +31,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsReporterService)(implicit appConfig: AppConfig, ec: ExecutionContext) {
+class DataStoreService @Inject()(http: HttpClient,
+                                 metricsReporter: MetricsReporterService)(
+  implicit appConfig: AppConfig, ec: ExecutionContext) {
 
   val log = Logger(this.getClass)
 
-  
   def getEmail(eori: EORI)(implicit hc: HeaderCarrier): Future[Either[EmailResponses, Email]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/verified-email"
     metricsReporter.withResponseTimeLogging("customs-data-store.get.email") {
@@ -47,12 +48,12 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
       }
     }
   }
-
 }
 
-case class EmailResponse(address: Option[String], timestamp: Option[String], undeliverable: Option[UndeliverableInformation])
+case class EmailResponse(address: Option[String],
+                         imestamp: Option[String],
+                         undeliverable: Option[UndeliverableInformation])
 
 object EmailResponse {
   implicit val format: OFormat[EmailResponse] = Json.format[EmailResponse]
 }
-
