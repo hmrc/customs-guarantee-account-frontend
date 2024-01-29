@@ -72,8 +72,8 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
   def auditCsvDownload(eori: String,
                        guaranteeAccountNumber: String,
                        dateTime: LocalDateTime,
-                       dates: Option[RequestDates] )(
-    implicit hc: HeaderCarrier, ex:ExecutionContext ) = {
+                       dates: Option[RequestDates])(
+    implicit hc: HeaderCarrier, ex:ExecutionContext) = {
 
   val eventualResult = dates match{
     case Some(value) =>

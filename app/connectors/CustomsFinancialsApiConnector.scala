@@ -38,7 +38,6 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
                                               cacheRepository: CacheRepository)(implicit ec: ExecutionContext) {
 
   private val logger = LoggerFactory.getLogger("application." + getClass.getCanonicalName)
-
   private val baseUrl = appConfig.customsFinancialsApi
   private val accountsUrl = s"$baseUrl/eori/accounts"
   private val retrieveOpenGuaranteeTransactionsDetailUrl = s"$baseUrl/account/guarantee/open-transactions-detail"
@@ -80,7 +79,7 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
       case UpstreamErrorResponse(_, 413, _, _) =>
         logger.error(s"Entity too large to download"); Left(TooManyTransactionsRequested)
 
-      case UpstreamErrorResponse(_, 404, _, _) =>
+      case UpstreamErrorResponse(_, _, _, _) =>
         logger.info(s"No data found"); Left(NoTransactionsAvailable)
 
       case e => logger.error(s"Unable to download CSV :${e.getMessage}"); Left(UnknownException)
@@ -109,7 +108,7 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
     case UpstreamErrorResponse(_, 413, _, _) =>
       logger.error(s"Entity too large to download"); Left(TooManyTransactionsRequested)
 
-    case UpstreamErrorResponse(_, 404, _, _) =>
+    case UpstreamErrorResponse(_, _, _, _) =>
       logger.info(s"No data found"); Left(NoTransactionsAvailable)
 
     case e => logger.error(s"Unable to download CSV :${e.getMessage}"); Left(UnknownException)

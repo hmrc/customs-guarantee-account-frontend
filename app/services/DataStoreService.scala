@@ -18,7 +18,7 @@ package services
 
 import config.AppConfig
 import models.domain.EORI
-import models.{EmailResponses, UndeliverableEmail, UnverifiedEmail}
+import models.{EmailResponses, UnverifiedEmail}
 import domain.UndeliverableInformation
 import play.api.Logger
 import play.api.http.Status.NOT_FOUND

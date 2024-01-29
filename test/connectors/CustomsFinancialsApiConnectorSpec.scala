@@ -33,7 +33,6 @@ import scala.concurrent.Future
 class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
   "getAccounts" must {
-
     "return all accounts available to the given EORI from the API service" in new Setup {
       when[Future[AccountsAndBalancesResponseContainer]](mockHttpClient.POST(any, any, any)(any, any, any, any))
         .thenReturn(Future.successful(traderAccounts))

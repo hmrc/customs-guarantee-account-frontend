@@ -16,7 +16,6 @@
 
 package controllers.actions
 
-import config.AppConfig
 import models.UnverifiedEmail
 import models.request.IdentifierRequest
 import play.api.i18n.{I18nSupport, MessagesApi}

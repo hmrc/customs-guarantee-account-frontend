@@ -66,7 +66,8 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Right(ganTransactions)))
 
-      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any)).thenReturn(Future.successful(AuditResult.Success))
+      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any)).thenReturn(
+        Future.successful(AuditResult.Success))
 
       running(app) {
         val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
@@ -82,7 +83,8 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Right(ganTransactions)))
 
-      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any)).thenReturn(Future.successful(AuditResult.Success))
+      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any)).thenReturn(
+        Future.successful(AuditResult.Success))
 
       running(app) {
         val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
@@ -99,10 +101,12 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Right(ganTransactions)))
 
-      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any)).thenReturn(Future.successful(AuditResult.Success))
+      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any)).thenReturn(
+        Future.successful(AuditResult.Success))
 
       running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(disposition = Some("inline"), None).url)
+        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(
+          disposition = Some("inline"), None).url)
         val result = route(app, request).value
         val actualHeaders = headers(result)
         actualHeaders("Content-Disposition") must startWith("inline")
