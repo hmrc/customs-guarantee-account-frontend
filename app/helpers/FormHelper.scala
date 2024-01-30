@@ -18,19 +18,6 @@ package helpers
 
 object FormHelper {
 
-  /**
-   * Updates the key as per below validation
-   * If key is either start or end and error msg is among future date,etmp date or tax year date
-   *  Updated key - start.month
-   *
-   *  If key is either start or end and error msg is of invalid year length
-   *   Updated key - start.year
-   *
-   *  If key is other than start or end
-   *   Updated key is unchanged
-   *
-   * @return Updated FormError key
-   */
   def updateFormErrorKeyForStartAndEndDate(): (String, String) => String = (key: String, errorMsg: String) => {
 
     val olderStartDateKey = "cf.form.error.start.date-too-far-in-past"

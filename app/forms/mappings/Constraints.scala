@@ -45,6 +45,7 @@ trait Constraints {
   def minTaxYear()(implicit clock: Clock): TaxYear = {
     lazy val currentDate: LocalDate = LocalDateTime.now(clock).toLocalDate
     val maximumNumberOfYears = 6
+
     taxYearFor(currentDate).back(maximumNumberOfYears)
   }
 

@@ -18,6 +18,7 @@ package helpers
 
 import play.api.i18n.Messages
 import services.DateTimeService
+import utils.Utils.singleSpace
 
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
@@ -44,8 +45,8 @@ trait DateFormatters {
 
   def updatedDateTime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
     Formatters.timeAsHourMinutesWithAmPm(dateTime).toLowerCase +
-      " " + messages(s"cf.guarantee-account.updated.time.on") +
-      " " + Formatters.dateAsDayMonthAndYear(dateTime.toLocalDate)
+      singleSpace + messages(s"cf.guarantee-account.updated.time.on") +
+      singleSpace + Formatters.dateAsDayMonthAndYear(dateTime.toLocalDate)
   }
 
   def dateTimeAsIso8601(dateTime: LocalDateTime): String = {
@@ -57,6 +58,7 @@ trait CurrencyFormatters {
   def formatCurrencyAmount(amount: BigDecimal): String = {
     val maxDecimalPlaces: Int = 2
     val numberFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.UK)
+
     numberFormat.setMaximumFractionDigits(maxDecimalPlaces)
     numberFormat.setMinimumFractionDigits(maxDecimalPlaces)
     numberFormat.format(amount)
@@ -65,6 +67,7 @@ trait CurrencyFormatters {
   def formatCurrencyAmount0dp(amount: BigDecimal): String = {
     val numberFormat: NumberFormat =NumberFormat.getCurrencyInstance(Locale.UK)
     val outputDecimals = if (amount.isWhole) 0 else 2
+
     numberFormat.setMaximumFractionDigits(outputDecimals)
     numberFormat.setMinimumFractionDigits(outputDecimals)
     numberFormat.format(amount)

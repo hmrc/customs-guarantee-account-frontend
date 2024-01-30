@@ -16,9 +16,31 @@
 
 package utils
 
-object Utils {
-  val emptyString = ""
-  val comma = ","
-  val singleSpace = " "
-  val hyphen = "-"
+import Utils._
+
+class UtilsSpec extends SpecBase {
+
+  "emptyString" should {
+    "return correct value" in {
+      emptyString mustBe empty
+    }
+  }
+
+  "singleSpace" should {
+    "return correct value" in {
+      singleSpace mustBe " "
+    }
+  }
+
+  "hyphen" should {
+    "return correct value" in {
+      hyphen mustBe "-"
+    }
+  }
+
+  "comma" should {
+    "return correct value" in {
+      comma mustBe ","
+    }
+  }
 }
