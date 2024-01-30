@@ -49,7 +49,6 @@ class GuaranteeTransactionsEncryptionSpec extends SpecBase {
       Some("C18-1"),
       dueDates = Seq(dd))
 
-
     val encryptor = app.injector.instanceOf[GuaranteeTransactionsEncryptor]
     val decryptor = app.injector.instanceOf[GuaranteeTransactionsDecryptor]
     val config = app.injector.instanceOf[Configuration]

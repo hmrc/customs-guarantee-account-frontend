@@ -33,12 +33,13 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DataStoreService @Inject()(http: HttpClient,
                                  metricsReporter: MetricsReporterService)(
-  implicit appConfig: AppConfig, ec: ExecutionContext) {
+                                  implicit appConfig: AppConfig, ec: ExecutionContext) {
 
   val log = Logger(this.getClass)
 
   def getEmail(eori: EORI)(implicit hc: HeaderCarrier): Future[Either[EmailResponses, Email]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/verified-email"
+
     metricsReporter.withResponseTimeLogging("customs-data-store.get.email") {
       http.GET[EmailResponse](dataStoreEndpoint).map {
         case EmailResponse(Some(address), _, None) => Right(Email(address))

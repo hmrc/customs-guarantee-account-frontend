@@ -25,6 +25,7 @@ import services.DataStoreService
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.ServiceUnavailableException
 import utils.SpecBase
+import utils.Utils.emptyString
 
 import scala.concurrent.Future
 
@@ -33,16 +34,19 @@ class EmailActionSpec extends SpecBase {
   "EmailAction" should {
     "Let requests with validated email through" in new Setup {
       running (app) {
-        when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
+        when(mockDataStoreService.getEmail(any)(any))
+          .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
+
         val response = await(emailAction.filter(authenticatedRequest))
         response mustBe None
       }
     }
 
-
     "Let request through, when getEmail throws service unavailable exception" in new Setup {
       running(app){
-        when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.failed(new ServiceUnavailableException("")))
+        when(mockDataStoreService.getEmail(any)(any))
+          .thenReturn(Future.failed(new ServiceUnavailableException(emptyString)))
+
         val response = await(emailAction.filter(authenticatedRequest))
         response mustBe None
       }

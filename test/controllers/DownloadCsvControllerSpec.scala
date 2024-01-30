@@ -278,7 +278,6 @@ class DownloadCsvControllerSpec extends SpecBase {
       }
     }
 
-
     "return redirect to unable to download csv search" in new Setup {
 
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
@@ -313,6 +312,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       }
     }
     "return redirect to unable to download csv when an exception is thrown" in new Setup {
+
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
@@ -392,7 +392,6 @@ class DownloadCsvControllerSpec extends SpecBase {
       }
     }
   }
-
 
   "audit the download of a requested CSV" in new Setup {
     when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))

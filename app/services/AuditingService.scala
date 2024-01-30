@@ -53,8 +53,7 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
 
   private def toExtendedDataEvent(appName: String,
                                   auditModel: AuditModel,
-                                  path: String)(
-    implicit hc: HeaderCarrier): ExtendedDataEvent =
+                                  path: String)(implicit hc: HeaderCarrier): ExtendedDataEvent =
     ExtendedDataEvent(
       auditSource = appName,
       auditType = auditModel.auditType,
@@ -73,18 +72,19 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
                        guaranteeAccountNumber: String,
                        dateTime: LocalDateTime,
                        dates: Option[RequestDates])(
-    implicit hc: HeaderCarrier, ex:ExecutionContext): Future[Unit] = {
+                        implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Unit] = {
 
-  val eventualResult = dates match{
-    case Some(value) =>
-      audit(AuditModel("DownloadGuaranteeStatement", "Download guarantee transactions",
+    val eventualResult = dates match {
+      case Some(value) =>
+        audit(AuditModel("DownloadGuaranteeStatement", "Download guarantee transactions",
           Json.toJson(GuaranteeCsvAuditData(eori, guaranteeAccountNumber,
-            "open", dateTimeAsIso8601(dateTime), "CSV",Some(value.dateFrom), Some(value.dateTo)))))
-    case None =>
-      audit(AuditModel("DownloadGuaranteeStatement", "Download guarantee transactions",
+            "open", dateTimeAsIso8601(dateTime), "CSV", Some(value.dateFrom), Some(value.dateTo)))))
+      case None =>
+        audit(AuditModel("DownloadGuaranteeStatement", "Download guarantee transactions",
           Json.toJson(GuaranteeCsvAuditData(eori, guaranteeAccountNumber,
-            "open", dateTimeAsIso8601(dateTime), "CSV",None, None))))
-  }
+            "open", dateTimeAsIso8601(dateTime), "CSV", None, None))))
+    }
+
     eventualResult.map {
       case _: AuditResult.Failure => log.error("Guarantee CSV download auditing failed")
       case _ => ()

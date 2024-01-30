@@ -32,6 +32,7 @@ case class GuaranteeAccountTransactionsViewModel(transactions: Seq[GuaranteeAcco
   val allItems: Seq[GuaranteeAccountTransaction] = transactions
 
   implicit val localDateOrdering: Ordering[LocalDate] = Ordering.by(_.toEpochDay)
+
   val itemsGroupedByDate: Seq[GuaranteeAccountTransactionsByDate] = transactions.groupBy(
     _.guaranteeTransaction.date).map(v => GuaranteeAccountTransactionsByDate(
       v._1, v._2)).toSeq.sortBy(_.date).reverse
@@ -42,4 +43,3 @@ case class GuaranteeAccountTransactionsViewModel(transactions: Seq[GuaranteeAcco
   override val urlForPage: Int => String = e =>
     routes.GuaranteeAccountController.showAccountDetails(Some(e)).url
 }
-

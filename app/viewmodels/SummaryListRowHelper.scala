@@ -19,7 +19,7 @@ package viewmodels
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Actions, Value}
-import utils.Utils.{emptyString}
+import utils.Utils.emptyString
 
 trait SummaryListRowHelper {
 

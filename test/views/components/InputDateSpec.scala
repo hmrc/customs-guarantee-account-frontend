@@ -29,7 +29,6 @@ class InputDateSpec extends SpecBase {
   "InpuDate component" should {
 
     "render correctly with no errors" in new Setup {
-
       val formWithValues = form.bind(Map(
         "start.month" -> "01", "start.year" -> "2021", "end.month" -> "10", "end.year" -> "2021"))
 
@@ -42,7 +41,9 @@ class InputDateSpec extends SpecBase {
         html.getElementsByTag("h1").text() must include("Date of Birth")
         html.getElementById("start.month").attr("value") must include("01")
         html.getElementById("start.year").attr("value") must include("2021")
-        html.getElementsByClass("govuk-date-input__input").attr("class") mustNot include("govuk-input--error")
+
+        html.getElementsByClass("govuk-date-input__input").attr(
+          "class") mustNot include("govuk-input--error")
       }
     }
 
@@ -60,7 +61,9 @@ class InputDateSpec extends SpecBase {
         html.getElementsByTag("h1").text() must include("Date of Birth")
         html.getElementById("start.month").attr("value") mustNot include("01")
         html.getElementById("start.year").attr("value") must include("2021")
-        html.getElementsByClass("govuk-date-input__input").attr("class") must include("govuk-input--error")
+
+        html.getElementsByClass("govuk-date-input__input").attr(
+          "class") must include("govuk-input--error")
       }
     }
 
@@ -78,7 +81,9 @@ class InputDateSpec extends SpecBase {
         html.getElementsByTag("h1").text() must include("Date of Birth")
         html.getElementById("start.month").attr("value") must include("01")
         html.getElementById("start.year").attr("value") mustNot include("2021")
-        html.getElementsByClass("govuk-date-input__input").attr("class") mustNot include("govuk-input--error")
+
+        html.getElementsByClass("govuk-date-input__input").attr(
+          "class") mustNot include("govuk-input--error")
       }
     }
 
@@ -98,8 +103,9 @@ class InputDateSpec extends SpecBase {
         html.getElementsByTag("h1").text() must include("Date of Birth")
         html.getElementById("start.month").attr("value") mustNot include("01")
         html.getElementById("start.year").attr("value") mustNot include("2021")
-        html.getElementsByClass("govuk-date-input__input").attr("class") must include("govuk-input--error")
 
+        html.getElementsByClass("govuk-date-input__input").attr(
+          "class") must include("govuk-input--error")
       }
     }
   }
