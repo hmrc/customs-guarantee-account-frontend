@@ -28,7 +28,10 @@
         <h2 class="govuk-label--m">
             @messages("cf.guarantee-account.detail.c18-issued", Formatters.dateAsDayMonthAndYear(c18Ref.date))
         </h2>
-        <p class="govuk-body">@messages("cf.guarantee-account.detail.linked", transaction.guaranteeTransaction.movementReferenceNumber, Formatters.dateAsDayMonthAndYear(transaction.guaranteeTransaction.date))</p>
+        <p class="govuk-body">@messages("cf.guarantee-account.detail.linked",
+            transaction.guaranteeTransaction.movementReferenceNumber,
+            Formatters.dateAsDayMonthAndYear(transaction.guaranteeTransaction.date))</p>
+
         @govukTable(Table(
             classes = "govuk-table hmrc-responsive-table govuk-!-margin-bottom-9",
             attributes = Map("id" -> s"guarantee-c18-reference-${c18Ref.date}"),
@@ -37,7 +40,8 @@
                     TableRow(
                         content = HtmlContent(
                             s"""
-                             <span class="hmrc-responsive-table__heading" aria-hidden="true">$messages("cf.guarantee-account.detail.c18")</span>
+                             <span class="hmrc-responsive-table__heading" aria-hidden="true">$messages(
+                                 "cf.guarantee-account.detail.c18")</span>
                             ${c18Ref.c18Reference.getOrElse("")}
                             """
                         ),
@@ -46,7 +50,8 @@
                     TableRow(
                         content = HtmlContent(
                             s"""
-                            <span class="hmrc-responsive-table__heading" aria-hidden="true">$messages("cf.guarantee-account.detail.amount")</span>
+                            <span class="hmrc-responsive-table__heading" aria-hidden="true">$messages(
+                                "cf.guarantee-account.detail.amount")</span>
                             ${Formatters.formatCurrencyAmount(c18Ref.originalCharge)}
                             """
                         ),
@@ -55,7 +60,8 @@
                     TableRow(
                         content = HtmlContent(
                             s"""
-                            <span class="hmrc-responsive-table__heading" aria-hidden="true">$messages("cf.guarantee-account.detail.paid")</span>
+                            <span class="hmrc-responsive-table__heading" aria-hidden="true">$messages(
+                                "cf.guarantee-account.detail.paid")</span>
                             ${Formatters.formatCurrencyAmount(c18Ref.dischargedAmount)}
                             """
                         ),
@@ -64,7 +70,8 @@
                     TableRow(
                         content = HtmlContent(
                             s"""
-                            <span class="hmrc-responsive-table__heading" aria-hidden="true">$messages("cf.guarantee-account.detail.remaining")</span>
+                            <span class="hmrc-responsive-table__heading" aria-hidden="true">$messages(
+                                "cf.guarantee-account.detail.remaining")</span>
                             ${Formatters.formatCurrencyAmount(c18Ref.balance)}
                             """
                         ),
@@ -90,10 +97,10 @@
                     classes = "govuk-table__header govuk-table__header--numeric"
                 )
             )),
-            caption = Some(messages("cf.guarantee-account.detail.c18-issued", Formatters.dateAsDayMonthAndYear(c18Ref.date))),
+            caption = Some(messages("cf.guarantee-account.detail.c18-issued",
+                Formatters.dateAsDayMonthAndYear(c18Ref.date))),
             captionClasses = "govuk-visually-hidden",
             firstCellIsHeader = true
         ))
-
     }
 }
