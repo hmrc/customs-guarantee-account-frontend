@@ -196,7 +196,7 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
 
     val eori = "GB001"
     val someGan = "GAN-1"
-    val limiter = 123000
+    val limit = 123000
     val balance = 123.45
 
     val mockDateTimeService = mock[DateTimeService]

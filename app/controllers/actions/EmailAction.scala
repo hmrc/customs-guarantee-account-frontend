@@ -39,6 +39,7 @@ class EmailAction @Inject()(dataStoreService: DataStoreService)(
       case Left(value) =>
         value match {
           case UnverifiedEmail => Some(Redirect(controllers.routes.EmailController.showUnverified()))
+          case _ => None
         }
       case Right(_) => None
     }.recover { case _ => None }

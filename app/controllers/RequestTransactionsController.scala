@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.{AppConfig, ErrorHandler}
 import controllers.actions.{IdentifierAction, EmailAction}
 import forms.GuaranteeTransactionsRequestPageFormProvider
 import models.GuaranteeTransactionDates
@@ -31,16 +30,13 @@ import views.html._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RequestTransactionsController @Inject()(
-                                               identify: IdentifierAction,
-                                               checkEmailIsVerified: EmailAction,
-                                               formProvider: GuaranteeTransactionsRequestPageFormProvider,
-                                               view: guarantee_transactions_request_page,
-                                               cache: RequestedTransactionsCache,
-                                               implicit val mcc: MessagesControllerComponents)
-                                             (implicit ec: ExecutionContext,
-                                              eh: ErrorHandler,
-                                              appConfig: AppConfig) extends FrontendController(mcc) with I18nSupport {
+class RequestTransactionsController @Inject()(identify: IdentifierAction,
+                                              checkEmailIsVerified: EmailAction,
+                                              formProvider: GuaranteeTransactionsRequestPageFormProvider,
+                                              view: guarantee_transactions_request_page,
+                                              cache: RequestedTransactionsCache,
+                                              implicit val mcc: MessagesControllerComponents)
+                                             (implicit ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport {
 
   val log: Logger = Logger(this.getClass)
 

@@ -25,12 +25,12 @@ import repositories.CacheRepository
 import services.MetricsReporterService
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
+import play.api.http.Status.REQUEST_ENTITY_TOO_LARGE
 
 import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-
 
 class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
                                               appConfig: AppConfig,
@@ -76,7 +76,7 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
           }
         }
     }.recover {
-      case UpstreamErrorResponse(_, 413, _, _) => //scalastyle:off magic.number
+      case UpstreamErrorResponse(_, REQUEST_ENTITY_TOO_LARGE, _, _) =>
         logger.error(s"Entity too large to download"); Left(TooManyTransactionsRequested)
 
       case UpstreamErrorResponse(_, _, _, _) =>
@@ -105,7 +105,7 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
       retrieveOpenGuaranteeTransactionsDetailUrl,
       openGuaranteeTransactionsRequest).map(Right(_))
   }.recover {
-    case UpstreamErrorResponse(_, 413, _, _) => //scalastyle:off magic.number
+    case UpstreamErrorResponse(_, REQUEST_ENTITY_TOO_LARGE, _, _) =>
       logger.error(s"Entity too large to download"); Left(TooManyTransactionsRequested)
 
     case UpstreamErrorResponse(_, _, _, _) =>

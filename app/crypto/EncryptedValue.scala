@@ -32,7 +32,6 @@ object EncryptedValue {
 
 class EncryptionDecryptionException(method: String, reason: String, message: String) extends RuntimeException {
   val failureReason = s"$reason for $method"
-  val failureMessage: String = message
 }
 
 class AesGCMCrypto @Inject()() {

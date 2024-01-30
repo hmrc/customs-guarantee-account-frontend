@@ -27,33 +27,33 @@ trait Constraints {
   val year = 2019
   val month = 10
   val day = 1
-  val compareLength = 4
+  private val validYearLength = 4
   val zero = 0
 
-  lazy val etmpStatementsDate: LocalDate = LocalDate.of(year, month, day)
-  lazy val currentDate: LocalDate = LocalDateTime.now().toLocalDate
-  lazy val dayOfMonthThatTaxYearStartsOn = 6
+  private lazy val etmpStatementsDate: LocalDate = LocalDate.of(year, month, day)
+  private lazy val currentDate: LocalDate = LocalDateTime.now().toLocalDate
+  private lazy val dayOfMonthThatTaxYearStartsOn = 6
 
-  def equalToOrBeforeToday(errorKey:String): Constraint[LocalDate] = Constraint {
+  def equalToOrBeforeToday(errorKey: String): Constraint[LocalDate] = Constraint {
 
-    case request if (request.isAfter(currentDate) && request.getYear.toString.length() == compareLength) =>
+    case request if (request.isAfter(currentDate) && request.getYear.toString.length() == validYearLength) =>
       Invalid(ValidationError(errorKey))
 
     case _ => Valid
   }
 
-  def minTaxYear()(implicit clock:Clock): TaxYear = {
+  def minTaxYear()(implicit clock: Clock): TaxYear = {
     lazy val currentDate: LocalDate = LocalDateTime.now(clock).toLocalDate
     val maximumNumberOfYears = 6
     taxYearFor(currentDate).back(maximumNumberOfYears)
   }
 
-  def checkDates(systemStartDateErrorKey:String,
-                 taxYearErrorKey:String,
-                 yearLengthError:String)(
-    implicit clock: Clock): Constraint[LocalDate] = Constraint {
+  def checkDates(systemStartDateErrorKey: String,
+                 taxYearErrorKey: String,
+                 yearLengthError: String)(
+                  implicit clock: Clock): Constraint[LocalDate] = Constraint {
 
-    case date if date.getYear.toString.length() != compareLength =>
+    case date if date.getYear.toString.length() != validYearLength =>
       Invalid(ValidationError(yearLengthError))
 
     case request if Period.between(request, etmpStatementsDate).toTotalMonths > zero =>

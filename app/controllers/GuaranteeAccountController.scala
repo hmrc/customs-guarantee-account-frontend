@@ -53,19 +53,19 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
   def showAccountDetails(page: Option[Int]): Action[AnyContent] = (
     identify andThen checkEmailIsVerified).async { implicit request =>
 
-      val result = for {
-        account <- fromOptionF[Future, Result, GuaranteeAccount](
-          apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
+    val result = for {
+      account <- fromOptionF[Future, Result, GuaranteeAccount](
+        apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
 
-        page <- liftF[Future, Result, Result](showAccountWithTransactionDetails(account, page))
-      } yield page
+      page <- liftF[Future, Result, Result](showAccountWithTransactionDetails(account, page))
+    } yield page
 
-      result.merge.recover {
-        case NonFatal(t) =>
-          log.error(s"Unable to retrieve account details: ${t.getMessage}")
-          Redirect(routes.GuaranteeAccountController.showAccountUnavailable)
-      }
+    result.merge.recover {
+      case NonFatal(t) =>
+        log.error(s"Unable to retrieve account details: ${t.getMessage}")
+        Redirect(routes.GuaranteeAccountController.showAccountUnavailable)
     }
+  }
 
   private def showAccountWithTransactionDetails(account: GuaranteeAccount, page: Option[Int])(
     implicit req: IdentifierRequest[AnyContent]): Future[Result] = {

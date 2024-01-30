@@ -47,7 +47,7 @@ class RequestedTransactionsController @Inject()(apiConnector: CustomsFinancialsA
                                                 resultView: guarantee_transactions_result_page,
                                                 eh: ErrorHandler,
                                                 mcc: MessagesControllerComponents)(
-                                                implicit executionContext: ExecutionContext, appConfig: AppConfig)
+                                                 implicit executionContext: ExecutionContext, appConfig: AppConfig)
   extends FrontendController(mcc) with I18nSupport with Logging {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
@@ -64,7 +64,9 @@ class RequestedTransactionsController @Inject()(apiConnector: CustomsFinancialsA
     }
   }
 
-  private def showAccountWithTransactionDetails(account: GuaranteeAccount, from: LocalDate, to: LocalDate)(
+  private def showAccountWithTransactionDetails(account: GuaranteeAccount,
+                                                from: LocalDate,
+                                                to: LocalDate)(
     implicit req: IdentifierRequest[AnyContent]): Future[Result] = {
     apiConnector.retrieveRequestedGuaranteeTransactionsDetail(account.number, onlyOpenItems = true, from, to).map {
 
