@@ -27,7 +27,6 @@ class AppConfigSpec extends SpecBase {
         appConfig.appName mustBe ("customs-guarantee-account-frontend")
       }
     }
-
   }
 
   trait Setup {

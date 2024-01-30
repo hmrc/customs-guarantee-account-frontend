@@ -48,8 +48,8 @@ trait Formatters {
       override def bind(key: String, data: Map[String, String]) =
         baseFormatter
           .bind(key, data)
-          .right.map(_.replace(comma, emptyString))
-          .right.flatMap {
+          .map(_.replace(comma, emptyString))
+          .flatMap {
 
           case s if s.matches(decimalRegexp) =>
             Left(Seq(FormError(key, wholeNumberKey, args)))
