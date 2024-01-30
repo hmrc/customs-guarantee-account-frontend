@@ -39,10 +39,11 @@ class DateConvertersSpec extends SpecBase {
     }
 
     "Comparing different dates returns difference between" in new Setup {
+      val result = -1999999998
       val minDate = LocalDate.MIN
       val maxDate = LocalDate.MAX
       val compare = DateConverters.OrderedLocalDate(minDate).compare(maxDate)
-      compare mustBe -1999999998
+      compare mustBe result
     }
   }
 
