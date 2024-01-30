@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuthActionSpec extends SpecBase {
 
   class Harness(authAction: IdentifierAction) {
-    def onPageLoad() = authAction { _ => Results.Ok }
+    def onPageLoad(): Action[AnyContent] = authAction { _ => Results.Ok }
   }
 
   "Auth Action" when {

@@ -73,7 +73,7 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
                        guaranteeAccountNumber: String,
                        dateTime: LocalDateTime,
                        dates: Option[RequestDates])(
-    implicit hc: HeaderCarrier, ex:ExecutionContext) = {
+    implicit hc: HeaderCarrier, ex:ExecutionContext): Future[Unit] = {
 
   val eventualResult = dates match{
     case Some(value) =>
