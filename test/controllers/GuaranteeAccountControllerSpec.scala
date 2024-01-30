@@ -323,7 +323,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
-        .thenReturn(Future.successful(Right(randomGuaranteeTransactions(555))))
+        .thenReturn(Future.successful(Right(randomGuaranteeTransactions(fiveFiveFive))))
 
       val app = application
         .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
@@ -357,6 +357,10 @@ class GuaranteeAccountControllerSpec extends SpecBase {
     val someGan = "GAN-1"
     val ten = "10"
     val zero = 0
+    val fiveFiveFive = 555
+
+    val limit = 123000
+    val balance = 123.45
 
     val mockDateTimeService = mock[DateTimeService]
     val mockCustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
@@ -364,8 +368,8 @@ class GuaranteeAccountControllerSpec extends SpecBase {
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
 
     val guaranteeAccount = GuaranteeAccount(someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(
-      BigDecimal(123000),
-      BigDecimal(123.45)
+      BigDecimal(limit),
+      BigDecimal(balance)
     )))
 
     val amt = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
@@ -373,8 +377,14 @@ class GuaranteeAccountControllerSpec extends SpecBase {
     val ttg = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
     val dd = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
+    val year = 2018
+    val dayTwentyThree = 23
+    val dayTwentyTwo = 22
+    val dayTwentyOne = 21
+    val dayTwenty = 20
+
     val ganTransactions = List(
-      GuaranteeTransaction(LocalDate.of(2018, Month.JULY, 23),
+      GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwentyThree),
         "MRN-1",
         None,
         BigDecimal(45367.12),
@@ -387,7 +397,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         None,
         dueDates = Seq(dd)),
 
-      GuaranteeTransaction(LocalDate.of(2018, Month.JULY, 22),
+      GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12367.50),
@@ -400,7 +410,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         None,
         dueDates = Seq(dd)),
 
-      GuaranteeTransaction(LocalDate.of(2018, Month.JULY, 21),
+      GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwentyOne),
         "MRN-3",
         None,
         BigDecimal(12368.50),
@@ -413,7 +423,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         Some("C18-1"),
         dueDates = Seq(dd)),
 
-      GuaranteeTransaction(LocalDate.of(2018, Month.JULY, 20),
+      GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwenty),
         "MRN-4",
         None,
         BigDecimal(12369.50),
@@ -426,7 +436,8 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         Some("C18-2"),
         dueDates = Seq(dd))
     )
-    val nonFatalResponse = UpstreamErrorResponse("ServiceUnavailable", Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
+    val nonFatalResponse = UpstreamErrorResponse("ServiceUnavailable",
+      Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
   }
 
   def randomString(length: Int): String = Random.alphanumeric.take(length).mkString
@@ -437,17 +448,22 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
   def randomBigDecimal: BigDecimal = BigDecimal(randomFloat.toString)
 
-  def randomLocalDate: LocalDate = LocalDate.now().minusMonths(Random.nextInt(36))
+  val randomIntRange = 36
+  def randomLocalDate: LocalDate = LocalDate.now().minusMonths(Random.nextInt(randomIntRange))
+
+  val randomStringLength = 18
+  val randomStringLength2 = 20
+  val randomStringLength3 = 17
 
   def randomGuaranteeTransaction: GuaranteeTransaction =
     GuaranteeTransaction(
       randomLocalDate,
-      randomString(18),
+      randomString(randomStringLength),
       None,
       randomBigDecimal,
-      Some(randomString(20)),
-      randomString(17),
-      randomString(17),
+      Some(randomString(randomStringLength2)),
+      randomString(randomStringLength3),
+      randomString(randomStringLength3),
       randomBigDecimal,
       randomBigDecimal,
       None,
@@ -455,5 +471,6 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       Seq.empty
     )
 
-  def randomGuaranteeTransactions(howMany: Int): Seq[GuaranteeTransaction] = List.fill(howMany)(randomGuaranteeTransaction)
+  def randomGuaranteeTransactions(howMany: Int): Seq[GuaranteeTransaction] =
+    List.fill(howMany)(randomGuaranteeTransaction)
 }
