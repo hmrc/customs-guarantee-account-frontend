@@ -76,7 +76,7 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
           }
         }
     }.recover {
-      case UpstreamErrorResponse(_, 413, _, _) =>
+      case UpstreamErrorResponse(_, 413, _, _) => //scalastyle:off magic.number
         logger.error(s"Entity too large to download"); Left(TooManyTransactionsRequested)
 
       case UpstreamErrorResponse(_, _, _, _) =>
@@ -105,7 +105,7 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
       retrieveOpenGuaranteeTransactionsDetailUrl,
       openGuaranteeTransactionsRequest).map(Right(_))
   }.recover {
-    case UpstreamErrorResponse(_, 413, _, _) =>
+    case UpstreamErrorResponse(_, 413, _, _) => //scalastyle:off magic.number
       logger.error(s"Entity too large to download"); Left(TooManyTransactionsRequested)
 
     case UpstreamErrorResponse(_, _, _, _) =>
