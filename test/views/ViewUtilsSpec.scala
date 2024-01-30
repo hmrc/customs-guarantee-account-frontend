@@ -21,6 +21,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import utils.SpecBase
+import utils.Utils.emptyString
 
 class ViewUtilsSpec extends SpecBase {
 
@@ -34,7 +35,7 @@ class ViewUtilsSpec extends SpecBase {
     }
 
     "return title with error for invalid form" in new Setup {
-      val inValidFormData = sampleForm.bind(Map("name" -> "", "age" -> "25"))
+      val inValidFormData = sampleForm.bind(Map("name" -> emptyString, "age" -> "25"))
       val scenarioB = ViewUtils.title(inValidFormData, "user details", None, Seq())(msgs)
 
       scenarioB mustEqual ("Error: user details")
@@ -42,7 +43,6 @@ class ViewUtilsSpec extends SpecBase {
   }
 
   trait Setup {
-
     val hundred = 100
 
     val sampleForm = Form(tuple(

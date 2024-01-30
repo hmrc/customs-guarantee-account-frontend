@@ -22,6 +22,7 @@ import java.security.InvalidAlgorithmParameterException
 import java.util.Base64
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.{Cipher, IllegalBlockSizeException, KeyGenerator, NoSuchPaddingException}
+import utils.Utils.emptyString
 
 class AesGCMCryptoSpec extends SpecBase {
   private val encrypter = new AesGCMCrypto
@@ -80,7 +81,7 @@ class AesGCMCryptoSpec extends SpecBase {
 
     "must return an EncryptionDecryptionException if the key is empty" in {
       val decryptAttempt = intercept[EncryptionDecryptionException](
-        encrypter.decrypt(encryptedText, "")
+        encrypter.decrypt(encryptedText, emptyString)
       )
 
       decryptAttempt.failureReason must include("The key provided is invalid")

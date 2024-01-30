@@ -29,6 +29,7 @@ import utils.SpecBase
 
 import java.time.{LocalDate, Month}
 import scala.concurrent.Future
+import utils.Utils.emptyString
 
 class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
@@ -268,7 +269,9 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector.retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly))
+        val result = await(connector.retrieveRequestedGuaranteeTransactionsDetail(
+          "gan", true, fromDate, toDate)(implicitly))
+
         result mustBe Right(ganTransactions)
       }
     }
@@ -419,7 +422,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
     val eori = "123456789"
     val traderAccounts = AccountsAndBalancesResponseContainer(
       AccountsAndBalancesResponse(
-        Some(AccountResponseCommon("", Some(""), "", None)),
+        Some(AccountResponseCommon(emptyString, Some(emptyString), emptyString, None)),
         AccountResponseDetail(
           Some("123456789"),
           None,

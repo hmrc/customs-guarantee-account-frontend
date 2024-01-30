@@ -26,6 +26,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, ServiceUnavailableException, UpstreamErrorResponse}
 import utils.SpecBase
+import utils.Utils.emptyString
 
 import scala.concurrent.Future
 
@@ -49,7 +50,7 @@ class DataStoreServiceSpec extends SpecBase {
       val hundred = 100
 
       val undeliverableEventData = UndeliverableInformationEvent("someid", "someevent",
-        "someemail", "", Some(hundred), Some("sample"), "sample")
+        "someemail", emptyString, Some(hundred), Some("sample"), "sample")
 
       val emailResponse = EmailResponse(Some("sample@email.com"), Some("time"),
         Some(UndeliverableInformation("subject-example", "ex-event-id-01", "ex-group-id-01",

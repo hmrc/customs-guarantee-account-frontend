@@ -24,6 +24,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import utils.SpecBase
 import java.time.Clock
+import utils.Utils.emptyString
 
 class InputDateSpec extends SpecBase {
   "InpuDate component" should {
@@ -50,7 +51,8 @@ class InputDateSpec extends SpecBase {
     "render correctly with month error" in new Setup {
 
       val formWithValues = form.bind(Map(
-        "start.month" -> "", "start.year" -> "2021", "end.month" -> "10", "end.year" -> "2021"))
+        "start.month" -> emptyString, "start.year" -> "2021",
+        "end.month" -> "10", "end.year" -> "2021"))
 
       running(app) {
         val inputDateView = app.injector.instanceOf[views.html.components.inputDate]
@@ -70,7 +72,7 @@ class InputDateSpec extends SpecBase {
     "render correctly with year error" in new Setup {
 
       val formWithValues = form.bind(Map(
-        "start.month" -> "01", "start.year" -> "", "end.month" -> "10", "end.year" -> "2021"))
+        "start.month" -> "01", "start.year" -> emptyString, "end.month" -> "10", "end.year" -> "2021"))
 
       running(app) {
         val inputDateView = app.injector.instanceOf[views.html.components.inputDate]
@@ -90,7 +92,8 @@ class InputDateSpec extends SpecBase {
     "render correctly with both month and year errors" in new Setup {
 
       val formWithValues = form.bind(Map(
-        "start.month" -> "", "start.year" -> "", "end.month" -> "10", "end.year" -> "2021"))
+        "start.month" -> emptyString, "start.year" -> emptyString,
+        "end.month" -> "10", "end.year" -> "2021"))
 
       running(app) {
         val inputDateView = app.injector.instanceOf[views.html.components.inputDate]

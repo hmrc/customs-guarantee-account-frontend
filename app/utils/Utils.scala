@@ -21,4 +21,5 @@ object Utils {
   val comma = ","
   val singleSpace = " "
   val hyphen = "-"
+  val asterix = "*"
 }

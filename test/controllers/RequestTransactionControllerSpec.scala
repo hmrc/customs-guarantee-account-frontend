@@ -20,6 +20,7 @@ import play.api.test.Helpers._
 import utils.SpecBase
 import java.time.LocalDate
 import scala.concurrent.Future
+import utils.Utils.emptyString
 
 class RequestTransactionControllerSpec extends SpecBase {
 
@@ -139,7 +140,8 @@ class RequestTransactionControllerSpec extends SpecBase {
 
     "return BAD_REQUEST when invalid data submitted" in new Setup {
       val request = fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
-        .withFormUrlEncodedBody("start.invalid" -> "10", "start.year" -> "2019", "end.month" -> "10", "end.year" -> "2019")
+        .withFormUrlEncodedBody("start.invalid" -> "10",
+          "start.year" -> "2019", "end.month" -> "10", "end.year" -> "2019")
 
       running(app) {
         val result = route(app, request).value
@@ -149,7 +151,8 @@ class RequestTransactionControllerSpec extends SpecBase {
 
     "return BAD_REQUEST when start date and end date are empty" in new Setup {
       val request = fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
-        .withFormUrlEncodedBody("start.month" -> "", "start.year" -> "2019", "end.month" -> "", "end.year" -> "2019")
+        .withFormUrlEncodedBody("start.month" -> emptyString,
+          "start.year" -> "2019", "end.month" -> emptyString, "end.year" -> "2019")
 
       running(app) {
         val result = route(app, request).value

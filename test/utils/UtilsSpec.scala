@@ -43,4 +43,10 @@ class UtilsSpec extends SpecBase {
       comma mustBe ","
     }
   }
+
+  "asterix" should {
+    "return correct value" in {
+      asterix mustBe "*"
+    }
+  }
 }
