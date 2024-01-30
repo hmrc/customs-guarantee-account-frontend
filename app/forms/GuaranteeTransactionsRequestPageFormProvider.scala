@@ -59,8 +59,4 @@ class GuaranteeTransactionsRequestPageFormProvider @Inject()(implicit clock: Clo
     )(GuaranteeTransactionDates.apply)(GuaranteeTransactionDates.unapply)
     )
   }
-
-
-
 }
-

@@ -138,7 +138,6 @@ private[mappings] class LocalDateFormatter(invalidMonth: String,
 
   private[mappings] def formErrorKeysInCaseOfEmptyOrNonNumericValues(key: String,
                                                                      data: Map[String, String]): String = {
-
     val monthValue = data.get(s"$key.month")
     val yearValue = data.get(s"$key.year")
 

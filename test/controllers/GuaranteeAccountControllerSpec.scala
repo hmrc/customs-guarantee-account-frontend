@@ -29,7 +29,7 @@ import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
 
 import java.time.{LocalDate, LocalDateTime, Month}
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters ._
 import scala.concurrent.Future
 import scala.util.Random
 

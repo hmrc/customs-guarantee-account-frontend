@@ -31,6 +31,4 @@ object CSVWriter {
 
     headers + rows.map(_.toCSVRow).mkString("\n") + formattedFooter
   }
-
 }
-

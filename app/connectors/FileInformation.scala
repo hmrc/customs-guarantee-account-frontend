@@ -33,14 +33,14 @@ case class Metadata(items: Seq[MetadataItem]) {
 
 object FileInformation {
   implicit val metadataItemReads: Reads[MetadataItem] =
-    ((JsPath \ "metadata").read[String] and (JsPath \ "value").read[String]) (MetadataItem.apply _)
+    ((JsPath \ "metadata").read[String] and (JsPath \ "value").read[String])(MetadataItem.apply _)
   implicit val metadataReads: Reads[Metadata] = __.read[List[MetadataItem]].map(Metadata.apply)
-  implicit val metadataItemWrites: Writes[MetadataItem] =  Json.writes[MetadataItem]
-  implicit val metadataWrites: Writes[Metadata] = new Writes[Metadata] {
-    override def writes(o: Metadata): JsValue = {
-      JsArray(o.items.map(
-        item => Json.obj(("metadata", item.key), ("value", item.value))))
-    }
+  implicit val metadataItemWrites: Writes[MetadataItem] = Json.writes[MetadataItem]
+
+  implicit val metadataWrites: Writes[Metadata] = (o: Metadata) => {
+    JsArray(o.items.map(
+      item => Json.obj(("metadata", item.key), ("value", item.value))))
   }
-  implicit val fileInformationFormats: Format[FileInformation] = Json.format[FileInformation]
+
+implicit val fileInformationFormats: Format[FileInformation] = Json.format[FileInformation]
 }

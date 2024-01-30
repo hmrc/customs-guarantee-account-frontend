@@ -67,7 +67,8 @@ class RequestTransactionsController @Inject()(identify: IdentifierAction,
       )
   }
 
-  private def customValidation(dates: GuaranteeTransactionDates, form: Form[GuaranteeTransactionDates]): Option[Form[GuaranteeTransactionDates]] = {
+  private def customValidation(dates: GuaranteeTransactionDates,
+                               form: Form[GuaranteeTransactionDates]): Option[Form[GuaranteeTransactionDates]] = {
     def populateErrors(startMessage: String, endMessage: String): Form[GuaranteeTransactionDates] = {
       form.withError("start", startMessage)
         .withError("end", endMessage).fill(dates)

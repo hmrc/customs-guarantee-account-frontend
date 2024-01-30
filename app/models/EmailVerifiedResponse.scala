@@ -18,12 +18,6 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class EmailVerifiedResponse(verifiedEmail: Option[String])
-
-object EmailVerifiedResponse {
-  implicit val format: OFormat[EmailVerifiedResponse] = Json.format[EmailVerifiedResponse]
-}
-
 case class EmailUnverifiedResponse(unVerifiedEmail: Option[String])
 
 object EmailUnverifiedResponse {
@@ -34,4 +28,3 @@ sealed trait EmailResponses
 
 case object UnverifiedEmail extends EmailResponses
 
-case class UndeliverableEmail(email: String) extends EmailResponses
