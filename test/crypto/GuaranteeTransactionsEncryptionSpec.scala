@@ -33,7 +33,10 @@ class GuaranteeTransactionsEncryptionSpec extends SpecBase {
     val ttg = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
     val dd = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
-    val transaction = GuaranteeTransaction(LocalDate.of(2018, Month.JULY, 22),
+    val year = 2018
+    val day = 22
+
+    val transaction = GuaranteeTransaction(LocalDate.of(year, Month.JULY, day),
       "MRN-1",
       None,
       BigDecimal(12369.50),

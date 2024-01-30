@@ -41,7 +41,10 @@ class GuaranteeAccountViewModelSpec extends SpecBase {
       val dd = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"),
         amounts = amt, taxTypeGroups = Seq(ttg))
 
-      val guranteeTxn = GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 23),
+      val year = 2019
+      val day = 23
+
+      val guranteeTxn = GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, day),
         "19GB000056HG5w746", None, BigDecimal(45367.12),
         Some("MGH-500000"), "GB10000", "GB20000",
         BigDecimal(21.00), BigDecimal(11.50),
@@ -83,5 +86,4 @@ class GuaranteeAccountViewModelSpec extends SpecBase {
     val model02 = GuaranteeAccountViewModel(guaranteeAccount02,
       LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
   }
-  
 }

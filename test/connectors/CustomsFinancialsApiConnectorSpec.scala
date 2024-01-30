@@ -336,7 +336,6 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         result mustBe Left(UnknownException)
       }
     }
-
   }
 
   trait Setup {
@@ -351,8 +350,12 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
     val ttg = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
     val dd = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
+    val year = 2019
+    val dayTwentyThree = 23
+    val dayTwentyTwo = 22
+
     val ganTransactions = List(
-      GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 23),
+      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyThree),
         "19GB000056HG5w746",
         None,
         BigDecimal(45367.12),
@@ -365,7 +368,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         None,
         dueDates = Seq(dd)),
 
-      GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 22),
+      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12367.50),
@@ -378,7 +381,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         None,
         dueDates = Seq(dd)),
 
-      GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 22),
+      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12368.50),
@@ -391,7 +394,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         Some("C18-1747"),
         dueDates = Seq(dd)),
 
-      GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 22),
+      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12369.50),
