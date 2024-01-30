@@ -57,8 +57,15 @@ class DateTimeServiceSpec extends SpecBase {
       testTime.isBefore(fixedTestDateTime) mustBe true
     }
   }
+
   trait Setup {
-    val fixedTestDateTime = LocalDateTime.of(LocalDate.of(2027, 12, 20), LocalTime.of(12,30))
+    val day = 20
+    val month = 12
+    val year = 2027
+    val hour = 12
+    val minute = 30
+
+    val fixedTestDateTime = LocalDateTime.of(LocalDate.of(year, month, day), LocalTime.of(hour, minute))
     val appConfig = application.injector().instanceOf[AppConfig]
     val service = new DateTimeService(appConfig)
   }
