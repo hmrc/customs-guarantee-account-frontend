@@ -128,16 +128,18 @@ class RequestedTransactionsControllerSpec extends SpecBase {
   }
 
   trait Setup {
-
     val eori = "GB001"
     val someGan = "GAN-1"
+    val limit = 123000
+    val balance = 123.45
+
     val mockCustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
 
     val guaranteeAccount = GuaranteeAccount(
       someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(
-        BigDecimal(123000),
-        BigDecimal(123.45)
-    )))
+        BigDecimal(limit),
+        BigDecimal(balance)
+      )))
 
     val amt = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
     val tt = TaxType("VAT", amt)
@@ -148,8 +150,12 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       reasonForSecurity = Some("T24"),
       amounts = amt, taxTypeGroups = Seq(ttg))
 
+    val year = 2019
+    val dayTwentyThree = 23
+    val dayTwentyTwo = 22
+
     val ganTransactions = List(
-      GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 23),
+      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyThree),
         "MRN-1",
         None,
         BigDecimal(45367.12),
@@ -162,7 +168,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         None,
         dueDates = Seq(dd)),
 
-      GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 22),
+      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12367.50),
@@ -175,7 +181,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         None,
         dueDates = Seq(dd)),
 
-      GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 22),
+      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "MRN-3",
         None,
         BigDecimal(12368.50),
@@ -188,7 +194,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         Some("C18-1"),
         dueDates = Seq(dd)),
 
-      GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 22),
+      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "MRN-4",
         None,
         BigDecimal(12369.50),
@@ -206,7 +212,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
 
     val app = application.overrides(
-        bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector)
-      ).configure("features.fixed-systemdate-for-tests" -> "true").build()
+      bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector)
+    ).configure("features.fixed-systemdate-for-tests" -> "true").build()
   }
 }

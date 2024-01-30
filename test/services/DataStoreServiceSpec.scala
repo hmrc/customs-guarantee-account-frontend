@@ -46,10 +46,10 @@ class DataStoreServiceSpec extends SpecBase {
     }
 
     "return unverified email" in new Setup {
-      val hundread = 100
+      val hundred = 100
 
       val undeliverableEventData = UndeliverableInformationEvent("someid", "someevent",
-        "someemail", "", Some(hundread), Some("sample"), "sample")
+        "someemail", "", Some(hundred), Some("sample"), "sample")
 
       val emailResponse = EmailResponse(Some("sample@email.com"), Some("time"),
         Some(UndeliverableInformation("subject-example", "ex-event-id-01", "ex-group-id-01",

@@ -26,6 +26,7 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.SpecBase
+import utils.Utils.emptyString
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -166,7 +167,7 @@ class AuthActionSpec extends SpecBase {
 }
 
 class FakeFailingAuthConnector @Inject()(exceptionToReturn: Throwable) extends AuthConnector {
-  val serviceUrl: String = ""
+  val serviceUrl: String = emptyString
 
   override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
     Future.failed(exceptionToReturn)

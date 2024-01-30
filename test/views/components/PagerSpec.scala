@@ -34,24 +34,19 @@ class PagerSpec extends SpecBase {
   "Pager view" should {
 
     "render correctly with paginated data" when {
-
       "data fits in one single page" in new Setup {
-        
         val viewDoc: Document = view(paginatedModel)
-
         shouldNotContainLinkToPreviousPage(viewDoc)
         shouldNotContainPaginationLabel(viewDoc)
       }
 
       "data does not fit in a single page" in new Setup {
         val viewDoc: Document = view(paginatedModelWithMoreThanOneItem)
-
         shouldContainPaginationLabel(viewDoc)
       }
 
       "page contains links to individual pages" in new Setup {
         val viewDoc: Document = view(paginatedModelWithMoreThanOneItem)
-
         shouldContainContainLinksToPages(viewDoc)
       }
     }
@@ -135,7 +130,7 @@ class PagerSpec extends SpecBase {
   private def shouldContainPaginationLabel(view: Document): Assertion = {
     Option(view.getElementById("pagination-label")) must not be empty
     view.text().contains("Pagination navigation") mustBe true
-   
+
   }
 
   private def shouldContainContainLinksToPages(view: Document)(implicit msg: Messages): Assertion = {
@@ -146,5 +141,4 @@ class PagerSpec extends SpecBase {
   private def shouldNotContainPaginationLabel(view: Document): Assertion = {
     Option(view.getElementById("pagination-label")) mustBe empty
   }
-
 }

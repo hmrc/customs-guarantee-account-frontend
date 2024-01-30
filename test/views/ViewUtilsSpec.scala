@@ -43,14 +43,15 @@ class ViewUtilsSpec extends SpecBase {
 
   trait Setup {
 
+    val hundred = 100
+
     val sampleForm = Form(tuple(
       "name" -> nonEmptyText,
-      "age" -> number(min = 0, max = 100)
+      "age" -> number(min = 0, max = hundred)
     ))
 
     val app = application.build()
     implicit val msgs: Messages = messages(app)
     val appConfig = app.injector.instanceOf[AppConfig]
-
   }
 }
