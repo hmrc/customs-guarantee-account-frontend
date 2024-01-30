@@ -19,7 +19,7 @@ package controllers
 import cats.data.EitherT._
 import cats.instances.future._
 import config.{AppConfig, ErrorHandler}
-import connectors.{CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested, UnknownException}
+import connectors._
 import controllers.actions.{IdentifierAction, EmailAction}
 import helpers.DateFormatters
 import models._
@@ -30,7 +30,7 @@ import play.api.mvc.{AnyContent, _}
 import services.DateTimeService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import viewmodels._
-import views.html.{guarantee_account, guarantee_account_exceed_threshold, guarantee_account_not_available, guarantee_account_transactions_not_available}
+import views.html._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
