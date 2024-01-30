@@ -40,6 +40,7 @@ class MetricsReporterService @Inject()(val metrics: Metrics, dateTimeService: Da
         case Failure(exception: UpstreamErrorResponse) => exception.statusCode
         case Failure(_) => Status.INTERNAL_SERVER_ERROR
       }
+
       updateResponseTimeHistogram(resourceName, httpResponseCode, startTime, dateTimeService.getTimeStamp)
     }
   }
@@ -49,6 +50,7 @@ class MetricsReporterService @Inject()(val metrics: Metrics, dateTimeService: Da
     val RESPONSE_TIMES_METRIC = "responseTimes"
     val histogramName = s"$RESPONSE_TIMES_METRIC.$resourceName.$httpResponseCode"
     val elapsedTimeInMillis = endTimestamp.toInstant.toEpochMilli - startTimestamp.toInstant.toEpochMilli
+
     metrics.defaultRegistry.histogram(histogramName).update(elapsedTimeInMillis)
   }
 }

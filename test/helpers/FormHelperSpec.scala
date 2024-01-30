@@ -22,7 +22,8 @@ import utils.SpecBase
 class FormHelperSpec extends SpecBase {
   "updateFormErrorKeyForStartAndEndDate" must {
     "append .month in the FormError key when key is either start or end and error msg key is " +
-      "olderStartDateKey, earlierStartDateKey, futureStartDateKey, invalidStartMonthKey and invalidStartYearKey" in new SetUp {
+      "olderStartDateKey, earlierStartDateKey, futureStartDateKey, " +
+      "invalidStartMonthKey and invalidStartYearKey" in new SetUp {
 
       FormHelper.updateFormErrorKeyForStartAndEndDate()(
         startKey, "cf.form.error.start.date-too-far-in-past") shouldBe s"$startKey.month"
@@ -38,7 +39,6 @@ class FormHelperSpec extends SpecBase {
 
       FormHelper.updateFormErrorKeyForStartAndEndDate()(
         startKey, "cf.form.error.start.year.date-number-invalid") shouldBe s"$startKey.month"
-
 
       FormHelper.updateFormErrorKeyForStartAndEndDate()(
         endKey, "cf.form.error.end.date-too-far-in-past") shouldBe s"$endKey.month"
@@ -74,6 +74,7 @@ class FormHelperSpec extends SpecBase {
         defaultKey, "cf.form.error.year.invalid") shouldBe defaultKey
     }
   }
+
   trait SetUp {
     val startKey = "start"
     val endKey = "end"

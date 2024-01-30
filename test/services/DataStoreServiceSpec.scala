@@ -27,6 +27,7 @@ import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, ServiceUnavailableException, UpstreamErrorResponse}
 import utils.SpecBase
 import utils.Utils.emptyString
+import play.api.http.Status.NOT_FOUND
 
 import scala.concurrent.Future
 
@@ -67,10 +68,8 @@ class DataStoreServiceSpec extends SpecBase {
     }
 
     "return a UnverifiedEmail on error response" in new Setup {
-      val fourZeroZero = 404
-
       when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
-        Future.failed(UpstreamErrorResponse("NoData", fourZeroZero, fourZeroZero)))
+        Future.failed(UpstreamErrorResponse("NoData", NOT_FOUND, NOT_FOUND)))
 
       running(app) {
         val response = service.getEmail(eori)

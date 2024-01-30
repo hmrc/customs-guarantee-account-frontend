@@ -35,7 +35,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
                                        config: Configuration,
                                        guaranteeTransactionsEncryptor: GuaranteeTransactionsEncryptor,
-                                       guaranteeTransactionsDecryptor: GuaranteeTransactionsDecryptor)(implicit executionContext: ExecutionContext)
+                                       guaranteeTransactionsDecryptor: GuaranteeTransactionsDecryptor)(
+  implicit executionContext: ExecutionContext)
   extends PlayMongoRepository[GuaranteeAccountMongo](
     collectionName = "guarantee-account-cache",
     mongoComponent = mongoComponent,
@@ -55,7 +56,8 @@ class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
   def get(id: String): Future[Option[Seq[GuaranteeTransaction]]] = {
     for {
       result <- collection.find(equal("_id", id)).toSingle().toFutureOption()
-      account = result.map(mongoAccount => guaranteeTransactionsDecryptor.decryptGuaranteeTransactions(mongoAccount.transactions, encryptionKey))
+      account = result.map(mongoAccount => guaranteeTransactionsDecryptor.decryptGuaranteeTransactions(
+        mongoAccount.transactions, encryptionKey))
     } yield account
   }
 
@@ -73,13 +75,13 @@ class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
   }
 }
 
-case class GuaranteeAccountMongo(transactions: Seq[EncryptedGuaranteeTransaction], lastUpdated: DateTime = DateTime.now())
+case class GuaranteeAccountMongo(transactions: Seq[EncryptedGuaranteeTransaction],
+                                 lastUpdated: DateTime = DateTime.now())
 
   object GuaranteeAccountMongo {
     implicit val jodaTimeFormat: Format[DateTime] = MongoJodaFormats.dateTimeFormat
     implicit val format: OFormat[GuaranteeAccountMongo] = Json.format[GuaranteeAccountMongo]
   }
-
 
 trait CacheRepository {
   def get(id: String): Future[Option[Seq[GuaranteeTransaction]]]
