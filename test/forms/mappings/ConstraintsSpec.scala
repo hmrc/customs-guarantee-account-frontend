@@ -20,6 +20,7 @@ import java.time.{Clock, LocalDate, LocalDateTime}
 import org.scalatest.matchers.should.Matchers._
 import forms.mappings.Constraints
 import play.api.data.validation.{Invalid, Valid, ValidationError}
+import utils.SpecBase
 
 class ConstraintsSpec extends SpecBase with Constraints {
 
