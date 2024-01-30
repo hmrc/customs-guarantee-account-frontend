@@ -28,17 +28,7 @@ trait Balances
 case class GuaranteeAccount(number: String,
                             owner: String,
                             status: CDSAccountStatus,
-                            balances: Option[GeneralGuaranteeBalance]
-                           )
-
-case class EncryptedGuaranteeAccount(number: EncryptedValue,
-                                     owner: EncryptedValue,
-                                     status: CDSAccountStatus,
-                                     balances: Option[GeneralGuaranteeBalance])
-
-object EncryptedGuaranteeAccount {
-  implicit val format: OFormat[EncryptedGuaranteeAccount] = Json.format[EncryptedGuaranteeAccount]
-}
+                            balances: Option[GeneralGuaranteeBalance])
 
 case class GeneralGuaranteeBalance(GuaranteeLimit: BigDecimal,
                                    AvailableGuaranteeBalance: BigDecimal) extends Balances {
