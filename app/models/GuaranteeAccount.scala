@@ -17,11 +17,9 @@
 package models
 
 import connectors.CDSAccountStatus
-import crypto.EncryptedValue
 import play.api.libs.json.{Json, OFormat}
 
 import scala.math.Numeric.BigDecimalIsFractional.zero
-
 
 trait Balances
 

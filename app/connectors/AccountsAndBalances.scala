@@ -78,7 +78,6 @@ case class ReturnParameters(paramName: String, paramValue: String)
 case class AccountResponseDetail(EORINo: Option[String],
                                  referenceDate: Option[String],
                                  generalGuaranteeAccount: Option[Seq[GeneralGuaranteeAccount]]) {
-  val totalNumberOfAccounts = generalGuaranteeAccount.fold(0)(_.size)
 }
 
 case class GeneralGuaranteeAccount(account: Account,
