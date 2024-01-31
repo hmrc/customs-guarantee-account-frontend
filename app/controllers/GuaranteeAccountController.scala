@@ -19,7 +19,7 @@ package controllers
 import cats.data.EitherT._
 import cats.instances.future._
 import config.{AppConfig, ErrorHandler}
-import connectors.{CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested, UnknownException}
+import connectors._
 import controllers.actions.{IdentifierAction, EmailAction}
 import helpers.DateFormatters
 import models._
@@ -30,7 +30,7 @@ import play.api.mvc.{AnyContent, _}
 import services.DateTimeService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import viewmodels._
-import views.html.{guarantee_account, guarantee_account_exceed_threshold, guarantee_account_not_available, guarantee_account_transactions_not_available}
+import views.html._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,34 +44,46 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
                                            guaranteeAccountNotAvailable: guarantee_account_not_available,
                                            tooManyResults: guarantee_account_exceed_threshold,
                                            guaranteeAccountTransactionsNotAvailable: guarantee_account_transactions_not_available
-                                          )(implicit mcc: MessagesControllerComponents, ec: ExecutionContext, eh: ErrorHandler, appConfig: AppConfig)
+                                          )(implicit mcc: MessagesControllerComponents,
+                                            ec: ExecutionContext, eh: ErrorHandler, appConfig: AppConfig)
   extends FrontendController(mcc) with I18nSupport with DateFormatters {
 
   val log: Logger = Logger(this.getClass)
 
-  def showAccountDetails(page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
+  def showAccountDetails(page: Option[Int]): Action[AnyContent] = (
+    identify andThen checkEmailIsVerified).async { implicit request =>
 
-      val result = for {
-        account <- fromOptionF[Future, Result, GuaranteeAccount](apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
-        page <- liftF[Future, Result, Result](showAccountWithTransactionDetails(account, page))
-      } yield page
+    val result = for {
+      account <- fromOptionF[Future, Result, GuaranteeAccount](
+        apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
 
-      result.merge.recover {
-        case NonFatal(t) =>
-          log.error(s"Unable to retrieve account details: ${t.getMessage}")
-          Redirect(routes.GuaranteeAccountController.showAccountUnavailable)
-      }
+      page <- liftF[Future, Result, Result](showAccountWithTransactionDetails(account, page))
+    } yield page
+
+    result.merge.recover {
+      case NonFatal(t) =>
+        log.error(s"Unable to retrieve account details: ${t.getMessage}")
+        Redirect(routes.GuaranteeAccountController.showAccountUnavailable)
     }
+  }
 
-  private def showAccountWithTransactionDetails(account: GuaranteeAccount, page: Option[Int])(implicit req: IdentifierRequest[AnyContent]): Future[Result] = {
+  private def showAccountWithTransactionDetails(account: GuaranteeAccount, page: Option[Int])(
+    implicit req: IdentifierRequest[AnyContent]): Future[Result] = {
+
     for {
       transactions <- apiConnector.retrieveOpenGuaranteeTransactionsDetail(account.number)
       result = transactions match {
         case Left(error) => error match {
-          case NoTransactionsAvailable => Ok(guaranteeAccount(GuaranteeAccountViewModel(account, dateTimeService.localDateTime()), GuaranteeAccountTransactionsViewModel(Seq.empty, page)))
-          case TooManyTransactionsRequested => Ok(tooManyResults(GuaranteeAccountViewModel(account, dateTimeService.localDateTime())))
+          case NoTransactionsAvailable => Ok(guaranteeAccount(
+            GuaranteeAccountViewModel(account, dateTimeService.localDateTime()),
+            GuaranteeAccountTransactionsViewModel(Seq.empty, page)))
+
+          case TooManyTransactionsRequested => Ok(tooManyResults(
+            GuaranteeAccountViewModel(account, dateTimeService.localDateTime())))
+
           case UnknownException => Redirect(routes.GuaranteeAccountController.showTransactionsUnavailable())
         }
+
         case Right(transactions) =>
           val (nonC18Transactions, c18Transactions) = transactions.partition(_.c18Reference.isEmpty)
           val filteredTransactions = nonC18Transactions.map { transaction =>
@@ -86,12 +98,15 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
     } yield result
   }
 
-  def showTransactionsUnavailable(): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
+  def showTransactionsUnavailable(): Action[AnyContent] = (
+    identify andThen checkEmailIsVerified).async { implicit request =>
 
     val result = for {
-      account <- fromOptionF[Future, Result, GuaranteeAccount](apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
+      account <- fromOptionF[Future, Result, GuaranteeAccount](
+        apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
     } yield
-      Ok(guaranteeAccountTransactionsNotAvailable(GuaranteeAccountViewModel(account, dateTimeService.localDateTime())))
+      Ok(guaranteeAccountTransactionsNotAvailable(GuaranteeAccountViewModel(
+        account, dateTimeService.localDateTime())))
 
     result.merge.recover {
       case NonFatal(e) =>

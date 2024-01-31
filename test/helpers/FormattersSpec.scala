@@ -34,22 +34,21 @@ class FormattersSpec extends SpecBase {
 
   "filenameWithDate" should {
     "return a correctly formatted filename" in {
-      running(app){
+      running(app) {
         val result = Formatters.filenameWithDateTime()(messages, mockDateTimeService)
         result must be("Open_Guarantees_20200419093059.CSV")
       }
-      }
+    }
   }
 
   "filenameWithRequestDates" should {
     "return a correctly formatted filename for the given dates" in {
       val fromDate = LocalDate.parse("2020-11-06")
       val toDate = LocalDate.parse("2020-12-12")
-      running(app){
+      running(app) {
         val result = Formatters.filenameWithRequestDates(fromDate, toDate)(messages)
         result must be("Open_Guarantees_202011-202012.CSV")
       }
     }
   }
-
 }

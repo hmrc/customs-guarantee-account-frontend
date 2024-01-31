@@ -16,13 +16,14 @@
 
 package models
 
+import utils.Utils.{emptyString, asterix}
+
 package object domain {
   type EORI = String
-  type LinkId = String
   type GAN = String
 
-  val lengthToReveal = 4
+  private val lengthToReveal = 4
 
   def obfuscateEori(eori: EORI): String =
-    List.fill(eori.length - lengthToReveal)("*").mkString("") + eori.takeRight(lengthToReveal)
+    List.fill(eori.length - lengthToReveal)(asterix).mkString(emptyString) + eori.takeRight(lengthToReveal)
 }

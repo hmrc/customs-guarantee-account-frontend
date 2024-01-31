@@ -21,7 +21,10 @@ import utils.SpecBase
 
 class CSVWritableSpec extends SpecBase {
 
-  case class Foo(columnA: Option[String], columnB: Option[String], columnC: Option[String]) extends CSVWritable with FieldNames {
+  case class Foo(columnA: Option[String],
+                 columnB: Option[String],
+                 columnC: Option[String])
+    extends CSVWritable with FieldNames {
     override def fieldNames: Seq[String] = Seq("columnA", "columnB", "columnC")
   }
 
@@ -45,9 +48,10 @@ class CSVWritableSpec extends SpecBase {
     }
 
     "flatten nested records" in {
-      val bar = Bar(Foo(Some("A"), None, Some("C")), Baz(Foo(None, Some("B"), None), Foo(Some("X"), Some("Y"), None)))
+      val bar = Bar(Foo(Some("A"), None,
+        Some("C")), Baz(Foo(None, Some("B"), None), Foo(Some("X"), Some("Y"), None)))
+
       bar.toCSVRow must be(""""A",,"C",,"B",,"X","Y",""")
     }
-
   }
 }

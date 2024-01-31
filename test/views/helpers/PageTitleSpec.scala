@@ -19,6 +19,7 @@ package views.helpers
 import utils.SpecBase
 import play.api.i18n.Messages
 import play.api.test.Helpers
+import utils.Utils.emptyString
 
 class PageTitleSpec extends SpecBase {
   "fullPageTitle" should {
@@ -28,7 +29,7 @@ class PageTitleSpec extends SpecBase {
     }
 
     "return correct string for no title" in new Setup {
-      val res = PageTitle.fullPageTitle(Some(""))
+      val res = PageTitle.fullPageTitle(Some(emptyString))
       res mustBe Some(" - service.name - GOV.UK")
     }
 

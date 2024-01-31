@@ -14,22 +14,45 @@
  * limitations under the License.
  */
 
-package models
+package utils
 
-import play.api.libs.json._
-import java.time.{Instant, LocalDateTime, ZoneOffset}
+import Utils._
 
-trait MongoDateTimeFormats {
+class UtilsSpec extends SpecBase {
 
-  implicit val localDateTimeRead: Reads[LocalDateTime] =
-    (__ \ "$date").read[Long].map {
-      millis =>
-        LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneOffset.UTC)
+  "emptyString" should {
+    "return correct value" in {
+      emptyString mustBe empty
     }
+  }
 
-  implicit val localDateTimeWrite: Writes[LocalDateTime] = (dateTime: LocalDateTime) => Json.obj(
-    "$date" -> dateTime.atZone(ZoneOffset.UTC).toInstant.toEpochMilli
-  )
+  "singleSpace" should {
+    "return correct value" in {
+      singleSpace mustBe " "
+    }
+  }
+
+  "hyphen" should {
+    "return correct value" in {
+      hyphen mustBe "-"
+    }
+  }
+
+  "comma" should {
+    "return correct value" in {
+      comma mustBe ","
+    }
+  }
+
+  "asterix" should {
+    "return correct value" in {
+      asterix mustBe "*"
+    }
+  }
+
+  "underScocre" should {
+    "return correct value" in {
+      underScore mustBe "_"
+    }
+  }
 }
-
-object MongoDateTimeFormats extends MongoDateTimeFormats

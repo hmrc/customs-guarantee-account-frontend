@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.{AppConfig, ErrorHandler}
 import controllers.actions.{IdentifierAction, EmailAction}
 import forms.GuaranteeTransactionsRequestPageFormProvider
 import models.GuaranteeTransactionDates
@@ -27,20 +26,18 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.RequestedTransactionsCache
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html._
+import utils.Utils.{singleSpace, hyphen, comma}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RequestTransactionsController @Inject()(
-                                               identify: IdentifierAction,
-                                               checkEmailIsVerified: EmailAction,
-                                               formProvider: GuaranteeTransactionsRequestPageFormProvider,
-                                               view: guarantee_transactions_request_page,
-                                               cache: RequestedTransactionsCache,
-                                               implicit val mcc: MessagesControllerComponents)
-                                             (implicit ec: ExecutionContext,
-                                              eh: ErrorHandler,
-                                              appConfig: AppConfig) extends FrontendController(mcc) with I18nSupport {
+class RequestTransactionsController @Inject()(identify: IdentifierAction,
+                                              checkEmailIsVerified: EmailAction,
+                                              formProvider: GuaranteeTransactionsRequestPageFormProvider,
+                                              view: guarantee_transactions_request_page,
+                                              cache: RequestedTransactionsCache,
+                                              implicit val mcc: MessagesControllerComponents)
+                                             (implicit ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport {
 
   val log: Logger = Logger(this.getClass)
 
@@ -70,7 +67,8 @@ class RequestTransactionsController @Inject()(
       )
   }
 
-  private def customValidation(dates: GuaranteeTransactionDates, form: Form[GuaranteeTransactionDates]): Option[Form[GuaranteeTransactionDates]] = {
+  private def customValidation(dates: GuaranteeTransactionDates,
+                               form: Form[GuaranteeTransactionDates]): Option[Form[GuaranteeTransactionDates]] = {
     def populateErrors(startMessage: String, endMessage: String): Form[GuaranteeTransactionDates] = {
       form.withError("start", startMessage)
         .withError("end", endMessage).fill(dates)
@@ -85,13 +83,13 @@ class RequestTransactionsController @Inject()(
 
   private def logMessageForAnalytics(eori: String, formWithErrors: Form[GuaranteeTransactionDates])
                                     (implicit messages: Messages): Unit= {
-    val errorMessages = formWithErrors.errors.map(e => messages(e.message)).mkString(",")
+    val errorMessages = formWithErrors.errors.map(e => messages(e.message)).mkString(comma)
 
-    val startDate = formWithErrors.data.getOrElse("start.year", " ") + "-" +
-      formWithErrors.data.getOrElse("start.month", " ")
+    val startDate = formWithErrors.data.getOrElse("start.year", singleSpace) + hyphen +
+      formWithErrors.data.getOrElse("start.month", singleSpace)
 
-    val endDate = formWithErrors.data.getOrElse("end.year", " ") + "-" +
-      formWithErrors.data.getOrElse("end.month", " ")
+    val endDate = formWithErrors.data.getOrElse("end.year", singleSpace) + hyphen +
+      formWithErrors.data.getOrElse("end.month", singleSpace)
 
     log.warn(s"Guarantee account, transaction request service, eori number: $eori, " +
       s"start date: $startDate, end date: $endDate, error: $errorMessages")

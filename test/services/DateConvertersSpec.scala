@@ -28,6 +28,7 @@ class DateConvertersSpec extends SpecBase {
       val testDate: Date = new Date
       val res = DateConverters.toLocalDate(testDate)
       val compare: LocalDate = testDate.toInstant.atZone(ZoneId.systemDefault()).toLocalDate
+
       compare mustBe res
     }
   }
@@ -35,14 +36,17 @@ class DateConvertersSpec extends SpecBase {
   "OrderedLocalDate Compare" should {
     "Comparing the same date returns 0" in new Setup {
       val compare = DateConverters.OrderedLocalDate(date).compare(date)
+
       compare mustBe 0
     }
 
     "Comparing different dates returns difference between" in new Setup {
+      val result = -1999999998
       val minDate = LocalDate.MIN
       val maxDate = LocalDate.MAX
       val compare = DateConverters.OrderedLocalDate(minDate).compare(maxDate)
-      compare mustBe -1999999998
+
+      compare mustBe result
     }
   }
 
@@ -50,11 +54,12 @@ class DateConvertersSpec extends SpecBase {
     "successfully convert to a joda date time" in new Setup {
       val res = DateConverters.toJodaTime(date)
       val compare = new time.LocalDate(java.util.Date.from(date.atStartOfDay().toInstant(ZoneOffset.UTC)))
+
       compare mustBe res
     }
   }
 
   trait Setup {
-    val date = LocalDate.now();
+    val date = LocalDate.now()
   }
 }

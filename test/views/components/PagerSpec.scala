@@ -34,9 +34,7 @@ class PagerSpec extends SpecBase {
   "Pager view" should {
 
     "render correctly with paginated data" when {
-
       "data fits in one single page" in new Setup {
-        
         val viewDoc: Document = view(paginatedModel)
 
         shouldNotContainLinkToPreviousPage(viewDoc)
@@ -73,9 +71,7 @@ class PagerSpec extends SpecBase {
     val openAmt = "10.00"
 
     val amt: Amounts = Amounts(totAmt, Some(clearAmt), Some(openAmt), "2020-08-01")
-
     val tt: TaxType = TaxType("VAT", amt)
-
     val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
 
     val dd: DueDate = DueDate(dueDate = "2020-07-28",
@@ -135,7 +131,6 @@ class PagerSpec extends SpecBase {
   private def shouldContainPaginationLabel(view: Document): Assertion = {
     Option(view.getElementById("pagination-label")) must not be empty
     view.text().contains("Pagination navigation") mustBe true
-   
   }
 
   private def shouldContainContainLinksToPages(view: Document)(implicit msg: Messages): Assertion = {
@@ -146,5 +141,4 @@ class PagerSpec extends SpecBase {
   private def shouldNotContainPaginationLabel(view: Document): Assertion = {
     Option(view.getElementById("pagination-label")) mustBe empty
   }
-
 }

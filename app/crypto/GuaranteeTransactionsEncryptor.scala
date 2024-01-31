@@ -22,7 +22,8 @@ import javax.inject.Inject
 
 class GuaranteeTransactionsEncryptor @Inject()(crypto: AesGCMCrypto) {
 
-  def encryptGuaranteeTransactions(guaranteeTransactions: Seq[GuaranteeTransaction], key: String): Seq[EncryptedGuaranteeTransaction] = {
+  def encryptGuaranteeTransactions(guaranteeTransactions: Seq[GuaranteeTransaction],
+                                   key: String): Seq[EncryptedGuaranteeTransaction] = {
     def e(field: String): EncryptedValue = crypto.encrypt(field, key)
 
     guaranteeTransactions.map { transaction =>

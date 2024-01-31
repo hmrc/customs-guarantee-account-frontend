@@ -18,6 +18,7 @@ package helpers
 
 import play.api.i18n.Messages
 import services.DateTimeService
+import utils.Utils.singleSpace
 
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
@@ -25,17 +26,29 @@ import java.time.temporal.ChronoUnit
 import java.time.{LocalDate, LocalDateTime}
 import java.util.Locale
 
-
 trait DateFormatters {
 
-  def dateAsMonth(date: LocalDate)(implicit messages: Messages): String = messages(s"month.${date.getMonthValue}")
-  def dateAsDayMonthAndYear(date: LocalDate)(implicit messages: Messages): String = s"${date.getDayOfMonth} ${dateAsMonth(date)} ${date.getYear}"
-  def dateAsMonthAbbr(date: LocalDate)(implicit messages: Messages): String = messages(s"month.abbr.${date.getMonthValue}")
-  def dateAsDayMonthAbbrAndYear(date: LocalDate)(implicit messages: Messages): String = s"${date.getDayOfMonth} ${dateAsMonthAbbr(date)} ${date.getYear}"
-  def timeAsHourMinutesWithAmPm(dateTime: LocalDateTime): String = DateTimeFormatter.ofPattern("hh:mm a").format(dateTime)
+  def dateAsMonth(date: LocalDate)(implicit messages: Messages): String =
+    messages(s"month.${date.getMonthValue}")
+
+  def dateAsDayMonthAndYear(date: LocalDate)(implicit messages: Messages): String =
+    s"${date.getDayOfMonth} ${dateAsMonth(date)} ${date.getYear}"
+
+  def dateAsMonthAbbr(date: LocalDate)(implicit messages: Messages): String =
+    messages(s"month.abbr.${date.getMonthValue}")
+
+  def dateAsDayMonthAbbrAndYear(date: LocalDate)(implicit messages: Messages): String =
+    s"${date.getDayOfMonth} ${dateAsMonthAbbr(date)} ${date.getYear}"
+
+  def timeAsHourMinutesWithAmPm(dateTime: LocalDateTime): String =
+    DateTimeFormatter.ofPattern("hh:mm a").format(dateTime)
+
   def updatedDateTime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
-    Formatters.timeAsHourMinutesWithAmPm(dateTime).toLowerCase + " "+messages(s"cf.guarantee-account.updated.time.on") + " "+ Formatters.dateAsDayMonthAndYear(dateTime.toLocalDate)
+    Formatters.timeAsHourMinutesWithAmPm(dateTime).toLowerCase +
+      singleSpace + messages(s"cf.guarantee-account.updated.time.on") +
+      singleSpace + Formatters.dateAsDayMonthAndYear(dateTime.toLocalDate)
   }
+
   def dateTimeAsIso8601(dateTime: LocalDateTime): String = {
     s"${DateTimeFormatter.ISO_DATE_TIME.format(dateTime.truncatedTo(ChronoUnit.SECONDS))}Z"
   }
@@ -45,6 +58,7 @@ trait CurrencyFormatters {
   def formatCurrencyAmount(amount: BigDecimal): String = {
     val maxDecimalPlaces: Int = 2
     val numberFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.UK)
+
     numberFormat.setMaximumFractionDigits(maxDecimalPlaces)
     numberFormat.setMinimumFractionDigits(maxDecimalPlaces)
     numberFormat.format(amount)
@@ -53,12 +67,12 @@ trait CurrencyFormatters {
   def formatCurrencyAmount0dp(amount: BigDecimal): String = {
     val numberFormat: NumberFormat =NumberFormat.getCurrencyInstance(Locale.UK)
     val outputDecimals = if (amount.isWhole) 0 else 2
+
     numberFormat.setMaximumFractionDigits(outputDecimals)
     numberFormat.setMinimumFractionDigits(outputDecimals)
     numberFormat.format(amount)
   }
 }
-
 
 trait FileFormatters {
   def filenameWithDateTime()(implicit messages: Messages, dateTimeService: DateTimeService): String = {
@@ -75,4 +89,3 @@ trait FileFormatters {
 }
 
 object Formatters extends DateFormatters with CurrencyFormatters with FileFormatters
-

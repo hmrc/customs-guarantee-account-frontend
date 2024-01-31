@@ -14,27 +14,13 @@
  * limitations under the License.
  */
 
-package views
+package utils
 
-import config.AppConfig
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.footer.FooterItem
-import utils.SpecBase
-
-class FooterLinksSpec extends SpecBase {
-
-  "apply" should {
-
-    "return correct FooterItems" in new Setup {
-      val footerLinks: Seq[FooterItem] = FooterLinks()(msges, appConfig)
-
-      footerLinks.size mustEqual (4)
-    }
-  }
-
-  trait Setup {
-    val app = application.build()
-    val appConfig = app.injector.instanceOf[AppConfig]
-    implicit val msges: Messages = messages(app)
-  }
+object Utils {
+  val emptyString = ""
+  val comma = ","
+  val singleSpace = " "
+  val hyphen = "-"
+  val asterix = "*"
+  val underScore = "_"
 }

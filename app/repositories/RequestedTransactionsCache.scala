@@ -67,4 +67,3 @@ trait RequestedTransactionsCache {
   def set(id: String, data: GuaranteeTransactionDates): Future[Boolean]
   def clear(id: String): Future[Boolean]
 }
-

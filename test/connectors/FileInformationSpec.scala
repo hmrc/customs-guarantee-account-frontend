@@ -36,10 +36,12 @@ class FileInformationSpec extends SpecBase {
           |    ]
           |  }""".stripMargin
 
+      val expectedFileInformationVals = 1234
+
       val expectedFileInformation = FileInformation(
         "filename.txt",
         "https://some.download.domain?token=abc123",
-        1234,
+        expectedFileInformationVals,
         Metadata(
           List(
             MetadataItem("item1", "value1"),
@@ -55,10 +57,12 @@ class FileInformationSpec extends SpecBase {
     }
 
     "be able to write to json" in {
+      val fileInfoVals = 9876
+
       val fileInformation = FileInformation(
         "file2.txt",
         "https://some.other.domain?token=abc123",
-        9876,
+        fileInfoVals,
         Metadata(
           List(
             MetadataItem("item3", "value3"),
@@ -84,5 +88,3 @@ class FileInformationSpec extends SpecBase {
     }
   }
 }
-
-

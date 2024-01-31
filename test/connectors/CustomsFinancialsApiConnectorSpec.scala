@@ -29,11 +29,11 @@ import utils.SpecBase
 
 import java.time.{LocalDate, Month}
 import scala.concurrent.Future
+import utils.Utils.emptyString
 
 class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
   "getAccounts" must {
-
     "return all accounts available to the given EORI from the API service" in new Setup {
       when[Future[AccountsAndBalancesResponseContainer]](mockHttpClient.POST(any, any, any)(any, any, any, any))
         .thenReturn(Future.successful(traderAccounts))
@@ -46,7 +46,8 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector.getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "12345678")))
+        val result = await(connector.getGuaranteeAccount(eori)(implicitly,
+          IdentifierRequest(fakeRequest(), "12345678")))
         result.value mustEqual guaranteeAccount
       }
     }
@@ -85,9 +86,11 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector.getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "12345678")))
+        val result = await(connector.getGuaranteeAccount(eori)(implicitly,
+          IdentifierRequest(fakeRequest(), "12345678")))
         result.value mustEqual guaranteeAccount
-        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo("customs-financials-api.get.accounts"))(any)(any)
+        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo(
+          "customs-financials-api.get.accounts"))(any)(any)
       }
     }
   }
@@ -119,7 +122,6 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       accStatusVal04 mustBe JsSuccess(AccountStatusOpen)
     }
 
-    //TODO Suspended and Closed are wrongly mapped in source code
     "write correctly to json value" in new Setup {
       val accStatusVal01 = CDSAccountStatus.CDSAccountStatusWrites.writes(AccountStatusOpen)
       accStatusVal01 mustBe JsString("Open")
@@ -189,9 +191,12 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
     "return TooManyTransactionsRequested exception if result from the API exceeds maximum limit" in new Setup {
 
-      val upstream4xxResponse = UpstreamErrorResponse("Entity too large to download", Status.REQUEST_ENTITY_TOO_LARGE, Status.REQUEST_ENTITY_TOO_LARGE)
+      val upstream4xxResponse = UpstreamErrorResponse("Entity too large to download",
+        Status.REQUEST_ENTITY_TOO_LARGE, Status.REQUEST_ENTITY_TOO_LARGE)
+
       when(mockHttpClient.POST(any, any, any)(any, any, any, any))
         .thenReturn(Future.failed(upstream4xxResponse))
+
       when(mockCacheRepository.get(any)).thenReturn(Future.successful(None))
 
       val app = application
@@ -208,10 +213,11 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
     }
 
     "return NotFound exception if no results are returned from the API" in new Setup {
-
       val upstream4xxResponse = UpstreamErrorResponse("Not Found", Status.NOT_FOUND, Status.NOT_FOUND)
+
       when(mockHttpClient.POST(any, any, any)(any, any, any, any))
         .thenReturn(Future.failed(upstream4xxResponse))
+
       when(mockCacheRepository.get(any)).thenReturn(Future.successful(None))
 
       val app = application
@@ -251,9 +257,9 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
   "retrieveRequestedGuaranteeTransactionsDetail" must {
     "return all the transactions from the API for the requested dates" in new Setup {
+
       when[Future[Seq[GuaranteeTransaction]]](mockHttpClient.POST(any, any, any)(any, any, any, any))
         .thenReturn(Future.successful(ganTransactions))
-
 
       val app = application
         .overrides(
@@ -263,17 +269,20 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector.retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly))
+        val result = await(connector.retrieveRequestedGuaranteeTransactionsDetail(
+          "gan", true, fromDate, toDate)(implicitly))
+
         result mustBe Right(ganTransactions)
       }
     }
 
     "return TooManyTransactionsRequested exception if result from the API exceeds maximum limit" in new Setup {
 
-      val upstream4xxResponse = UpstreamErrorResponse("Entity too large to download", Status.REQUEST_ENTITY_TOO_LARGE, Status.REQUEST_ENTITY_TOO_LARGE)
+      val upstream4xxResponse = UpstreamErrorResponse("Entity too large to download",
+        Status.REQUEST_ENTITY_TOO_LARGE, Status.REQUEST_ENTITY_TOO_LARGE)
+
       when(mockHttpClient.POST(any, any, any)(any, any, any, any))
         .thenReturn(Future.failed(upstream4xxResponse))
-
 
       val app = application
         .overrides(
@@ -283,7 +292,9 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector.retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly))
+        val result = await(connector.retrieveRequestedGuaranteeTransactionsDetail(
+          "gan", true, fromDate, toDate)(implicitly))
+
         result mustBe Left(TooManyTransactionsRequested)
       }
     }
@@ -294,7 +305,6 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       when(mockHttpClient.POST(any, any, any)(any, any, any, any))
         .thenReturn(Future.failed(upstream4xxResponse))
 
-
       val app = application
         .overrides(
           bind[HttpClient].toInstance(mockHttpClient)
@@ -303,7 +313,9 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector.retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly))
+        val result = await(connector.retrieveRequestedGuaranteeTransactionsDetail(
+          "gan", true, fromDate, toDate)(implicitly))
+
         result mustBe Left(NoTransactionsAvailable)
       }
     }
@@ -313,7 +325,6 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       when(mockHttpClient.POST(any, any, any)(any, any, any, any))
         .thenReturn(Future.failed(new RuntimeException("Boom")))
 
-
       val app = application
         .overrides(
           bind[HttpClient].toInstance(mockHttpClient)
@@ -322,11 +333,12 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector.retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly))
+        val result = await(connector.retrieveRequestedGuaranteeTransactionsDetail(
+          "gan", true, fromDate, toDate)(implicitly))
+
         result mustBe Left(UnknownException)
       }
     }
-
   }
 
   trait Setup {
@@ -341,8 +353,12 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
     val ttg = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
     val dd = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
+    val year = 2019
+    val dayTwentyThree = 23
+    val dayTwentyTwo = 22
+
     val ganTransactions = List(
-      GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 23),
+      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyThree),
         "19GB000056HG5w746",
         None,
         BigDecimal(45367.12),
@@ -355,7 +371,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         None,
         dueDates = Seq(dd)),
 
-      GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 22),
+      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12367.50),
@@ -368,7 +384,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         None,
         dueDates = Seq(dd)),
 
-      GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 22),
+      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12368.50),
@@ -381,7 +397,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         Some("C18-1747"),
         dueDates = Seq(dd)),
 
-      GuaranteeTransaction(LocalDate.of(2019, Month.OCTOBER, 22),
+      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12369.50),
@@ -395,7 +411,9 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         dueDates = Seq(dd))
     )
 
-    val generalGuaranteeAccount = GeneralGuaranteeAccount(Account(accountNumber, "123456789", traderEori), Some("999.99"), None)
+    val generalGuaranteeAccount = GeneralGuaranteeAccount(Account(
+      accountNumber, "123456789", traderEori), Some("999.99"), None)
+
     val guaranteeAccount = generalGuaranteeAccount.toDomain()
 
     val fromDate = LocalDate.parse("2019-10-08")
@@ -404,7 +422,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
     val eori = "123456789"
     val traderAccounts = AccountsAndBalancesResponseContainer(
       AccountsAndBalancesResponse(
-        Some(AccountResponseCommon("", Some(""), "", None)),
+        Some(AccountResponseCommon(emptyString, Some(emptyString), emptyString, None)),
         AccountResponseDetail(
           Some("123456789"),
           None,

@@ -21,7 +21,8 @@ import models._
 import javax.inject.Inject
 
 class GuaranteeTransactionsDecryptor @Inject()(crypto: AesGCMCrypto) {
-  def decryptGuaranteeTransactions(guaranteeTransactions: Seq[EncryptedGuaranteeTransaction], key: String): Seq[GuaranteeTransaction] = {
+  def decryptGuaranteeTransactions(guaranteeTransactions: Seq[EncryptedGuaranteeTransaction],
+                                   key: String): Seq[GuaranteeTransaction] = {
     def d(field: EncryptedValue): String = crypto.decrypt(field, key)
 
     guaranteeTransactions.map { transaction =>
@@ -85,6 +86,3 @@ class GuaranteeTransactionsDecryptor @Inject()(crypto: AesGCMCrypto) {
     )
   }
 }
-
-
-

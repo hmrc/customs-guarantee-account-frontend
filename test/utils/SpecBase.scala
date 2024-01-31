@@ -32,13 +32,19 @@ import play.api.test.FakeRequest
 import repositories.{CacheRepository, RequestedTransactionsCache}
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
+import utils.Utils.{emptyString, singleSpace}
 
 class FakeMetrics extends Metrics {
   override val defaultRegistry: MetricRegistry = new MetricRegistry
   override val toJson: String = "{}"
 }
 
-trait SpecBase extends AnyWordSpecLike with Matchers with MockitoSugar with OptionValues with ScalaFutures with IntegrationPatience {
+trait SpecBase extends AnyWordSpecLike
+  with Matchers
+  with MockitoSugar
+  with OptionValues
+  with ScalaFutures
+  with IntegrationPatience {
 
   val mockCacheRepository: CacheRepository = mock[CacheRepository]
   val mockRequestedTransactionsCache: RequestedTransactionsCache = mock[RequestedTransactionsCache]
@@ -51,9 +57,9 @@ trait SpecBase extends AnyWordSpecLike with Matchers with MockitoSugar with Opti
     ).configure("auditing.enabled" -> false)
     .configure("metrics.enabled" -> false)
 
-  def fakeRequest(method: String = "", path: String = ""): FakeRequest[AnyContentAsEmpty.type] =
+  def fakeRequest(method: String = emptyString, path: String = emptyString): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(method, path).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(
-  fakeRequest("", ""))
+    fakeRequest(emptyString, singleSpace))
 }
