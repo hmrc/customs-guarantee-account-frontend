@@ -22,9 +22,8 @@ package object domain {
   type EORI = String
   type GAN = String
 
-  val lengthToReveal = 4
+  private val lengthToReveal = 4
 
   def obfuscateEori(eori: EORI): String =
-    List.fill(eori.length - lengthToReveal)(asterix).mkString(
-      emptyString) + eori.takeRight(lengthToReveal)
+    List.fill(eori.length - lengthToReveal)(asterix).mkString(emptyString) + eori.takeRight(lengthToReveal)
 }

@@ -77,8 +77,7 @@ case class ReturnParameters(paramName: String, paramValue: String)
 
 case class AccountResponseDetail(EORINo: Option[String],
                                  referenceDate: Option[String],
-                                 generalGuaranteeAccount: Option[Seq[GeneralGuaranteeAccount]]) {
-}
+                                 generalGuaranteeAccount: Option[Seq[GeneralGuaranteeAccount]])
 
 case class GeneralGuaranteeAccount(account: Account,
                                    guaranteeLimit: Option[String], availableGuaranteeBalance: Option[String]) {

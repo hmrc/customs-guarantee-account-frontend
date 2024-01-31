@@ -74,7 +74,7 @@ class DownloadCsvController @Inject()(identify: IdentifierAction,
           val csvContent = convertToCSV(transactions)
 
           val contentHeaders = "Content-Disposition" ->
-            s"${disposition.getOrElse("attachment")}; filename=$filenameWithDateTime"
+            s"${disposition.getOrElse("attachment")}; filename=${filenameWithDateTime()}"
 
           val _ = auditingService.auditCsvDownload(
             request.eori, account.number, dateTimeService.utcDateTime(), None)
@@ -95,7 +95,9 @@ class DownloadCsvController @Inject()(identify: IdentifierAction,
                            page: Option[Int]): Action[AnyContent] = (
     identify andThen checkEmailIsVerified).async { implicit request =>
 
-    Try(LocalDate.parse(from), LocalDate.parse(to)) match {
+
+    Try((LocalDate.parse(from), LocalDate.parse(to)):
+      (java.time.LocalDate, java.time.LocalDate)) match {
       case Failure(_) => Future.successful(BadRequest)
       case Success((start, end)) =>
         val eventualMaybeGuaranteeAccount = apiConnector.getGuaranteeAccount(request.eori)
