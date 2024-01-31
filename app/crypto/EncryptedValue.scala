@@ -30,8 +30,10 @@ object EncryptedValue {
   implicit lazy val format: OFormat[EncryptedValue] = Json.format[EncryptedValue]
 }
 
-class EncryptionDecryptionException(method: String, reason: String, message: String) extends RuntimeException {
-  val failureReason = s"$reason for $method"
+class EncryptionDecryptionException(method: String,
+                                    reason: String,
+                                    message: String) extends RuntimeException {
+  val failureReason = s"$reason for $method - $message"
 }
 
 class AesGCMCrypto @Inject()() {

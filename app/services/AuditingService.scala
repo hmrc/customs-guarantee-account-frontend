@@ -27,6 +27,7 @@ import uk.gov.hmrc.play.audit.AuditExtensions
 import uk.gov.hmrc.play.audit.http.connector.AuditResult.{Disabled, Failure, Success}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
+import utils.Utils.underScore
 
 import java.time.LocalDateTime
 import javax.inject.{Inject, Singleton}
@@ -38,7 +39,7 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
   val log: LoggerLike = Logger(this.getClass)
 
   val referrer: HeaderCarrier => String = _.headers(
-    Seq(HeaderNames.REFERER)).headOption.map(_._2).getOrElse("_")
+    Seq(HeaderNames.REFERER)).headOption.map(_._2).getOrElse(underScore)
 
   def audit(auditModel: AuditModel)(
     implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

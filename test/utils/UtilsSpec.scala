@@ -49,4 +49,10 @@ class UtilsSpec extends SpecBase {
       asterix mustBe "*"
     }
   }
+
+  "underScocre" should {
+    "return correct value" in {
+      underScore mustBe "_"
+    }
+  }
 }

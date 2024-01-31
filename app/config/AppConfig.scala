@@ -23,7 +23,6 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
-  val footerLinkItems: Seq[String] = config.getOptional[Seq[String]]("footerLinkItems").getOrElse(Seq())
 
   lazy val appName: String = config.get[String]("appName")
   lazy val loginUrl: String = config.get[String]("urls.login")

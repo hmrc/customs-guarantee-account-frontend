@@ -19,7 +19,6 @@ package connectors
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-
 case class FileInformation(filename: String,
                            downloadURL: String,
                            fileSize: Long,
@@ -27,9 +26,7 @@ case class FileInformation(filename: String,
 
 case class MetadataItem(key: String, value: String)
 
-case class Metadata(items: Seq[MetadataItem]) {
-  val asMap: Map[String, String] = items.map(item => (item.key, item.value)).toMap
-}
+case class Metadata(items: Seq[MetadataItem])
 
 object FileInformation {
   implicit val metadataItemReads: Reads[MetadataItem] =

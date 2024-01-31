@@ -40,5 +40,3 @@ case class GeneralGuaranteeBalance(GuaranteeLimit: BigDecimal,
 object GeneralGuaranteeBalance {
   implicit val format: OFormat[GeneralGuaranteeBalance] = Json.format[GeneralGuaranteeBalance]
 }
-
-

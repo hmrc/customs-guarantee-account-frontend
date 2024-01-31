@@ -20,7 +20,6 @@ import utils.Utils.{emptyString, asterix}
 
 package object domain {
   type EORI = String
-  type LinkId = String
   type GAN = String
 
   val lengthToReveal = 4

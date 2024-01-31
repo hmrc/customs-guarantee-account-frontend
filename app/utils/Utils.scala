@@ -22,4 +22,5 @@ object Utils {
   val singleSpace = " "
   val hyphen = "-"
   val asterix = "*"
+  val underScore = "_"
 }
