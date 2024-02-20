@@ -23,17 +23,17 @@
 @if(!model.dataFitsOnOnePage) {
     <nav class="govuk-pagination" id="pagination-label">
         <p class="govuk-visually-hidden">Pagination navigation</p>
+         @if(!model.isFirstPage) {
+            @linkToPreviousPage
+        }
         <ul class="govuk-pagination__list">
-            @if(!model.isFirstPage) {
-                @linkToPreviousPage
-            }
             @for(pageNumber <- model.pageRange) {
                 @linkToPage(pageNumber)
             }
-            @if(!model.isLastPage) {
-                @linkToNextPage
-            }
         </ul>
+        @if(!model.isLastPage) {
+            @linkToNextPage
+        }
         <p class="govuk-pagination__results">
             @messages("cf.pager.summary") 
             <strong>@(model.firstItemOnPage+1)</strong> 
