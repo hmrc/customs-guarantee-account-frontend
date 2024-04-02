@@ -18,7 +18,7 @@ package repositories
 
 import crypto._
 import models._
-import org.joda.time.DateTime
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.{IndexModel, IndexOptions, ReplaceOptions}
 import org.mongodb.scala.model.Indexes.ascending
@@ -26,10 +26,11 @@ import play.api.Configuration
 import play.api.libs.json.{Format, Json, OFormat}
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
-import uk.gov.hmrc.mongo.play.json.formats.MongoJodaFormats
+
 import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import java.time.{LocalDate, LocalDateTime}
 
 @Singleton
 class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
@@ -64,7 +65,7 @@ class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
   def set(id: String, transactions: Seq[GuaranteeTransaction]): Future[Boolean] = {
     val record = GuaranteeAccountMongo(
       guaranteeTransactionsEncryptor.encryptGuaranteeTransactions(transactions, encryptionKey),
-      DateTime.now()
+      LocalDateTime.now()
     )
 
     collection.replaceOne(
@@ -76,10 +77,10 @@ class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
 }
 
 case class GuaranteeAccountMongo(transactions: Seq[EncryptedGuaranteeTransaction],
-                                 lastUpdated: DateTime = DateTime.now())
+                                 lastUpdated: LocalDateTime = LocalDateTime.now())
 
   object GuaranteeAccountMongo {
-    implicit val jodaTimeFormat: Format[DateTime] = MongoJodaFormats.dateTimeFormat
+    implicit val javaTimeFormat: Format[LocalDate] = MongoJavatimeFormats.localDateFormat
     implicit val format: OFormat[GuaranteeAccountMongo] = Json.format[GuaranteeAccountMongo]
   }
 
