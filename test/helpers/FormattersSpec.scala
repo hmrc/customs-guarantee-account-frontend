@@ -16,7 +16,7 @@
 
 package helpers
 
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import services.DateTimeService
@@ -27,7 +27,7 @@ import java.time.{LocalDate, LocalDateTime}
 class FormattersSpec extends SpecBase {
 
   val app = application.build()
-  implicit val messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
+  implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
   val mockDateTimeService = mock[DateTimeService]
   when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-19T09:30:59"))
