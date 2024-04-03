@@ -57,11 +57,12 @@ trait Constraints {
     case date if date.getYear.toString.length() != validYearLength =>
       Invalid(ValidationError(yearLengthError))
 
+    case request if minTaxYear().starts.isAfter(request.withDayOfMonth(dayOfMonthThatTaxYearStartsOn)) =>
+      Invalid(ValidationError(taxYearErrorKey))
+
     case request if Period.between(request, etmpStatementsDate).toTotalMonths > zero =>
       Invalid(ValidationError(systemStartDateErrorKey))
 
-    case request if minTaxYear().starts.isAfter(request.withDayOfMonth(dayOfMonthThatTaxYearStartsOn)) =>
-      Invalid(ValidationError(taxYearErrorKey))
     case _ => Valid
   }
 }
