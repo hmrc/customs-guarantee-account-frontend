@@ -210,6 +210,24 @@ class DownloadCsvControllerSpec extends SpecBase {
         }
       }
     }
+
+    "throw internal server error when get guaranteeAcc API call fails" in new Setup {
+
+      when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
+        .thenReturn(Future.failed(new RuntimeException("Unknown Exception")))
+
+      override val app = application
+        .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
+        .configure(
+          "application.guarantee-account.numberOfItemsPerPage" -> "10")
+        .build()
+
+      running(app) {
+        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+        val result = route(app, request).value
+        status(result) must be(Status.INTERNAL_SERVER_ERROR)
+      }
+    }
   }
 
   "downloadRequestedCSV" must {
@@ -358,6 +376,19 @@ class DownloadCsvControllerSpec extends SpecBase {
           val result = route(app, request).value
           status(result) must be(Status.NOT_FOUND)
         }
+      }
+    }
+
+    "throw internal server error when get guaranteeAcc API call fails" in new Setup {
+      when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
+        .thenReturn(Future.failed(new RuntimeException("Unknown Exception")))
+
+      running(appRequested) {
+        val request = FakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(
+          None, "2019-10-10", "2019-10-30", None).url)
+
+        val result = route(appRequested, request).value
+        status(result) must be(Status.INTERNAL_SERVER_ERROR)
       }
     }
   }
