@@ -81,13 +81,13 @@ case class GuaranteeAccountTransaction(guaranteeTransaction: GuaranteeTransactio
 
 object GuaranteeTransaction {
 
-  implicit val amountReads = Json.reads[Amounts]
+  implicit val amountReads: Reads[Amounts] = Json.reads[Amounts]
 
-  implicit val taxTypeReads = Json.reads[TaxType]
+  implicit val taxTypeReads: Reads[TaxType] = Json.reads[TaxType]
 
-  implicit val taxTypeGroupReads = Json.reads[TaxTypeGroup]
+  implicit val taxTypeGroupReads: Reads[TaxTypeGroup] = Json.reads[TaxTypeGroup]
 
-  implicit val dueDateReads = Json.reads[DueDate]
+  implicit val dueDateReads: Reads[DueDate] = Json.reads[DueDate]
 
   implicit val guaranteeTransactionReads: Reads[GuaranteeTransaction] = {
     val defaultToZero = Reads.pure(BigDecimal(0))

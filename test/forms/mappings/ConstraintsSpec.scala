@@ -46,6 +46,13 @@ class ConstraintsSpec extends SpecBase with Constraints {
         result mustBe Invalid(List(ValidationError(List(yearLengthError))))
       }
 
+      "return Invalid taxYearErrorKey" in new Setup {
+        val result = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
+          .apply(LocalDate.of(twoThousand, month, day))
+
+        result mustBe Invalid(List(ValidationError(List(taxYearErrorKey))))
+      }
+
       "return Invalid constraint for year before 2019" in new Setup {
         val result = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
           .apply(LocalDate.of(year, month, day))
@@ -61,6 +68,7 @@ class ConstraintsSpec extends SpecBase with Constraints {
     val month = 10
     val year = 2018
     val eighteen = 18
+    val twoThousand = 2000
 
     def ld: LocalDate = LocalDateTime.now().toLocalDate
 

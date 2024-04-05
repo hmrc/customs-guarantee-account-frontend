@@ -17,7 +17,6 @@
 package utils
 
 import com.codahale.metrics.MetricRegistry
-import com.kenshoo.play.metrics.Metrics
 import controllers.actions.{FakeIdentifierAction, IdentifierAction}
 import org.mockito.scalatest.MockitoSugar
 import org.scalatest.OptionValues
@@ -34,9 +33,9 @@ import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import utils.Utils.{emptyString, singleSpace}
 
-class FakeMetrics extends Metrics {
-  override val defaultRegistry: MetricRegistry = new MetricRegistry
-  override val toJson: String = "{}"
+class FakeMetrics extends MetricRegistry {
+  val defaultRegistry: MetricRegistry = new MetricRegistry
+  val toJson: String = "{}"
 }
 
 trait SpecBase extends AnyWordSpecLike
@@ -51,7 +50,7 @@ trait SpecBase extends AnyWordSpecLike
 
   def application: GuiceApplicationBuilder = new GuiceApplicationBuilder().overrides(
       bind[IdentifierAction].to[FakeIdentifierAction],
-      bind[Metrics].toInstance(new FakeMetrics),
+      bind[MetricRegistry].toInstance(new FakeMetrics),
       bind[CacheRepository].toInstance(mockCacheRepository),
       bind[RequestedTransactionsCache].toInstance(mockRequestedTransactionsCache)
     ).configure("auditing.enabled" -> false)

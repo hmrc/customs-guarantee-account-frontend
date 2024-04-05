@@ -17,7 +17,7 @@
 package models
 
 import crypto.EncryptedValue
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
@@ -52,9 +52,9 @@ case class EncryptedGuaranteeTransaction(date: LocalDate,
                                          dueDates: Seq[EncryptedDueDate])
 
 object EncryptedGuaranteeTransaction {
-  implicit val amountFormat = Json.format[EncryptedAmounts]
-  implicit val taxTypeFormat = Json.format[EncryptedTaxType]
-  implicit val taxTypeGroupFormat = Json.format[EncryptedTaxTypeGroup]
-  implicit val dueDateFormat = Json.format[EncryptedDueDate]
-  implicit val format = Json.format[EncryptedGuaranteeTransaction]
+  implicit val amountFormat: OFormat[EncryptedAmounts] = Json.format[EncryptedAmounts]
+  implicit val taxTypeFormat: OFormat[EncryptedTaxType] = Json.format[EncryptedTaxType]
+  implicit val taxTypeGroupFormat: OFormat[EncryptedTaxTypeGroup] = Json.format[EncryptedTaxTypeGroup]
+  implicit val dueDateFormat: OFormat[EncryptedDueDate] = Json.format[EncryptedDueDate]
+  implicit val format: OFormat[EncryptedGuaranteeTransaction] = Json.format[EncryptedGuaranteeTransaction]
 }

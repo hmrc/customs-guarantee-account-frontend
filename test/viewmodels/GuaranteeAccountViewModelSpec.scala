@@ -78,7 +78,7 @@ class GuaranteeAccountViewModelSpec extends SpecBase {
     val guaranteeAccount02 = GuaranteeAccount("gan", "eori", AccountStatusOpen,
       Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(5000.10))))
 
-    implicit val appConfig = mock[AppConfig]
+    val appConfig = mock[AppConfig]
 
     val model = GuaranteeAccountViewModel(guaranteeAccount,
       LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())

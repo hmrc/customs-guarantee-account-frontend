@@ -105,7 +105,7 @@ object CDSAccountStatus {
 
   val logger = Logger(this.getClass)
 
-  implicit val CDSAccountStatusReads = new Reads[CDSAccountStatus] {
+  implicit val CDSAccountStatusReads: Reads[CDSAccountStatus] = new Reads[CDSAccountStatus] {
     override def reads(json: JsValue): JsResult[CDSAccountStatus] = {
       json.as[String] match {
         case status if status.equalsIgnoreCase("Open") => JsSuccess(AccountStatusOpen)
@@ -116,7 +116,7 @@ object CDSAccountStatus {
     }
   }
 
-  implicit val CDSAccountStatusWrites = new Writes[CDSAccountStatus] {
+  implicit val CDSAccountStatusWrites: Writes[CDSAccountStatus] = new Writes[CDSAccountStatus] {
     override def writes(o: CDSAccountStatus): JsValue = {
       o match {
         case AccountStatusOpen => JsString("Open")
@@ -139,20 +139,24 @@ case class Limits(periodGuaranteeLimit: String, periodAccountLimit: String)
 case class DefermentBalances(periodAvailableGuaranteeBalance: String, periodAvailableAccountBalance: String)
 
 object AccountsAndBalancesResponseContainer {
-  implicit val returnParametersReads = Json.reads[ReturnParameters]
-  implicit val accountReads = Json.reads[Account]
-  implicit val limitsReads = Json.reads[Limits]
-  implicit val balancesReads = Json.reads[DefermentBalances]
-  implicit val generalGuaranteeAccountReads = Json.reads[GeneralGuaranteeAccount]
-  implicit val accountResponseDetailReads = Json.reads[AccountResponseDetail]
-  implicit val accountResponseCommonReads = Json.reads[AccountResponseCommon]
-  implicit val accountsAndBalancesResponseReads = Json.reads[AccountsAndBalancesResponse]
-  implicit val accountsAndBalancesResponseContainerReads = Json.reads[AccountsAndBalancesResponseContainer]
+  implicit val returnParametersReads: Reads[ReturnParameters] = Json.reads[ReturnParameters]
+  implicit val accountReads: Reads[Account] = Json.reads[Account]
+  implicit val limitsReads: Reads[Limits] = Json.reads[Limits]
+  implicit val balancesReads: Reads[DefermentBalances] = Json.reads[DefermentBalances]
+  implicit val generalGuaranteeAccountReads: Reads[GeneralGuaranteeAccount] = Json.reads[GeneralGuaranteeAccount]
+  implicit val accountResponseDetailReads: Reads[AccountResponseDetail] = Json.reads[AccountResponseDetail]
+  implicit val accountResponseCommonReads: Reads[AccountResponseCommon] = Json.reads[AccountResponseCommon]
+  implicit val accountsAndBalancesResponseReads: Reads[AccountsAndBalancesResponse] = Json.reads[AccountsAndBalancesResponse]
+  implicit val accountsAndBalancesResponseContainerReads: Reads[AccountsAndBalancesResponseContainer] = Json.reads[AccountsAndBalancesResponseContainer]
 }
 
 object AccountsAndBalancesRequestContainer {
-  implicit val accountsRequestCommonFormat = Json.format[AccountsRequestCommon]
-  implicit val accountsRequestDetailFormat = Json.format[AccountsRequestDetail]
-  implicit val accountsAndBalancesRequestFormat = Json.format[AccountsAndBalancesRequest]
-  implicit val accountsAndBalancesRequestContainerFormat = Json.format[AccountsAndBalancesRequestContainer]
+  implicit val accountsRequestCommonFormat: OFormat[AccountsRequestCommon] = Json.format[AccountsRequestCommon]
+  implicit val accountsRequestDetailFormat: OFormat[AccountsRequestDetail] = Json.format[AccountsRequestDetail]
+
+  implicit val accountsAndBalancesRequestFormat: OFormat[AccountsAndBalancesRequest] =
+    Json.format[AccountsAndBalancesRequest]
+
+  implicit val accountsAndBalancesRequestContainerFormat: OFormat[AccountsAndBalancesRequestContainer] =
+    Json.format[AccountsAndBalancesRequestContainer]
 }
