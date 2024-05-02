@@ -3,7 +3,7 @@ language.english = English
 language.change.english=Change the language to English
 
 service.back=Yn ôl
-service.name=Bwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
+service.name=Rheoli tollau mewnforio a chyfrifon TAW
 
 site.error = Gwall
 
