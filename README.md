@@ -19,4 +19,8 @@ then open the resulting coverage report `target/scala-2.12/scoverage-report/inde
 
 Test coverage threshold is set at 80% - so if you commit any significant amount of implementation code without writing tests, you can expect the build to fail.
 
+## All tests and checks
 
+This is an sbt command alias specific to this project. It will run a scala style check, run unit tests, run integration tests and produce a coverage report.
+
+> `sbt runAllChecks`
