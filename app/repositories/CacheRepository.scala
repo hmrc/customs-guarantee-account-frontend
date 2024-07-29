@@ -48,8 +48,7 @@ class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
           .name("guarantee-account-cache-last-updated-index")
           .expireAfter(config.get[Int]("mongodb.timeToLiveInSeconds"),
             TimeUnit.SECONDS).background(true)
-      )
-    )) with CacheRepository {
+      ))) with CacheRepository {
 
   private val encryptionKey = config.get[String]("mongodb.encryptionKey")
 
@@ -81,13 +80,13 @@ case class GuaranteeAccountMongo(transactions: Seq[EncryptedGuaranteeTransaction
 object GuaranteeAccountMongo {
 
   implicit val javaTimeFormat: Format[Instant] = Format[Instant](
-    Reads.path.nullable[String](__ \ "$date" \ "$numberLong").map(dateString => dateValueFromString(dateString)),
+    Reads.path.nullable[String](__ \ "$date" \ "$numberLong").map(dateString => createInstantDateFromString(dateString)),
     Writes.at[String](__ \ "$date" \ "$numberLong").contramap(_.toEpochMilli.toString)
   )
 
   implicit val format: OFormat[GuaranteeAccountMongo] = Json.format[GuaranteeAccountMongo]
 
-  private def dateValueFromString(dateString: Option[String]): Instant = {
+  private def createInstantDateFromString(dateString: Option[String]): Instant = {
     dateString match {
       case Some(value) => Instant.ofEpochMilli(value.toLong)
       case _ => Instant.now()
