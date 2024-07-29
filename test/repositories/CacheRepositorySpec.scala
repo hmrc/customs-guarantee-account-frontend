@@ -108,6 +108,6 @@ class CacheRepositorySpec extends SpecBase {
         |"dischargedAmount":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
         |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
         |"dueDates":[]}],
-        |"lastUpdated":{"date":"2024-07-22"}}""".stripMargin
+        |"lastUpdated":{"date":"2024-07-29T16:16:03.120694"}}""".stripMargin
   }
 }
