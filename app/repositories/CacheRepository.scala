@@ -30,7 +30,6 @@ import java.time.Instant
 import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Success, Try, Failure}
 
 @Singleton
 class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
@@ -81,13 +80,9 @@ case class GuaranteeAccountMongo(transactions: Seq[EncryptedGuaranteeTransaction
 
 object GuaranteeAccountMongo {
   implicit val javaTimeFormat: Format[Instant] = Format[Instant](
-    Try {
-      Reads.at[String](__ \ "$date" \ "$numberLong")
-        .map(s => Instant.ofEpochMilli(s.toLong))
-    } match {
-      case Success(value) => value
-      case Failure(_) =>
-        Reads[Instant](_ => JsSuccess(Instant.now()))
+    Reads.path.nullable[String](__ \ "$date" \ "$numberLong").map {
+      case Some(value) => Instant.ofEpochMilli(value.toLong)
+      case _ => Instant.now()
     },
     Writes.at[String](__ \ "$date" \ "$numberLong")
       .contramap(_.toEpochMilli.toString)
