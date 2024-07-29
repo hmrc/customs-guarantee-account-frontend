@@ -19,7 +19,7 @@ package repositories
 import models.EncryptedGuaranteeTransaction
 import play.api.libs.json.{JsSuccess, Json}
 import utils.SpecBase
-import utils.TestData.{ENCRYPTED_VALUE_OBJECT, LOCAL_DATE_CURRENT, LOCAL_DATE_TIME}
+import utils.TestData.{ENCRYPTED_VALUE, ENCRYPTED_VALUE_OBJECT, LOCAL_DATE_CURRENT, LOCAL_DATE_TIME, NONCE_VALUE}
 
 import java.time.{Instant, ZoneOffset}
 
@@ -28,7 +28,7 @@ class CacheRepositorySpec extends SpecBase {
   "GuaranteeAccountMongo.format" should {
 
     "Read the incoming JsValue correctly" when {
-       import GuaranteeAccountMongo.format
+      import GuaranteeAccountMongo.format
 
       "JsValue is correct Instant representation" in new Setup {
         Json.fromJson(Json.parse(guaranteeAccJsonString)) mustBe JsSuccess(guaranteeAcc)
@@ -72,42 +72,44 @@ class CacheRepositorySpec extends SpecBase {
     val guaranteeAccWithDefaultDateTime: GuaranteeAccountMongo =
       GuaranteeAccountMongo(encryptedTransactions, Instant.now())
 
+    val lastUpdatedDateString = """"$date":{"$numberLong":"1721995855000"}"""
+
     val guaranteeAccJsonString: String =
-      """{
-        |"transactions":[
-        |{"date":"2024-07-29",
-        |"movementReferenceNumber":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
-        |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
-        |"balance":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
-        |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
-        |"declarantEori":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
-        |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
-        |"consigneeEori":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
-        |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
-        |"originalCharge":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
-        |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
-        |"dischargedAmount":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
-        |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
-        |"dueDates":[]}],
-        |"lastUpdated":{"$date":{"$numberLong":"1721995855000"}}}""".stripMargin
+      s"""{
+         |"transactions":[
+         |{"date":"2024-07-29",
+         |"movementReferenceNumber":{"value":"$ENCRYPTED_VALUE",
+         |"nonce":"$NONCE_VALUE"},
+         |"balance":{"value":"$ENCRYPTED_VALUE",
+         |"nonce":"$NONCE_VALUE"},
+         |"declarantEori":{"value":"$ENCRYPTED_VALUE",
+         |"nonce":"$NONCE_VALUE"},
+         |"consigneeEori":{"value":"$ENCRYPTED_VALUE",
+         |"nonce":"$NONCE_VALUE"},
+         |"originalCharge":{"value":"$ENCRYPTED_VALUE",
+         |"nonce":"$NONCE_VALUE"},
+         |"dischargedAmount":{"value":"$ENCRYPTED_VALUE",
+         |"nonce":"$NONCE_VALUE"},
+         |"dueDates":[]}],
+         |"lastUpdated":{$lastUpdatedDateString}}""".stripMargin
 
     val guaranteeAccJsonStringWithIncorrectDateFormat: String =
-      """{
-        |"transactions":[
-        |{"date":"2024-07-29",
-        |"movementReferenceNumber":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
-        |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
-        |"balance":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
-        |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
-        |"declarantEori":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
-        |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
-        |"consigneeEori":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
-        |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
-        |"originalCharge":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
-        |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
-        |"dischargedAmount":{"value":"sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI=",
-        |"nonce":"RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"},
-        |"dueDates":[]}],
-        |"lastUpdated":{"date":"2024-07-29T16:16:03.120694"}}""".stripMargin
+      s"""{
+         |"transactions":[
+         |{"date":"2024-07-29",
+         |"movementReferenceNumber":{"value":"$ENCRYPTED_VALUE",
+         |"nonce":"$NONCE_VALUE"},
+         |"balance":{"value":"$ENCRYPTED_VALUE",
+         |"nonce":"$NONCE_VALUE"},
+         |"declarantEori":{"value":"$ENCRYPTED_VALUE",
+         |"nonce":"$NONCE_VALUE"},
+         |"consigneeEori":{"value":"$ENCRYPTED_VALUE",
+         |"nonce":"$NONCE_VALUE"},
+         |"originalCharge":{"value":"$ENCRYPTED_VALUE",
+         |"nonce":"$NONCE_VALUE"},
+         |"dischargedAmount":{"value":"$ENCRYPTED_VALUE",
+         |"nonce":"$NONCE_VALUE"},
+         |"dueDates":[]}],
+         |"lastUpdated":{"date":"2024-07-29T16:16:03.120694"}}""".stripMargin
   }
 }
