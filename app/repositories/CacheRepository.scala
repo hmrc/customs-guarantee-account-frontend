@@ -80,15 +80,18 @@ case class GuaranteeAccountMongo(transactions: Seq[EncryptedGuaranteeTransaction
 
 object GuaranteeAccountMongo {
   implicit val javaTimeFormat: Format[Instant] = Format[Instant](
-    Reads.path.nullable[String](__ \ "$date" \ "$numberLong").map {
-      case Some(value) => Instant.ofEpochMilli(value.toLong)
-      case _ => Instant.now()
-    },
-    Writes.at[String](__ \ "$date" \ "$numberLong")
-      .contramap(_.toEpochMilli.toString)
+    Reads.path.nullable[String](__ \ "$date" \ "$numberLong").map(dateString => dateValueFromString(dateString)),
+    Writes.at[String](__ \ "$date" \ "$numberLong").contramap(_.toEpochMilli.toString)
   )
 
   implicit val format: OFormat[GuaranteeAccountMongo] = Json.format[GuaranteeAccountMongo]
+
+  private def dateValueFromString(dateString: Option[String]): Instant = {
+    dateString match {
+      case Some(value) => Instant.ofEpochMilli(value.toLong)
+      case _ => Instant.now()
+    }
+  }
 }
 
 trait CacheRepository {
