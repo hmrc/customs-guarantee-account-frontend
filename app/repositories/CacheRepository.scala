@@ -18,26 +18,26 @@ package repositories
 
 import crypto._
 import models._
-import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 import org.mongodb.scala.model.Filters.equal
-import org.mongodb.scala.model.{IndexModel, IndexOptions, ReplaceOptions}
 import org.mongodb.scala.model.Indexes.ascending
+import org.mongodb.scala.model.{IndexModel, IndexOptions, ReplaceOptions}
 import play.api.Configuration
-import play.api.libs.json.{Format, Json, OFormat}
+import play.api.libs.json._
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
+import java.time.Instant
 import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import java.time.{LocalDate, LocalDateTime}
+import scala.util.{Success, Try, Failure}
 
 @Singleton
 class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
                                        config: Configuration,
                                        guaranteeTransactionsEncryptor: GuaranteeTransactionsEncryptor,
                                        guaranteeTransactionsDecryptor: GuaranteeTransactionsDecryptor)(
-  implicit executionContext: ExecutionContext)
+                                        implicit executionContext: ExecutionContext)
   extends PlayMongoRepository[GuaranteeAccountMongo](
     collectionName = "guarantee-account-cache",
     mongoComponent = mongoComponent,
@@ -48,9 +48,9 @@ class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
         IndexOptions()
           .name("guarantee-account-cache-last-updated-index")
           .expireAfter(config.get[Int]("mongodb.timeToLiveInSeconds"),
-            TimeUnit.SECONDS)
-    )
-  )) with CacheRepository {
+            TimeUnit.SECONDS).background(true)
+      )
+    )) with CacheRepository {
 
   private val encryptionKey = config.get[String]("mongodb.encryptionKey")
 
@@ -65,7 +65,7 @@ class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
   def set(id: String, transactions: Seq[GuaranteeTransaction]): Future[Boolean] = {
     val record = GuaranteeAccountMongo(
       guaranteeTransactionsEncryptor.encryptGuaranteeTransactions(transactions, encryptionKey),
-      LocalDateTime.now()
+      Instant.now()
     )
 
     collection.replaceOne(
@@ -77,14 +77,27 @@ class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
 }
 
 case class GuaranteeAccountMongo(transactions: Seq[EncryptedGuaranteeTransaction],
-                                 lastUpdated: LocalDateTime = LocalDateTime.now())
+                                 lastUpdated: Instant = Instant.now())
 
-  object GuaranteeAccountMongo {
-    implicit val javaTimeFormat: Format[LocalDate] = MongoJavatimeFormats.localDateFormat
-    implicit val format: OFormat[GuaranteeAccountMongo] = Json.format[GuaranteeAccountMongo]
-  }
+object GuaranteeAccountMongo {
+  implicit val javaTimeFormat: Format[Instant] = Format[Instant](
+    Try {
+      Reads.at[String](__ \ "$date" \ "$numberLong")
+        .map(s => Instant.ofEpochMilli(s.toLong))
+    } match {
+      case Success(value) => value
+      case Failure(_) =>
+        Reads[Instant](_ => JsSuccess(Instant.now()))
+    },
+    Writes.at[String](__ \ "$date" \ "$numberLong")
+      .contramap(_.toEpochMilli.toString)
+  )
+
+  implicit val format: OFormat[GuaranteeAccountMongo] = Json.format[GuaranteeAccountMongo]
+}
 
 trait CacheRepository {
   def get(id: String): Future[Option[Seq[GuaranteeTransaction]]]
+
   def set(id: String, transactions: Seq[GuaranteeTransaction]): Future[Boolean]
 }
