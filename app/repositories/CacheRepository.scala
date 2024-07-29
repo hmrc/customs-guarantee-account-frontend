@@ -35,8 +35,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
                                        config: Configuration,
                                        guaranteeTransactionsEncryptor: GuaranteeTransactionsEncryptor,
-                                       guaranteeTransactionsDecryptor: GuaranteeTransactionsDecryptor)(
-                                        implicit executionContext: ExecutionContext)
+                                       guaranteeTransactionsDecryptor: GuaranteeTransactionsDecryptor)
+                                      (implicit executionContext: ExecutionContext)
   extends PlayMongoRepository[GuaranteeAccountMongo](
     collectionName = "guarantee-account-cache",
     mongoComponent = mongoComponent,
