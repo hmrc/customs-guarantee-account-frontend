@@ -19,7 +19,7 @@ package repositories
 import models.EncryptedGuaranteeTransaction
 import play.api.libs.json.{JsSuccess, Json}
 import utils.SpecBase
-import utils.TestData.{ENCRYPTED_VALUE, ENCRYPTED_VALUE_OBJECT, LOCAL_DATE_CURRENT, LOCAL_DATE_TIME, NONCE_VALUE}
+import utils.TestData.{ENCRYPTED_VALUE, ENCRYPTED_VALUE_OBJECT, LOCAL_DATE, LOCAL_DATE_TIME, NONCE_VALUE}
 
 import java.time.{Instant, ZoneOffset}
 
@@ -50,7 +50,7 @@ class CacheRepositorySpec extends SpecBase {
 
   trait Setup {
     val encryptedTrans: EncryptedGuaranteeTransaction = EncryptedGuaranteeTransaction(
-      date = LOCAL_DATE_CURRENT,
+      date = LOCAL_DATE,
       movementReferenceNumber = ENCRYPTED_VALUE_OBJECT,
       secureMovementReferenceNumber = None,
       balance = ENCRYPTED_VALUE_OBJECT,
@@ -68,9 +68,6 @@ class CacheRepositorySpec extends SpecBase {
     val lastUpdatedTime: Instant = LOCAL_DATE_TIME.toInstant(ZoneOffset.UTC)
 
     val guaranteeAcc: GuaranteeAccountMongo = GuaranteeAccountMongo(encryptedTransactions, lastUpdatedTime)
-
-    val guaranteeAccWithDefaultDateTime: GuaranteeAccountMongo =
-      GuaranteeAccountMongo(encryptedTransactions, Instant.now())
 
     val lastUpdatedDateString = """"$date":{"$numberLong":"1721995855000"}"""
 

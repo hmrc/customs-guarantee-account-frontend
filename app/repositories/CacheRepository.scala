@@ -80,7 +80,7 @@ case class GuaranteeAccountMongo(transactions: Seq[EncryptedGuaranteeTransaction
 object GuaranteeAccountMongo {
 
   implicit val javaTimeFormat: Format[Instant] = Format[Instant](
-    Reads.path.nullable[String](__ \ "$date" \ "$numberLong").map(dateString => createInstantDateFromString(dateString)),
+    Reads.path.nullable[String](__ \ "$date" \ "$numberLong").map(createInstantDateFromString),
     Writes.at[String](__ \ "$date" \ "$numberLong").contramap(_.toEpochMilli.toString)
   )
 
