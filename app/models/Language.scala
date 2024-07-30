@@ -38,6 +38,7 @@ object Language {
       value match {
         case Cymraeg.toString => Right(Cymraeg)
         case English.toString => Right(English)
+        case _ => throw new RuntimeException(s"Language $value is not supported")
       }
 
     override def unbind(key: String, value: Language): String =
