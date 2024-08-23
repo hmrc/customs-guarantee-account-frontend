@@ -37,22 +37,21 @@
     @formHelper(action = controllers.routes.RequestTransactionsController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors, None, isErrorKeyUpdateEnabled = true, Some(updateFormErrorKeyForStartAndEndDate))
         @h1("cf.guarantee-account.transactions.request.heading")
-        @p("cf.guarantee-account.transactions.request.hint")
         @inputDate(
             form,
             messages("cf.guarantee-account.transactions.request.from"),
-            hintText = Some(messages("cf.guarantee-account.transactions.request.date.hint")),
+            hintText = Some(messages("cf.guarantee-account.transactions.request.startDate.hint")),
             id = "start",
             legendAsPageHeading = false,
-            legendHiddenContent = Some(messages("cf.guarantee-account.transactions.request.whichStartDate.hidden"))
+            legendHiddenContent = None
         )
         @inputDate(
             form,
             messages("cf.guarantee-account.transactions.request.to"),
-            hintText = Some(messages("cf.guarantee-account.transactions.request.date.hint")),
+            hintText = Some(messages("cf.guarantee-account.transactions.request.endDate.hint")),
             id = "end",
             legendAsPageHeading = false,
-            legendHiddenContent = Some(messages("cf.guarantee-account.transactions.request.whichEndDate.hidden"))
+            legendHiddenContent = None
         )
         @button(messages("cf.guarantee-account.transactions.request.continue"))
     }
