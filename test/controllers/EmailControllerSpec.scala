@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.CustomsFinancialsApiConnector
+import connectors.CustomsDataStoreConnector
 import models.EmailUnverifiedResponse
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.inject._
@@ -32,9 +32,9 @@ class EmailControllerSpec extends SpecBase {
   "EmailController" must {
     "return unverified email" in new Setup {
       running(app) {
-        val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+        val connector = app.injector.instanceOf[CustomsDataStoreConnector]
 
-        val result: Future[Option[String]] = connector.isEmailUnverified(hc)
+        val result: Future[Option[String]] = connector.retrieveUnverifiedEmail(hc)
         await(result) mustBe expectedResult
       }
     }
