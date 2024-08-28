@@ -29,7 +29,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class CustomsDataStoreConnectorSpec extends SpecBase {
 
-  "isEmailUnverified" must {
+  "retrieveUnverifiedEmail" must {
 
     "return unverified email" in new Setup {
       when[Future[EmailUnverifiedResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
