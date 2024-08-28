@@ -27,7 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class CustomsDataStoreConnector @Inject()(httpClient: HttpClient,
                                           appConfig: AppConfig)(implicit ec: ExecutionContext) {
 
-  def isEmailUnverified(implicit hc: HeaderCarrier): Future[Option[String]] = {
+  def retrieveUnverifiedEmail(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val endPoint = s"${appConfig.customsDataStore}/subscriptions/unverified-email-display"
 
     httpClient.GET[EmailUnverifiedResponse](endPoint).map(_.unVerifiedEmail)

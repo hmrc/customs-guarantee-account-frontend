@@ -34,7 +34,7 @@ class EmailControllerSpec extends SpecBase {
       running(app) {
         val connector = app.injector.instanceOf[CustomsDataStoreConnector]
 
-        val result: Future[Option[String]] = connector.isEmailUnverified(hc)
+        val result: Future[Option[String]] = connector.retrieveUnverifiedEmail(hc)
         await(result) mustBe expectedResult
       }
     }

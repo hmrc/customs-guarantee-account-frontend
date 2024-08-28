@@ -25,6 +25,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import utils.SpecBase
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class CustomsDataStoreConnectorSpec extends SpecBase {
 
@@ -42,8 +43,9 @@ class CustomsDataStoreConnectorSpec extends SpecBase {
       val connector: CustomsDataStoreConnector = app.injector.instanceOf[CustomsDataStoreConnector]
 
       running(app) {
-        val result = await(connector.isEmailUnverified(hc))
-        result mustBe Some("unverified@email.com")
+        connector.retrieveUnverifiedEmail(hc) map {
+          res => res mustBe Some("unverified@email.com")
+        }
       }
     }
   }
