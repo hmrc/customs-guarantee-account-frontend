@@ -41,6 +41,7 @@ class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
     collectionName = "guarantee-account-cache",
     mongoComponent = mongoComponent,
     domainFormat = GuaranteeAccountMongo.format,
+    replaceIndexes = true,
     indexes = Seq(
       IndexModel(
         ascending("lastUpdated"),
