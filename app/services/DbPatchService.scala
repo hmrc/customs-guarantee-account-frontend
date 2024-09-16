@@ -17,33 +17,41 @@
 package services
 
 import config.AppConfig
+import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.{Document, MongoCollection}
 import play.api.Logger
 import uk.gov.hmrc.mongo.MongoComponent
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class DbPatchService @Inject()(appConfig: AppConfig, mongoComponent: MongoComponent) {
 
-  val log = Logger(this.getClass)
+  val log: Logger = Logger(this.getClass)
 
   if (appConfig.dropGuaranteeAccCache) {
     log.info("appConfig.dropGuaranteeAccCache is true")
-    dropCollection("guarantee-account-cache")
+    deleteDocuments("guarantee-account-cache")
   }
   else {
     log.info("appConfig.dropGuaranteeAccCache is false")
   }
 
-  private def dropCollection(collectionName: String): Unit = {
-    log.info(s"Started collection drop : ${collectionName}")
+  private def deleteDocuments(collectionName: String): Unit = {
+    log.warn(s"Started deletion of records : ${collectionName}")
     try {
       val collection: MongoCollection[Document] = mongoComponent.database.getCollection(collectionName)
-      collection.drop().toFuture()
-      log.info(s"Collection dropped : ${collectionName}")
+      collection.deleteMany(empty())
+        .toFuture()
+        .map(a => {
+          log.warn(s"Deleted records from : $collectionName")
+          log.warn(s"Total deleted documents in the $collectionName: ${a.getDeletedCount}")
+        })
+
     } catch {
-      case e: Exception => log.error(s"Collection drop failed : ${collectionName} with Exception : ${e.getMessage}")
+      case e: Exception =>
+        log.error(s"Collection drop failed : ${collectionName} with Exception : ${e.getMessage}")
     }
   }
 
