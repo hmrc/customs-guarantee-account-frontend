@@ -30,22 +30,22 @@ class DbPatchService @Inject()(appConfig: AppConfig, mongoComponent: MongoCompon
 
   val log: Logger = Logger(this.getClass)
 
-  if (appConfig.dropGuaranteeAccCache) {
-    log.info("appConfig.dropGuaranteeAccCache is true")
+  if (appConfig.deleteGuaranteeAccountCacheDocuments) {
+    log.info("appConfig.deleteGuaranteeAccountCacheDocuments is true")
     deleteDocuments("guarantee-account-cache")
   }
   else {
-    log.info("appConfig.dropGuaranteeAccCache is false")
+    log.info("appConfig.deleteGuaranteeAccountCacheDocuments is false")
   }
 
   private def deleteDocuments(collectionName: String): Unit = {
-    log.warn(s"Started deletion of records : ${collectionName}")
+    log.warn(s"Started deletion of documents : ${collectionName}")
     try {
       val collection: MongoCollection[Document] = mongoComponent.database.getCollection(collectionName)
       collection.deleteMany(empty())
         .toFuture()
         .map(a => {
-          log.warn(s"Deleted records from : $collectionName")
+          log.warn(s"Deleted documents from : $collectionName")
           log.warn(s"Total deleted documents in the $collectionName: ${a.getDeletedCount}")
         })
 
