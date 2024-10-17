@@ -31,7 +31,7 @@ class DbPatchServiceSpec extends SpecBase {
 
   "Database Patch Service" should {
 
-    "delete documents when deleteGuaranteeAccountCacheDocuments is true" in new Setup {
+    "delete documents when 'delete-guarantee-account-cache-documents' feature flag is set to true" in new Setup {
       when(appConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(true)
       commonSetupForDeletion()
 
@@ -44,7 +44,7 @@ class DbPatchServiceSpec extends SpecBase {
       }
     }
 
-    "not delete documents when deleteGuaranteeAccountCacheDocuments is false" in new Setup {
+    "not delete documents when 'delete-guarantee-account-cache-documents' feature flag is set to false" in new Setup {
       when(appConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(false)
       when(mockComponent.database).thenReturn(mockDatabase)
 
