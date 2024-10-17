@@ -23,36 +23,41 @@ import play.api.Logger
 import uk.gov.hmrc.mongo.MongoComponent
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 @Singleton
-class DbPatchService @Inject()(appConfig: AppConfig, mongoComponent: MongoComponent) {
+class DbPatchService @Inject()(appConfig: AppConfig, mongoComponent: MongoComponent)(implicit val ec: ExecutionContext) {
 
-  val log: Logger = Logger(this.getClass)
+  private val log: Logger = Logger(this.getClass)
+  private val documentName = "guarantee-account-cache"
 
   if (appConfig.deleteGuaranteeAccountCacheDocuments) {
     log.info("appConfig.deleteGuaranteeAccountCacheDocuments is true")
-    deleteDocuments("guarantee-account-cache")
-  }
-  else {
+    deleteDocumentsFromCache(documentName)
+  } else {
     log.info("appConfig.deleteGuaranteeAccountCacheDocuments is false")
   }
 
-  private def deleteDocuments(collectionName: String): Unit = {
-    log.warn(s"Started deletion of documents : ${collectionName}")
-    try {
-      val collection: MongoCollection[Document] = mongoComponent.database.getCollection(collectionName)
-      collection.deleteMany(empty())
-        .toFuture()
-        .map(a => {
-          log.warn(s"Deleted documents from : $collectionName")
-          log.warn(s"Total deleted documents in the $collectionName: ${a.getDeletedCount}")
-        })
+  private def deleteDocumentsFromCache(collectionName: String): Unit = {
+    log.warn(s"Started deletion of documents : $collectionName")
+    val collection = getMongoCollection(collectionName)
 
-    } catch {
-      case e: Exception =>
-        log.error(s"Collection drop failed : ${collectionName} with Exception : ${e.getMessage}")
-    }
+    deleteDocuments(collection, collectionName)
   }
 
+  private def getMongoCollection(collectionName: String): MongoCollection[Document] = {
+    mongoComponent.database.getCollection(collectionName)
+  }
+
+  private def deleteDocuments(collection: MongoCollection[Document], collectionName: String): Unit = {
+    collection.deleteMany(empty())
+      .toFuture()
+      .map { result =>
+        log.warn(s"Deleted documents from : $collectionName")
+        log.warn(s"Total deleted documents in the $collectionName: ${result.getDeletedCount}")
+      }.recover {
+        case e: Exception =>
+          log.error(s"Collection drop failed : $collectionName with Exception : ${e.getMessage}")
+      }
+  }
 }

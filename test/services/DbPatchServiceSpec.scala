@@ -19,7 +19,7 @@ package services
 import config.AppConfig
 import utils.SpecBase
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import org.mongodb.scala._
 import org.mongodb.scala.result.DeleteResult
 import play.api.test.Helpers.running
@@ -98,12 +98,15 @@ class DbPatchServiceSpec extends SpecBase {
     val mockCollection: MongoCollection[Document] = mock[MongoCollection[Document]]
     val mockDeleteResult: DeleteResult = mock[DeleteResult]
     val mockDeleteObservable: SingleObservable[DeleteResult] = mock[SingleObservable[DeleteResult]]
+    implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
     when(appConfig.customsFinancialsApi).thenReturn(emptyString)
 
     val app: Application = application.overrides(
       inject.bind[MongoComponent].toInstance(mockComponent),
-      inject.bind[AppConfig].toInstance(appConfig)).build()
+      inject.bind[AppConfig].toInstance(appConfig),
+      inject.bind[ExecutionContext].toInstance(ec)
+    ).build()
 
     def commonSetupForDeletion(): Unit = {
       when(mockComponent.database).thenReturn(mockDatabase)
