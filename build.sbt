@@ -40,7 +40,8 @@ lazy val microservice = Project(appName, file("."))
       "uk.gov.hmrc.hmrcfrontend.views.html.components._"
     ),
 
-    scalacOptions := scalacOptions.value.diff(Seq("-Wunused:all")),
+    scalacOptions := scalacOptions.value
+      .diff(Seq("-Wunused:all")) ++ Seq("-Wconf:src=routes/.*:s", "-Wconf:msg=Flag.*repeatedly:s"),
 
     Test / scalacOptions ++= Seq(
       "-Wunused:imports",
