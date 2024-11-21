@@ -18,7 +18,7 @@ package controllers
 
 import cats.data.EitherT
 import cats.data.EitherT.fromOptionF
-import config.{AppConfig, ErrorHandler}
+import config.AppConfig
 import connectors._
 import controllers.actions.{IdentifierAction, EmailAction}
 import models.GuaranteeAccount
@@ -45,7 +45,7 @@ class RequestedTransactionsController @Inject()(apiConnector: CustomsFinancialsA
                                                 noResults: guarantee_transactions_no_result,
                                                 guaranteeAccountTransactionsNotAvailable: guarantee_account_transactions_not_available,
                                                 resultView: guarantee_transactions_result_page,
-                                                eh: ErrorHandler,
+                                                notFound: not_found,
                                                 mcc: MessagesControllerComponents)(
                                                  implicit executionContext: ExecutionContext, appConfig: AppConfig)
   extends FrontendController(mcc) with I18nSupport with Logging {
@@ -54,7 +54,7 @@ class RequestedTransactionsController @Inject()(apiConnector: CustomsFinancialsA
 
     val result: EitherT[Future, Result, Result] = for {
       dates <- fromOptionF(cache.get(request.eori), Redirect(routes.RequestTransactionsController.onPageLoad()))
-      account <- fromOptionF(apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
+      account <- fromOptionF(apiConnector.getGuaranteeAccount(request.eori), NotFound(notFound()))
       page <- EitherT.liftF(showAccountWithTransactionDetails(account, dates.start, dates.end))
     } yield page
 
