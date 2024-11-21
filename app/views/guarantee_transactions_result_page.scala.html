@@ -18,7 +18,6 @@
 
 @this(
         main_template: Layout,
-        govukSummaryList: GovukSummaryList,
         h1: components.h1,
         p: components.p,
         link: components.link,
@@ -28,7 +27,7 @@
 @(summary: ResultsPageSummary, returnLink: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")),
-    backLink = Some(controllers.routes.RequestTransactionsController.onPageLoad.url)) {
+    backLink = Some(controllers.routes.RequestTransactionsController.onPageLoad().url)) {
         @h1("cf.guarantee-account.transactions.result.transaction")
         @p("cf.guarantee-account.transactions.result.download.transactions")
         @summaryList(summary)

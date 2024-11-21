@@ -32,8 +32,8 @@
     backLink = Some(controllers.routes.GuaranteeAccountController.showAccountDetails(None).url)
 ) {
 
-    @formHelper(action = controllers.routes.RequestTransactionsController.onSubmit(), 'autoComplete -> "off") {
-        @errorSummary(form.errors, None, isErrorKeyUpdateEnabled = true, Some(updateFormErrorKeyForStartAndEndDate))
+    @formHelper(action = controllers.routes.RequestTransactionsController.onSubmit(), Symbol("autoComplete") -> "off") {
+        @errorSummary(form.errors, None, isErrorKeyUpdateEnabled = true, Some(updateFormErrorKeyForStartAndEndDate()))
         @h1("cf.guarantee-account.transactions.request.heading")
         @inputDate(
             form,
