@@ -18,6 +18,8 @@ package repositories
 
 import crypto._
 import models._
+import org.mongodb.scala.ToSingleObservablePublisher
+import org.mongodb.scala.SingleObservableFuture
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Indexes.ascending
 import org.mongodb.scala.model.{IndexModel, IndexOptions, ReplaceOptions}
@@ -47,7 +49,7 @@ class DefaultCacheRepository @Inject()(mongoComponent: MongoComponent,
         ascending("lastUpdated"),
         IndexOptions()
           .name("guarantee-account-cache-last-updated-index")
-          .expireAfter(config.get[Int]("mongodb.timeToLiveInSeconds"),
+          .expireAfter(config.get[Long]("mongodb.timeToLiveInSeconds"),
             TimeUnit.SECONDS).background(true)
       ))) with CacheRepository {
 
