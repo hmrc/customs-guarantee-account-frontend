@@ -19,17 +19,21 @@ package connectors
 import config.AppConfig
 import models.EmailUnverifiedResponse
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CustomsDataStoreConnector @Inject()(httpClient: HttpClient,
+class CustomsDataStoreConnector @Inject()(httpClient: HttpClientV2,
                                           appConfig: AppConfig)(implicit ec: ExecutionContext) {
 
   def retrieveUnverifiedEmail(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val endPoint = s"${appConfig.customsDataStore}/subscriptions/unverified-email-display"
 
-    httpClient.GET[EmailUnverifiedResponse](endPoint).map(_.unVerifiedEmail)
+    httpClient
+      .get(url"$endPoint")
+      .execute[EmailUnverifiedResponse]
+      .map(_.unVerifiedEmail)
   }
 }

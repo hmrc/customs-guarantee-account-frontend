@@ -20,19 +20,22 @@ import config.AppConfig
 import models.request.{GuaranteeTransactionsRequest, IdentifierRequest}
 import models.{GuaranteeAccount, GuaranteeTransaction, RequestDates}
 import org.slf4j.LoggerFactory
+import play.api.http.Status.REQUEST_ENTITY_TOO_LARGE
+import play.api.libs.json.Json
 import play.api.mvc.AnyContent
 import repositories.CacheRepository
 import services.MetricsReporterService
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
-import play.api.http.Status.REQUEST_ENTITY_TOO_LARGE
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps, UpstreamErrorResponse}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
+class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClientV2,
                                               appConfig: AppConfig,
                                               metricsReporter: MetricsReporterService,
                                               cacheRepository: CacheRepository)(implicit ec: ExecutionContext) {
@@ -50,8 +53,11 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
     )
 
     metricsReporter.withResponseTimeLogging("customs-financials-api.get.accounts") {
-      httpClient.POST[AccountsAndBalancesRequestContainer,
-        AccountsAndBalancesResponseContainer](accountsUrl, accountsAndBalancesRequest).map(_.toGuaranteeAccounts)
+      httpClient
+        .post(url"$accountsUrl")
+        .withBody(Json.toJson(accountsAndBalancesRequest))
+        .execute[AccountsAndBalancesResponseContainer]
+        .map(_.toGuaranteeAccounts)
     }
   }.map(_.find(_.owner == request.eori))
 
@@ -62,19 +68,20 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
     cacheRepository.get(gan).flatMap {
       case Some(value) => Future.successful(Right(value))
       case None =>
-        httpClient.POST[GuaranteeTransactionsRequest, Seq[GuaranteeTransaction]](
-          retrieveOpenGuaranteeTransactionsDetailUrl,
-          openGuaranteeTransactionsRequest
-        ).flatMap { transactions =>
-          val transactionsWithUUID = transactions.map(_.copy(
-            secureMovementReferenceNumber = Some(UUID.randomUUID().toString)))
-          cacheRepository.set(gan, transactionsWithUUID).map { successfulWrite =>
-            if (!successfulWrite) {
-              logger.error("Failed to store data in the session cache defaulting to the api response")
+        httpClient
+          .post(url"$retrieveOpenGuaranteeTransactionsDetailUrl")
+          .withBody(Json.toJson(openGuaranteeTransactionsRequest))
+          .execute[Seq[GuaranteeTransaction]]
+          .flatMap { transactions =>
+            val transactionsWithUUID = transactions.map(_.copy(
+              secureMovementReferenceNumber = Some(UUID.randomUUID().toString)))
+            cacheRepository.set(gan, transactionsWithUUID).map { successfulWrite =>
+              if (!successfulWrite) {
+                logger.error("Failed to store data in the session cache defaulting to the api response")
+              }
+              Right(transactionsWithUUID)
             }
-            Right(transactionsWithUUID)
           }
-        }
     }.recover {
       case UpstreamErrorResponse(_, REQUEST_ENTITY_TOO_LARGE, _, _) =>
         logger.error(s"Entity too large to download"); Left(TooManyTransactionsRequested)
@@ -86,19 +93,20 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClient,
     }
   }
 
-  def retrieveRequestedGuaranteeTransactionsDetail(
-                                                    gan: String,
-                                                    onlyOpenItems: Boolean,
-                                                    from: LocalDate,
-                                                    to: LocalDate)(
-                                                    implicit hc: HeaderCarrier): Future[Either[GuaranteeResponses, Seq[GuaranteeTransaction]]] = {
+  def retrieveRequestedGuaranteeTransactionsDetail(gan: String,
+                                                   onlyOpenItems: Boolean,
+                                                   from: LocalDate,
+                                                   to: LocalDate)
+                                                  (implicit hc: HeaderCarrier): Future[Either[GuaranteeResponses, Seq[GuaranteeTransaction]]] = {
 
     val openGuaranteeTransactionsRequest = GuaranteeTransactionsRequest(
       gan, onlyOpenItems, Some(RequestDates(from, to)))
 
-    httpClient.POST[GuaranteeTransactionsRequest, Seq[GuaranteeTransaction]](
-      retrieveOpenGuaranteeTransactionsDetailUrl,
-      openGuaranteeTransactionsRequest).map(Right(_))
+    httpClient
+      .post(url"$retrieveOpenGuaranteeTransactionsDetailUrl")
+      .withBody(Json.toJson(openGuaranteeTransactionsRequest))
+      .execute[Seq[GuaranteeTransaction]]
+      .map(Right(_))
   }.recover {
     case UpstreamErrorResponse(_, REQUEST_ENTITY_TOO_LARGE, _, _) =>
       logger.error(s"Entity too large to download"); Left(TooManyTransactionsRequested)
