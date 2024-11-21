@@ -16,7 +16,10 @@
 
 package controllers
 
-import connectors.{AccountStatusOpen, CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested, UnknownException}
+import connectors.{
+  AccountStatusOpen, CustomsFinancialsApiConnector,
+  NoTransactionsAvailable, TooManyTransactionsRequested, UnknownException
+}
 import models._
 import org.jsoup.Jsoup.parseBodyFragment
 import play.api.http.Status
@@ -27,9 +30,13 @@ import services.{AuditingService, DataStoreService, DateTimeService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.Application
 
 import java.time.{LocalDate, LocalDateTime, Month}
-import scala.jdk.CollectionConverters ._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.Future
 import scala.util.Random
 
@@ -48,7 +55,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       when(mockDataStoreService.getEmail(eqTo(eori))(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
-      val app = application
+      val app: Application = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
@@ -62,12 +69,12 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       running(app) {
         val request = FakeRequest(GET, routes.GuaranteeAccountController.showAccountDetails(None).url)
         val result = route(app, request).value
+
         status(result) mustEqual OK
       }
     }
 
     "return 303 redirect response when Api connector throws unknown exception" in new Setup {
-
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
@@ -77,7 +84,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       when(mockDataStoreService.getEmail(eqTo(eori))(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
-      val app = application
+      val app: Application = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
@@ -91,6 +98,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       running(app) {
         val request = FakeRequest(GET, routes.GuaranteeAccountController.showAccountDetails(None).url)
         val result = route(app, request).value
+
         status(result) mustEqual SEE_OTHER
       }
     }
@@ -107,7 +115,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       when(mockDataStoreService.getEmail(eqTo(eori))(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
-      val app = application
+      val app: Application = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
@@ -121,6 +129,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       running(app) {
         val request = FakeRequest(GET, routes.GuaranteeAccountController.showAccountDetails(None).url)
         val result = route(app, request).value
+
         status(result) mustEqual OK
       }
     }
@@ -129,13 +138,14 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(None))
 
-      val app = application
+      val app: Application = application
         .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
         .build()
 
       running(app) {
         val request = FakeRequest(GET, routes.GuaranteeAccountController.showAccountDetails(None).url)
         val result = route(app, request).value
+
         status(result) mustEqual NOT_FOUND
       }
     }
@@ -152,7 +162,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       when(mockDataStoreService.getEmail(eqTo(eori))(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
-      val app = application
+      val app: Application = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
@@ -165,6 +175,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       running(app) {
         val request = FakeRequest(GET, routes.GuaranteeAccountController.showAccountDetails(None).url)
         val result = route(app, request).value
+
         contentAsString(result) must include regex "Search for and download a CSV of all securities"
       }
     }
@@ -181,7 +192,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       when(mockDataStoreService.getEmail(eqTo(eori))(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
-      val app = application
+      val app: Application = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
@@ -192,6 +203,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       running(app) {
         val request = FakeRequest(GET, routes.GuaranteeAccountController.showAccountDetails(None).url)
         val result = route(app, request).value
+
         status(result) mustEqual OK
         contentAsString(result) must include regex "There are too many open securities to display consecutively"
       }
@@ -208,7 +220,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       when(mockDataStoreService.getEmail(eqTo(eori))(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
-      val app = application
+      val app: Application = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
@@ -221,60 +233,67 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       running(app) {
         val request = FakeRequest(GET, routes.GuaranteeAccountController.showTransactionsUnavailable().url)
         val result = route(app, request).value
+
         status(result) mustEqual OK
       }
     }
 
     "redirect to account unavailable page" when {
       "failed to fetch account details while redirecting to transaction unavailable page" in new Setup {
-        val upstream5xxResponse = UpstreamErrorResponse("ServiceUnavailable",
+        val upstream5xxResponse: UpstreamErrorResponse = UpstreamErrorResponse("ServiceUnavailable",
           Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
 
         when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
           .thenReturn(Future.failed(upstream5xxResponse))
 
-        val app = application
+        val app: Application = application
           .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
           .build()
 
         running(app) {
           val request = FakeRequest(GET, routes.GuaranteeAccountController.showTransactionsUnavailable().url)
           val result = route(app, request).value
+
           status(result) must be(Status.SEE_OTHER)
           header(LOCATION, result) must be(Some(routes.GuaranteeAccountController.showAccountUnavailable.url))
         }
       }
+
       "the api returns Not Found" in new Setup {
-        val errorResponse = UpstreamErrorResponse("Not Found", Status.NOT_FOUND, Status.NOT_FOUND)
+        val errorResponse: UpstreamErrorResponse = UpstreamErrorResponse("Not Found",
+          Status.NOT_FOUND, Status.NOT_FOUND)
+
         when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
           .thenReturn(Future.failed(errorResponse))
 
-        val app = application
+        val app: Application = application
           .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
           .build()
 
         running(app) {
           val request = FakeRequest(GET, routes.GuaranteeAccountController.showTransactionsUnavailable().url)
           val result = route(app, request).value
+
           status(result) must be(Status.SEE_OTHER)
           header(LOCATION, result) must be(Some(routes.GuaranteeAccountController.showAccountUnavailable.url))
         }
       }
 
       "the api returns entity too large" in new Setup {
-        val errorResponse = UpstreamErrorResponse("Entity too large",
+        val errorResponse: UpstreamErrorResponse = UpstreamErrorResponse("Entity too large",
           Status.REQUEST_ENTITY_TOO_LARGE, Status.REQUEST_ENTITY_TOO_LARGE)
 
         when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
           .thenReturn(Future.failed(errorResponse))
 
-        val app = application
+        val app: Application = application
           .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
           .build()
 
         running(app) {
           val request = FakeRequest(GET, routes.GuaranteeAccountController.showTransactionsUnavailable().url)
           val result = route(app, request).value
+
           status(result) must be(Status.SEE_OTHER)
           header(LOCATION, result) must be(Some(routes.GuaranteeAccountController.showAccountUnavailable.url))
         }
@@ -284,13 +303,14 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
   "showAccountUnavailable" should {
     "return OK" in new Setup {
-      val app = application
+      val app: Application = application
         .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
         .build()
 
       running(app) {
         val request = FakeRequest(GET, routes.GuaranteeAccountController.showAccountUnavailable.url)
         val result = route(app, request).value
+
         status(result) must be(Status.OK)
       }
     }
@@ -299,17 +319,17 @@ class GuaranteeAccountControllerSpec extends SpecBase {
   "unhappy path section" should {
     "redirect to an error page" when {
       "the api connector throws an exception" in new Setup {
-
         when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
           .thenReturn(Future.failed(new RuntimeException("boom")))
 
-        val app = application
+        val app: Application = application
           .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
           .build()
 
         running(app) {
           val request = FakeRequest(GET, routes.GuaranteeAccountController.showAccountDetails(None).url)
           val result = route(app, request).value
+
           status(result) must be(Status.SEE_OTHER)
           header(LOCATION, result) must be(Some(routes.GuaranteeAccountController.showAccountUnavailable.url))
         }
@@ -325,7 +345,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Right(randomGuaranteeTransactions(fiveFiveFive))))
 
-      val app = application
+      val app: Application = application
         .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
         .configure(
           "application.guarantee-account.numberOfItemsPerPage" -> ten)
@@ -340,7 +360,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         val pageNumberLinks = html.select("li.govuk-pagination__item > a").asScala
 
         withClue("html did not contain any pagination links:") {
-          pageNumberLinks.size must not be (zero)
+          pageNumberLinks.size must not be zero
         }
 
         pageNumberLinks.map { pageNumberLink =>
@@ -362,20 +382,20 @@ class GuaranteeAccountControllerSpec extends SpecBase {
     val limit = 123000
     val balance = 123.45
 
-    val mockDateTimeService = mock[DateTimeService]
-    val mockCustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
+    val mockDateTimeService: DateTimeService = mock[DateTimeService]
+    val mockCustomsFinancialsApiConnector: CustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
     val mockAuditingService: AuditingService = mock[AuditingService]
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
 
-    val guaranteeAccount = GuaranteeAccount(someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(
-      BigDecimal(limit),
-      BigDecimal(balance)
-    )))
+    val guaranteeAccount: GuaranteeAccount = GuaranteeAccount(
+      someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(BigDecimal(limit), BigDecimal(balance))))
 
-    val amt = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
-    val tt = TaxType("VAT", amt)
-    val ttg = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
-    val dd = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
+    val amt: Amounts = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
+    val tt: TaxType = TaxType("VAT", amt)
+    val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
+
+    val dd: DueDate =
+      DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
     val year = 2018
     val dayTwentyThree = 23
@@ -383,7 +403,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
     val dayTwentyOne = 21
     val dayTwenty = 20
 
-    val ganTransactions = List(
+    val ganTransactions: Seq[GuaranteeTransaction] = List(
       GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwentyThree),
         "MRN-1",
         None,
@@ -434,9 +454,9 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         BigDecimal(26.20),
         None,
         Some("C18-2"),
-        dueDates = Seq(dd))
-    )
-    val nonFatalResponse = UpstreamErrorResponse("ServiceUnavailable",
+        dueDates = Seq(dd)))
+
+    val nonFatalResponse: UpstreamErrorResponse = UpstreamErrorResponse("ServiceUnavailable",
       Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
   }
 
@@ -449,6 +469,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
   def randomBigDecimal: BigDecimal = BigDecimal(randomFloat.toString)
 
   val randomIntRange = 36
+
   def randomLocalDate: LocalDate = LocalDate.now().minusMonths(Random.nextInt(randomIntRange))
 
   val randomStringLength = 18
@@ -468,8 +489,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       randomBigDecimal,
       None,
       None,
-      Seq.empty
-    )
+      Seq.empty)
 
   def randomGuaranteeTransactions(howMany: Int): Seq[GuaranteeTransaction] =
     List.fill(howMany)(randomGuaranteeTransaction)

@@ -18,7 +18,7 @@ package controllers.actions
 
 import models.UnverifiedEmail
 import models.request.IdentifierRequest
-import play.api.inject
+import play.api.{Application, inject}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.DataStoreService
@@ -26,6 +26,10 @@ import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.ServiceUnavailableException
 import utils.SpecBase
 import utils.Utils.emptyString
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.mvc.AnyContentAsEmpty
 
 import scala.concurrent.Future
 
@@ -33,21 +37,23 @@ class EmailActionSpec extends SpecBase {
 
   "EmailAction" should {
     "Let requests with validated email through" in new Setup {
-      running (app) {
+      running(app) {
         when(mockDataStoreService.getEmail(any)(any))
           .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
 
         val response = await(emailAction.filter(authenticatedRequest))
+
         response mustBe None
       }
     }
 
     "Let request through, when getEmail throws service unavailable exception" in new Setup {
-      running(app){
+      running(app) {
         when(mockDataStoreService.getEmail(any)(any))
           .thenReturn(Future.failed(new ServiceUnavailableException(emptyString)))
 
         val response = await(emailAction.filter(authenticatedRequest))
+
         response mustBe None
       }
     }
@@ -55,7 +61,9 @@ class EmailActionSpec extends SpecBase {
     "Redirect users with unvalidated emails" in new Setup {
       running(app) {
         when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Left(UnverifiedEmail)))
+
         val response = await(emailAction.filter(authenticatedRequest))
+
         response.get.header.status mustBe SEE_OTHER
         response.get.header.headers(LOCATION) must include("/verify-your-email")
       }
@@ -65,12 +73,13 @@ class EmailActionSpec extends SpecBase {
   trait Setup {
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
 
-    val app = application.overrides(
+    val app: Application = application.overrides(
       inject.bind[DataStoreService].toInstance(mockDataStoreService)
     ).build()
 
-    val emailAction = app.injector.instanceOf[EmailAction]
+    val emailAction: EmailAction = app.injector.instanceOf[EmailAction]
 
-    val authenticatedRequest = IdentifierRequest(FakeRequest("GET","/"), "1234")
+    val authenticatedRequest: IdentifierRequest[AnyContentAsEmpty.type] =
+      IdentifierRequest(FakeRequest("GET", "/"), "1234")
   }
 }

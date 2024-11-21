@@ -16,15 +16,19 @@
 
 package connectors
 
-import models._
+import models.EmailUnverifiedResponse
 import play.api.Application
 import play.api.inject.bind
-import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionId
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads}
 import utils.SpecBase
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.test.Helpers.running
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class CustomsDataStoreConnectorSpec extends SpecBase {
@@ -32,12 +36,15 @@ class CustomsDataStoreConnectorSpec extends SpecBase {
   "retrieveUnverifiedEmail" must {
 
     "return unverified email" in new Setup {
-      when[Future[EmailUnverifiedResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
+      when(requestBuilder.execute(any[HttpReads[EmailUnverifiedResponse]], any[ExecutionContext]))
         .thenReturn(Future.successful(EmailUnverifiedResponse(Some("unverified@email.com"))))
+
+      when(mockHttpClient.get(any())(any())).thenReturn(requestBuilder)
 
       val app: Application = application
         .overrides(
-          bind[HttpClient].toInstance(mockHttpClient)
+          bind[HttpClientV2].toInstance(mockHttpClient),
+          bind[RequestBuilder].toInstance(requestBuilder)
         ).build()
 
       val connector: CustomsDataStoreConnector = app.injector.instanceOf[CustomsDataStoreConnector]
@@ -53,6 +60,8 @@ class CustomsDataStoreConnectorSpec extends SpecBase {
   trait Setup {
     val sessionId: SessionId = SessionId("session_1234")
     implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(sessionId))
-    val mockHttpClient: HttpClient = mock[HttpClient]
+
+    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+    val requestBuilder: RequestBuilder = mock[RequestBuilder]
   }
 }

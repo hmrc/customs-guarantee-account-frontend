@@ -26,6 +26,10 @@ import play.api.test.Helpers.running
 import play.api.{Application, inject}
 import uk.gov.hmrc.mongo.MongoComponent
 import utils.Utils.emptyString
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{verify, never}
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar.mock
 
 class DbPatchServiceSpec extends SpecBase {
 
@@ -88,9 +92,9 @@ class DbPatchServiceSpec extends SpecBase {
 
   trait Setup {
     val collectionName = "guarantee-account-cache"
-    val documents = 5
+    val documents = 5L
     val timesCalled = 1
-    val emptyCollection = 0
+    val emptyCollection = 0L
 
     val appConfig: AppConfig = mock[AppConfig]
     val mockComponent: MongoComponent = mock[MongoComponent]

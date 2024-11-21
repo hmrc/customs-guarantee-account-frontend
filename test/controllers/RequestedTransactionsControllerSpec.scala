@@ -25,6 +25,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.Application
 
 import java.time._
 import scala.concurrent.Future
@@ -40,6 +44,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
 
     running(app) {
       val result = route(app, request).value
+
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe routes.RequestTransactionsController.onPageLoad().url
     }
@@ -60,6 +65,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
 
     running(app) {
       val result = route(app, request).value
+
       status(result) mustBe OK
       contentAsString(result) must include regex "No guarantee account securities"
     }
@@ -80,6 +86,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
 
     running(app) {
       val result = route(app, request).value
+
       status(result) mustBe OK
       contentAsString(result) must include regex "Your search returned too many results"
     }
@@ -108,7 +115,6 @@ class RequestedTransactionsControllerSpec extends SpecBase {
   }
 
   "redirect to account unavailable page when exception is thrown" in new Setup {
-
     when(mockRequestedTransactionsCache.get(any))
       .thenReturn(Future.successful(Some(GuaranteeTransactionDates(LocalDate.now(), LocalDate.now()))))
 
@@ -123,6 +129,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
 
     running(app) {
       val result = route(app, request).value
+
       status(result) mustBe SEE_OTHER
     }
   }
@@ -133,19 +140,16 @@ class RequestedTransactionsControllerSpec extends SpecBase {
     val limit = 123000
     val balance = 123.45
 
-    val mockCustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
+    val mockCustomsFinancialsApiConnector: CustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
 
-    val guaranteeAccount = GuaranteeAccount(
-      someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(
-        BigDecimal(limit),
-        BigDecimal(balance)
-      )))
+    val guaranteeAccount: GuaranteeAccount = GuaranteeAccount(
+      someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(BigDecimal(limit), BigDecimal(balance))))
 
-    val amt = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
-    val tt = TaxType("VAT", amt)
-    val ttg = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
+    val amt: Amounts = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
+    val tt: TaxType = TaxType("VAT", amt)
+    val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
 
-    val dd = DueDate(
+    val dd: DueDate = DueDate(
       dueDate = "2020-07-28",
       reasonForSecurity = Some("T24"),
       amounts = amt, taxTypeGroups = Seq(ttg))
@@ -154,7 +158,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
     val dayTwentyThree = 23
     val dayTwentyTwo = 22
 
-    val ganTransactions = List(
+    val ganTransactions: Seq[GuaranteeTransaction] = List(
       GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyThree),
         "MRN-1",
         None,
@@ -205,13 +209,12 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         BigDecimal(26.20),
         None,
         Some("C18-2"),
-        dueDates = Seq(dd))
-    )
+        dueDates = Seq(dd)))
 
-    val nonFatalResponse = UpstreamErrorResponse("ServiceUnavailable",
+    val nonFatalResponse: UpstreamErrorResponse = UpstreamErrorResponse("ServiceUnavailable",
       Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
 
-    val app = application.overrides(
+    val app: Application = application.overrides(
       bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector)
     ).configure("features.fixed-systemdate-for-tests" -> "true").build()
   }
