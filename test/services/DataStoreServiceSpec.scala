@@ -20,29 +20,40 @@ import domain.{UndeliverableInformation, UndeliverableInformationEvent}
 import models.UnverifiedEmail
 import org.joda.time.DateTime
 import org.mockito.invocation.InvocationOnMock
-import play.api.inject
+import play.api.{Application, inject}
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.Email
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, ServiceUnavailableException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, ServiceUnavailableException, UpstreamErrorResponse}
 import utils.SpecBase
 import utils.Utils.emptyString
 import play.api.http.Status.NOT_FOUND
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar.mock
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 
-import scala.concurrent.Future
+import java.net.URL
+import scala.concurrent.{ExecutionContext, Future}
 
 class DataStoreServiceSpec extends SpecBase {
 
   "Data store service" should {
 
     "return existing email" in new Setup {
-      val jsonResponse = """{"address":"someemail@mail.com"}""".stripMargin
-      when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
-        Future.successful(Json.parse(jsonResponse).as[EmailResponse]))
+      val jsonResponse: String = """{"address":"someemail@mail.com"}""".stripMargin
+
+      when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
+
+      when(requestBuilder.execute(any[HttpReads[EmailResponse]], any[ExecutionContext]))
+        .thenReturn(Future.successful(Json.parse(jsonResponse).as[EmailResponse]))
+
+      when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
       running(app) {
         val response = service.getEmail(eori)
         val result = await(response)
+
         result mustBe Right(Email("someemail@mail.com"))
       }
     }
@@ -50,29 +61,39 @@ class DataStoreServiceSpec extends SpecBase {
     "return unverified email" in new Setup {
       val hundred = 100
 
-      val undeliverableEventData = UndeliverableInformationEvent("someid", "someevent",
+      val undeliverableEventData: UndeliverableInformationEvent = UndeliverableInformationEvent("someid", "someevent",
         "someemail", emptyString, Some(hundred), Some("sample"), "sample")
 
-      val emailResponse = EmailResponse(Some("sample@email.com"), Some("time"),
+      val emailResponse: EmailResponse = EmailResponse(Some("sample@email.com"), Some("time"),
         Some(UndeliverableInformation("subject-example", "ex-event-id-01", "ex-group-id-01",
           DateTime.now(), undeliverableEventData)))
 
-      when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
-        Future.successful(emailResponse))
+      when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
+
+      when(requestBuilder.execute(any[HttpReads[EmailResponse]], any[ExecutionContext]))
+        .thenReturn(Future.successful(emailResponse))
+
+      when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
       running(app) {
         val response = service.getEmail(eori)
         val result = await(response)
+
         result mustBe Left(UnverifiedEmail)
       }
     }
 
     "return a UnverifiedEmail on error response" in new Setup {
-      when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
-        Future.failed(UpstreamErrorResponse("NoData", NOT_FOUND, NOT_FOUND)))
+      when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
+
+      when(requestBuilder.execute(any[HttpReads[EmailResponse]], any[ExecutionContext]))
+        .thenReturn(Future.failed(UpstreamErrorResponse("NoData", NOT_FOUND, NOT_FOUND)))
+
+      when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
       running(app) {
         val response = service.getEmail(eori)
+
         await(response) mustBe Left(UnverifiedEmail)
       }
     }
@@ -80,25 +101,34 @@ class DataStoreServiceSpec extends SpecBase {
     "throw service unavailable" in new Setup {
       running(app) {
         val eori = "ETMP500ERROR"
-        when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
-          Future.failed(new ServiceUnavailableException("ServiceUnavailable")))
+
+        when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
+
+        when(requestBuilder.execute(any[HttpReads[EmailResponse]], any[ExecutionContext]))
+          .thenReturn(Future.failed(new ServiceUnavailableException("ServiceUnavailable")))
+
+        when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
+
         assertThrows[ServiceUnavailableException](await(service.getEmail(eori)))
       }
     }
   }
 
   trait Setup {
-    val mockMetricsReporterService = mock[MetricsReporterService]
-    val mockHttp = mock[HttpClient]
+    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val eori = "GB11111"
 
-    val app = application.overrides(
+    val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
+    val requestBuilder: RequestBuilder = mock[RequestBuilder]
+
+    val app: Application = application.overrides(
       inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-      inject.bind[HttpClient].toInstance(mockHttp)
+      inject.bind[HttpClientV2].toInstance(mockHttpClient),
+      inject.bind[RequestBuilder].toInstance(requestBuilder)
     ).build()
 
-    val service = app.injector.instanceOf[DataStoreService]
+    val service: DataStoreService = app.injector.instanceOf[DataStoreService]
 
     when(mockMetricsReporterService.withResponseTimeLogging[Email](any)(any)(any))
       .thenAnswer((i: InvocationOnMock) => {

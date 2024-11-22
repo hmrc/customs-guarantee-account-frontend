@@ -24,6 +24,7 @@ import uk.gov.hmrc.mongo.MongoComponent
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
+import org.mongodb.scala.SingleObservableFuture
 
 @Singleton
 class DbPatchService @Inject()(appConfig: AppConfig, mongoComponent: MongoComponent)(implicit val ec: ExecutionContext) {

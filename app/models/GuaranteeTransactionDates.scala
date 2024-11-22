@@ -24,4 +24,6 @@ case class GuaranteeTransactionDates(start: LocalDate, end: LocalDate)
 
 object GuaranteeTransactionDates {
   implicit val format: OFormat[GuaranteeTransactionDates] = Json.format[GuaranteeTransactionDates]
+
+  def unapply(dates: GuaranteeTransactionDates): Option[(LocalDate, LocalDate)] = Some((dates.start, dates.end))
 }

@@ -15,7 +15,6 @@
  *@
 
 @import viewmodels.GuaranteeAccountViewModel
-@import helpers.Formatters
 @import views.html.components.guarantee_account_summary
 
 @this(
@@ -42,7 +41,7 @@
 
     @link(
         linkMessage = "cf.guarantee-account.transactions.request.link",
-        location = controllers.routes.RequestTransactionsController.onPageLoad.url,
+        location = controllers.routes.RequestTransactionsController.onPageLoad().url,
         postLinkMessage = Some("cf.guarantee-account.transactions.request.link.post")
     )
 

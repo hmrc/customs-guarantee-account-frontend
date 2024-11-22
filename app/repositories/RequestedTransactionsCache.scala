@@ -17,6 +17,8 @@
 package repositories
 
 import models.GuaranteeTransactionDates
+import org.mongodb.scala.ToSingleObservablePublisher
+import org.mongodb.scala.SingleObservableFuture
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Indexes.ascending
 import org.mongodb.scala.model.{IndexModel, IndexOptions, ReplaceOptions}
@@ -39,7 +41,7 @@ class DefaultRequestedTransactionsCache @Inject()(mongoComponent: MongoComponent
         ascending("lastUpdated"),
         IndexOptions()
           .name("requested-transactions-cache-last-updated-index")
-          .expireAfter(config.get[Int]("mongodb.timeToLiveInSeconds"),
+          .expireAfter(config.get[Long]("mongodb.timeToLiveInSeconds"),
             TimeUnit.SECONDS)
       ))) with RequestedTransactionsCache {
 

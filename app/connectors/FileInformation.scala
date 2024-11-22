@@ -39,5 +39,5 @@ object FileInformation {
       item => Json.obj(("metadata", item.key), ("value", item.value))))
   }
 
-implicit val fileInformationFormats: Format[FileInformation] = Json.format[FileInformation]
+  implicit val fileInformationFormats: Format[FileInformation] = Json.format[FileInformation]
 }

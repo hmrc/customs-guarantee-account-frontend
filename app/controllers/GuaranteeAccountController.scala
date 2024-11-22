@@ -18,7 +18,7 @@ package controllers
 
 import cats.data.EitherT._
 import cats.instances.future._
-import config.{AppConfig, ErrorHandler}
+import config.AppConfig
 import connectors._
 import controllers.actions.{IdentifierAction, EmailAction}
 import helpers.DateFormatters
@@ -43,9 +43,10 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
                                            guaranteeAccount: guarantee_account,
                                            guaranteeAccountNotAvailable: guarantee_account_not_available,
                                            tooManyResults: guarantee_account_exceed_threshold,
-                                           guaranteeAccountTransactionsNotAvailable: guarantee_account_transactions_not_available
+                                           guaranteeAccountTransactionsNotAvailable: guarantee_account_transactions_not_available,
+                                           notFound: not_found
                                           )(implicit mcc: MessagesControllerComponents,
-                                            ec: ExecutionContext, eh: ErrorHandler, appConfig: AppConfig)
+                                            ec: ExecutionContext, appConfig: AppConfig)
   extends FrontendController(mcc) with I18nSupport with DateFormatters {
 
   val log: Logger = Logger(this.getClass)
@@ -55,7 +56,7 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
 
     val result = for {
       account <- fromOptionF[Future, Result, GuaranteeAccount](
-        apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
+        apiConnector.getGuaranteeAccount(request.eori), NotFound(notFound()))
 
       page <- liftF[Future, Result, Result](showAccountWithTransactionDetails(account, page))
     } yield page
@@ -103,7 +104,7 @@ class GuaranteeAccountController @Inject()(identify: IdentifierAction,
 
     val result = for {
       account <- fromOptionF[Future, Result, GuaranteeAccount](
-        apiConnector.getGuaranteeAccount(request.eori), NotFound(eh.notFoundTemplate))
+        apiConnector.getGuaranteeAccount(request.eori), NotFound(notFound()))
     } yield
       Ok(guaranteeAccountTransactionsNotAvailable(GuaranteeAccountViewModel(
         account, dateTimeService.localDateTime())))

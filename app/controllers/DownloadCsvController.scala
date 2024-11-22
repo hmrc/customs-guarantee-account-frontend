@@ -18,7 +18,7 @@ package controllers
 
 import cats.data.EitherT.{fromOptionF, liftF}
 import cats.instances.future._
-import config.{AppConfig, ErrorHandler}
+import config.AppConfig
 import connectors._
 import controllers.actions.{IdentifierAction, EmailAction}
 import helpers.FileFormatters
@@ -30,7 +30,10 @@ import services.{AuditingService, DateTimeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import viewmodels.GuaranteeTransactionCsvRow.GuaranteeTransactionCsvRowViewModel
 import viewmodels.{CSVWriter, ResultsPageSummary}
-import views.html.{guarantee_account_unable_download_csv, guarantee_transactions_no_result, guarantee_transactions_too_many_results}
+import views.html.{
+  guarantee_account_unable_download_csv, guarantee_transactions_no_result,
+  guarantee_transactions_too_many_results, not_found
+}
 
 import java.time.LocalDate
 import javax.inject.Inject
@@ -44,11 +47,11 @@ class DownloadCsvController @Inject()(identify: IdentifierAction,
                                       tooManyResults: guarantee_transactions_too_many_results,
                                       noResults: guarantee_transactions_no_result,
                                       auditingService: AuditingService,
-                                      unableToDownloadCSV: guarantee_account_unable_download_csv)
+                                      unableToDownloadCSV: guarantee_account_unable_download_csv,
+                                      notFound: not_found)
                                      (implicit ec: ExecutionContext,
                                       dateTimeService: DateTimeService,
                                       mcc: MessagesControllerComponents,
-                                      eh: ErrorHandler,
                                       appConfig: AppConfig)
   extends FrontendController(mcc) with I18nSupport with FileFormatters {
 
@@ -62,14 +65,14 @@ class DownloadCsvController @Inject()(identify: IdentifierAction,
 
     val result = for {
       account <- fromOptionF[Future, Result, GuaranteeAccount](
-        eventualMaybeGuaranteeAccount, NotFound(eh.notFoundTemplate))
+        eventualMaybeGuaranteeAccount, NotFound(notFound()))
 
       transactions <- liftF[Future, Result,
         Either[GuaranteeResponses, Seq[GuaranteeTransaction]]](
         apiConnector.retrieveOpenGuaranteeTransactionsDetail(account.number))
 
       result = transactions match {
-        case Left(_) =>  Redirect(routes.DownloadCsvController.showUnableToDownloadCSV(page))
+        case Left(_) => Redirect(routes.DownloadCsvController.showUnableToDownloadCSV(page))
         case Right(transactions) =>
           val csvContent = convertToCSV(transactions)
 
@@ -95,15 +98,15 @@ class DownloadCsvController @Inject()(identify: IdentifierAction,
                            page: Option[Int]): Action[AnyContent] = (
     identify andThen checkEmailIsVerified).async { implicit request =>
 
-
-    Try((LocalDate.parse(from), LocalDate.parse(to)):
-      (java.time.LocalDate, java.time.LocalDate)) match {
+    Try {
+      (LocalDate.parse(from), LocalDate.parse(to))
+    } match {
       case Failure(_) => Future.successful(BadRequest)
       case Success((start, end)) =>
         val eventualMaybeGuaranteeAccount = apiConnector.getGuaranteeAccount(request.eori)
         val result = for {
           account <- fromOptionF[Future, Result, GuaranteeAccount](
-            eventualMaybeGuaranteeAccount, NotFound(eh.notFoundTemplate))
+            eventualMaybeGuaranteeAccount, NotFound(notFound()))
 
           transactions <- liftF[Future, Result,
             Either[GuaranteeResponses, Seq[GuaranteeTransaction]]](
@@ -144,12 +147,12 @@ class DownloadCsvController @Inject()(identify: IdentifierAction,
 
   def showUnableToDownloadCSV(page: Option[Int]): Action[AnyContent] = (
     identify andThen checkEmailIsVerified) { implicit req =>
-      Ok(unableToDownloadCSV(page))
+    Ok(unableToDownloadCSV(page))
   }
 
   private def convertToCSV(transactions: Seq[GuaranteeTransaction])(implicit messages: Messages) = {
     val fileFooter = Some(messages("cf.guarantee-account.csv.guidance", appConfig.guaranteeAccountGuidanceUrl))
-    CSVWriter.toCSVWithHeaders(transactions.flatMap(_.toReportLayout),makeColumnNames, fileFooter)
+    CSVWriter.toCSVWithHeaders(transactions.flatMap(_.toReportLayout), makeColumnNames, fileFooter)
   }
 
   private def makeColumnNames(columnName: String)(implicit messages: Messages): String = {

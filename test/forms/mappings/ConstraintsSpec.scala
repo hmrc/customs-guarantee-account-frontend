@@ -18,43 +18,43 @@ package forms.mappings
 
 import java.time.{Clock, LocalDate, LocalDateTime}
 import org.scalatest.matchers.should.Matchers._
-import forms.mappings.Constraints
-import play.api.data.validation.{Invalid, Valid, ValidationError}
+import play.api.data.validation.{Invalid, Valid, ValidationError, ValidationResult}
 import utils.SpecBase
 
 class ConstraintsSpec extends SpecBase with Constraints {
 
   "Constraints" should {
     "equalToOrBeforeToday" must {
-
       "valid if equal to or before today" in new Setup {
-        val result = equalToOrBeforeToday("error.date").apply(ld)
+        val result: ValidationResult = equalToOrBeforeToday("error.date").apply(ld)
+
         result mustBe Valid
       }
 
       "invalid if date is in future" in new Setup {
-        val result = equalToOrBeforeToday("error.date").apply(ld.plusYears(1))
+        val result: ValidationResult = equalToOrBeforeToday("error.date").apply(ld.plusYears(1))
+
         result mustBe Invalid(List(ValidationError(List("error.date"))))
       }
     }
 
     "checkDates" must {
       "return Invalid year error" in new Setup {
-        val result = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
+        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
           .apply(LocalDate.of(eighteen, month, day))
 
         result mustBe Invalid(List(ValidationError(List(yearLengthError))))
       }
 
       "return Invalid taxYearErrorKey" in new Setup {
-        val result = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
+        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
           .apply(LocalDate.of(twoThousand, month, day))
 
         result mustBe Invalid(List(ValidationError(List(taxYearErrorKey))))
       }
 
       "return Invalid constraint for year before 2019" in new Setup {
-        val result = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
+        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
           .apply(LocalDate.of(year, month, day))
 
         result mustBe Invalid(List(ValidationError(List(systemStartDateErrorKey))))
