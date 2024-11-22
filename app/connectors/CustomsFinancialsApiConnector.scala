@@ -97,7 +97,8 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClientV2,
                                                    onlyOpenItems: Boolean,
                                                    from: LocalDate,
                                                    to: LocalDate)
-                                                  (implicit hc: HeaderCarrier): Future[Either[GuaranteeResponses, Seq[GuaranteeTransaction]]] = {
+                                                  (implicit hc: HeaderCarrier
+                                                  ): Future[Either[GuaranteeResponses, Seq[GuaranteeTransaction]]] = {
 
     val openGuaranteeTransactionsRequest = GuaranteeTransactionsRequest(
       gan, onlyOpenItems, Some(RequestDates(from, to)))

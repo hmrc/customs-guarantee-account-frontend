@@ -145,14 +145,14 @@ class RequestedTransactionsControllerSpec extends SpecBase {
     val guaranteeAccount: GuaranteeAccount = GuaranteeAccount(
       someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(BigDecimal(limit), BigDecimal(balance))))
 
-    val amt: Amounts = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
-    val tt: TaxType = TaxType("VAT", amt)
-    val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
+    val amounts: Amounts = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
+    val taxType: TaxType = TaxType("VAT", amounts)
+    val taxTypeGroup: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amounts, taxType = taxType)
 
-    val dd: DueDate = DueDate(
+    val dueDate: DueDate = DueDate(
       dueDate = "2020-07-28",
       reasonForSecurity = Some("T24"),
-      amounts = amt, taxTypeGroups = Seq(ttg))
+      amounts = amounts, taxTypeGroups = Seq(taxTypeGroup))
 
     val year = 2019
     val dayTwentyThree = 23
@@ -170,7 +170,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         BigDecimal(11.50),
         None,
         None,
-        dueDates = Seq(dd)),
+        dueDates = Seq(dueDate)),
 
       GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "MRN-2",
@@ -183,7 +183,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         BigDecimal(25.20),
         None,
         None,
-        dueDates = Seq(dd)),
+        dueDates = Seq(dueDate)),
 
       GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "MRN-3",
@@ -196,7 +196,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         BigDecimal(27.20),
         None,
         Some("C18-1"),
-        dueDates = Seq(dd)),
+        dueDates = Seq(dueDate)),
 
       GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "MRN-4",
@@ -209,7 +209,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         BigDecimal(26.20),
         None,
         Some("C18-2"),
-        dueDates = Seq(dd)))
+        dueDates = Seq(dueDate)))
 
     val nonFatalResponse: UpstreamErrorResponse = UpstreamErrorResponse("ServiceUnavailable",
       Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
