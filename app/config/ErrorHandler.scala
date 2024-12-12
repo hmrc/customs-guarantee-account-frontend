@@ -26,15 +26,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ErrorHandler @Inject()(errorTemplate: ErrorTemplate,
-                             notFound: not_found,
-                             val messagesApi: MessagesApi)
-                            (implicit appConfig: AppConfig, protected val ec: ExecutionContext)
-  extends FrontendErrorHandler {
+class ErrorHandler @Inject() (errorTemplate: ErrorTemplate, notFound: not_found, val messagesApi: MessagesApi)(implicit
+  appConfig: AppConfig,
+  protected val ec: ExecutionContext
+) extends FrontendErrorHandler {
 
-  override def standardErrorTemplate(pageTitle: String,
-                                     heading: String,
-                                     message: String)(implicit rh: RequestHeader): Future[Html] =
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
+    rh: RequestHeader
+  ): Future[Html] =
     Future.successful(errorTemplate(pageTitle, heading, message))
 
   override def notFoundTemplate(implicit rh: RequestHeader): Future[Html] =
