@@ -27,7 +27,7 @@ import play.api.{Application, inject}
 import uk.gov.hmrc.mongo.MongoComponent
 import utils.Utils.emptyString
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{verify, never}
+import org.mockito.Mockito.{never, verify}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
 
@@ -91,26 +91,28 @@ class DbPatchServiceSpec extends SpecBase {
   }
 
   trait Setup {
-    val collectionName = "guarantee-account-cache"
-    val documents = 5L
-    val timesCalled = 1
+    val collectionName  = "guarantee-account-cache"
+    val documents       = 5L
+    val timesCalled     = 1
     val emptyCollection = 0L
 
-    val appConfig: AppConfig = mock[AppConfig]
-    val mockComponent: MongoComponent = mock[MongoComponent]
-    val mockDatabase: MongoDatabase = mock[MongoDatabase]
-    val mockCollection: MongoCollection[Document] = mock[MongoCollection[Document]]
-    val mockDeleteResult: DeleteResult = mock[DeleteResult]
+    val appConfig: AppConfig                                 = mock[AppConfig]
+    val mockComponent: MongoComponent                        = mock[MongoComponent]
+    val mockDatabase: MongoDatabase                          = mock[MongoDatabase]
+    val mockCollection: MongoCollection[Document]            = mock[MongoCollection[Document]]
+    val mockDeleteResult: DeleteResult                       = mock[DeleteResult]
     val mockDeleteObservable: SingleObservable[DeleteResult] = mock[SingleObservable[DeleteResult]]
-    implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+    implicit val ec: ExecutionContext                        = scala.concurrent.ExecutionContext.Implicits.global
 
     when(appConfig.customsFinancialsApi).thenReturn(emptyString)
 
-    val app: Application = application.overrides(
-      inject.bind[MongoComponent].toInstance(mockComponent),
-      inject.bind[AppConfig].toInstance(appConfig),
-      inject.bind[ExecutionContext].toInstance(ec)
-    ).build()
+    val app: Application = application
+      .overrides(
+        inject.bind[MongoComponent].toInstance(mockComponent),
+        inject.bind[AppConfig].toInstance(appConfig),
+        inject.bind[ExecutionContext].toInstance(ec)
+      )
+      .build()
 
     def commonSetupForDeletion(): Unit = {
       when(mockComponent.database).thenReturn(mockDatabase)

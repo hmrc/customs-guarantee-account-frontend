@@ -41,8 +41,17 @@ class AuditingServiceSpec extends SpecBase {
 
   "AuditService" should {
     "return success for a valid auditModel with to and from dates " in new Setup {
-      val expectedDetail: JsValue = Json.toJson(GuaranteeCsvAuditData(
-        eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00", "CSV", Some(fromDate), Some(toDate)))
+      val expectedDetail: JsValue = Json.toJson(
+        GuaranteeCsvAuditData(
+          eori,
+          guaranteeAccountNumber,
+          "open",
+          "2027-12-20T12:30:00",
+          "CSV",
+          Some(fromDate),
+          Some(toDate)
+        )
+      )
 
       running(app) {
         val result = await(testAuditingService.audit(auditModelWithDates))
@@ -52,15 +61,16 @@ class AuditingServiceSpec extends SpecBase {
         val dataEvent = dataEventCaptor.getValue
 
         dataEvent.auditSource should be("customs-guarantee-account-frontend")
-        dataEvent.auditType should be("DownloadGuaranteeStatement")
-        dataEvent.detail should be(expectedDetail)
-        result must be(AuditResult.Success)
+        dataEvent.auditType   should be("DownloadGuaranteeStatement")
+        dataEvent.detail      should be(expectedDetail)
+        result                  must be(AuditResult.Success)
       }
     }
 
     "return success for a valid auditModel without to and from dates" in new Setup {
-      val expectedDetail: JsValue = Json.toJson(GuaranteeCsvAuditData(
-        eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00", "CSV", None, None))
+      val expectedDetail: JsValue = Json.toJson(
+        GuaranteeCsvAuditData(eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00", "CSV", None, None)
+      )
 
       running(app) {
         val result = await(testAuditingService.audit(auditModelWithoutDates))
@@ -70,18 +80,19 @@ class AuditingServiceSpec extends SpecBase {
         val dataEvent = dataEventCaptor.getValue
 
         dataEvent.auditSource should be("customs-guarantee-account-frontend")
-        dataEvent.auditType should be("DownloadGuaranteeStatement")
-        dataEvent.detail should be(expectedDetail)
-        result must be(AuditResult.Success)
+        dataEvent.auditType   should be("DownloadGuaranteeStatement")
+        dataEvent.detail      should be(expectedDetail)
+        result                  must be(AuditResult.Success)
       }
     }
 
     "return failed for an invalid audit model" in new Setup {
-      val expectedDetail: JsValue = Json.toJson(GuaranteeCsvAuditData(
-        eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00", "CSV", None, None))
+      val expectedDetail: JsValue = Json.toJson(
+        GuaranteeCsvAuditData(eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00", "CSV", None, None)
+      )
 
-      when(mockAuditConnector.sendExtendedEvent(any)(any, any)).thenReturn(
-        Future.successful(AuditResult.Failure("Boom")))
+      when(mockAuditConnector.sendExtendedEvent(any)(any, any))
+        .thenReturn(Future.successful(AuditResult.Failure("Boom")))
 
       running(app) {
         val result = await(testAuditingService.audit(auditModelWithoutDates))
@@ -91,82 +102,103 @@ class AuditingServiceSpec extends SpecBase {
         val dataEvent = dataEventCaptor.getValue
 
         dataEvent.auditSource should be("customs-guarantee-account-frontend")
-        dataEvent.auditType should be("DownloadGuaranteeStatement")
-        dataEvent.detail should be(expectedDetail)
-        result must be(AuditResult.Failure("Boom"))
+        dataEvent.auditType   should be("DownloadGuaranteeStatement")
+        dataEvent.detail      should be(expectedDetail)
+        result                  must be(AuditResult.Failure("Boom"))
       }
     }
 
-
     "return success for a valid auditModel with to and from dates when downloading a CSV" in new Setup {
-      val expectedDetail: JsValue = Json.toJson(GuaranteeCsvAuditData(
-        eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00Z", "CSV", Some(fromDate), Some(toDate)))
+      val expectedDetail: JsValue = Json.toJson(
+        GuaranteeCsvAuditData(
+          eori,
+          guaranteeAccountNumber,
+          "open",
+          "2027-12-20T12:30:00Z",
+          "CSV",
+          Some(fromDate),
+          Some(toDate)
+        )
+      )
 
       running(app) {
-        val result: Unit = await(testAuditingService.auditCsvDownload(
-          eori, guaranteeAccountNumber, LocalDateTime.parse("2027-12-20T12:30:00"),
-          Some(RequestDates(fromDate, toDate))))
+        val result: Unit = await(
+          testAuditingService.auditCsvDownload(
+            eori,
+            guaranteeAccountNumber,
+            LocalDateTime.parse("2027-12-20T12:30:00"),
+            Some(RequestDates(fromDate, toDate))
+          )
+        )
 
         verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
 
         val dataEvent = dataEventCaptor.getValue
 
         dataEvent.auditSource should be("customs-guarantee-account-frontend")
-        dataEvent.auditType should be("DownloadGuaranteeStatement")
-        dataEvent.detail should be(expectedDetail)
-        result must be(())
+        dataEvent.auditType   should be("DownloadGuaranteeStatement")
+        dataEvent.detail      should be(expectedDetail)
+        result                  must be(())
       }
     }
 
     "return success for a valid auditModel without to and from dates when downloading a CSV" in new Setup {
-      val expectedDetail: JsValue = Json.toJson(GuaranteeCsvAuditData(
-        eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00Z", "CSV", None, None))
+      val expectedDetail: JsValue = Json.toJson(
+        GuaranteeCsvAuditData(eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00Z", "CSV", None, None)
+      )
 
       running(app) {
-        val result: Unit = await(testAuditingService.auditCsvDownload(
-          eori, guaranteeAccountNumber, LocalDateTime.parse("2027-12-20T12:30:00"), None))
+        val result: Unit = await(
+          testAuditingService
+            .auditCsvDownload(eori, guaranteeAccountNumber, LocalDateTime.parse("2027-12-20T12:30:00"), None)
+        )
 
         verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
 
         val dataEvent = dataEventCaptor.getValue
 
         dataEvent.auditSource should be("customs-guarantee-account-frontend")
-        dataEvent.auditType should be("DownloadGuaranteeStatement")
-        dataEvent.detail should be(expectedDetail)
-        result must be(())
+        dataEvent.auditType   should be("DownloadGuaranteeStatement")
+        dataEvent.detail      should be(expectedDetail)
+        result                  must be(())
       }
     }
 
     "log an error message for an invalid audit model when downloading a CSV" in new Setup {
-      when(mockAuditConnector.sendExtendedEvent(any)(any, any)).thenReturn(
-        Future.successful(AuditResult.Failure("Boom")))
+      when(mockAuditConnector.sendExtendedEvent(any)(any, any))
+        .thenReturn(Future.successful(AuditResult.Failure("Boom")))
 
-      val expectedDetail: JsValue = Json.toJson(GuaranteeCsvAuditData(
-        eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00Z", "CSV", None, None))
+      val expectedDetail: JsValue = Json.toJson(
+        GuaranteeCsvAuditData(eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00Z", "CSV", None, None)
+      )
 
       running(app) {
-        val result: Unit = await(testAuditingService.auditCsvDownload(
-          eori, guaranteeAccountNumber, LocalDateTime.parse("2027-12-20T12:30:00"), None))
+        val result: Unit = await(
+          testAuditingService
+            .auditCsvDownload(eori, guaranteeAccountNumber, LocalDateTime.parse("2027-12-20T12:30:00"), None)
+        )
 
         verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
 
         val dataEvent = dataEventCaptor.getValue
 
         dataEvent.auditSource should be("customs-guarantee-account-frontend")
-        dataEvent.auditType should be("DownloadGuaranteeStatement")
-        dataEvent.detail should be(expectedDetail)
-        result must be(())
+        dataEvent.auditType   should be("DownloadGuaranteeStatement")
+        dataEvent.detail      should be(expectedDetail)
+        result                  must be(())
       }
     }
 
     "throw an exception when the send fails to connect when downloading a CSV" in new Setup {
-      when(mockAuditConnector.sendExtendedEvent(any)(any, any)).thenReturn(
-        Future.failed(new Exception("Failed connection")))
+      when(mockAuditConnector.sendExtendedEvent(any)(any, any))
+        .thenReturn(Future.failed(new Exception("Failed connection")))
 
       running(app) {
         intercept[Exception] {
-          await(testAuditingService.auditCsvDownload(
-            eori, guaranteeAccountNumber, LocalDateTime.parse("2027-12-20T12:30:00"), None))
+          await(
+            testAuditingService
+              .auditCsvDownload(eori, guaranteeAccountNumber, LocalDateTime.parse("2027-12-20T12:30:00"), None)
+          )
         }
       }
     }
@@ -175,29 +207,42 @@ class AuditingServiceSpec extends SpecBase {
   trait Setup {
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    val eori = "GB744638982000"
+    val eori                   = "GB744638982000"
     val guaranteeAccountNumber = "1234567"
-    val fromDate: LocalDate = LocalDate.parse("2020-10-20")
-    val toDate: LocalDate = LocalDate.parse("2020-12-22")
-    val dataEventCaptor = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
+    val fromDate: LocalDate    = LocalDate.parse("2020-10-20")
+    val toDate: LocalDate      = LocalDate.parse("2020-12-22")
+    val dataEventCaptor        = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
-    val auditModelWithDates: AuditModel = AuditModel("DownloadGuaranteeStatement", "Download guarantee transactions",
-      Json.toJson(GuaranteeCsvAuditData(
-        eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00", "CSV", Some(fromDate), Some(toDate))))
+    val auditModelWithDates: AuditModel = AuditModel(
+      "DownloadGuaranteeStatement",
+      "Download guarantee transactions",
+      Json.toJson(
+        GuaranteeCsvAuditData(
+          eori,
+          guaranteeAccountNumber,
+          "open",
+          "2027-12-20T12:30:00",
+          "CSV",
+          Some(fromDate),
+          Some(toDate)
+        )
+      )
+    )
 
-    val auditModelWithoutDates: AuditModel = AuditModel("DownloadGuaranteeStatement", "Download guarantee transactions",
-      Json.toJson(GuaranteeCsvAuditData(
-        eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00", "CSV", None, None)))
+    val auditModelWithoutDates: AuditModel = AuditModel(
+      "DownloadGuaranteeStatement",
+      "Download guarantee transactions",
+      Json.toJson(GuaranteeCsvAuditData(eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00", "CSV", None, None))
+    )
 
     val appName = "customs-guarantee-account-frontend"
 
-    val mockAppConfig: AppConfig = mock[AppConfig]
+    val mockAppConfig: AppConfig           = mock[AppConfig]
     val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
-    when(mockAuditConnector.sendExtendedEvent(any)(any, any)).thenReturn(
-      Future.successful(AuditResult.Success))
+    when(mockAuditConnector.sendExtendedEvent(any)(any, any)).thenReturn(Future.successful(AuditResult.Success))
 
-    val app: Application = application.overrides(bind[AuditConnector].toInstance(mockAuditConnector)).build()
+    val app: Application                     = application.overrides(bind[AuditConnector].toInstance(mockAuditConnector)).build()
     val testAuditingService: AuditingService = app.injector.instanceOf[AuditingService]
 
   }

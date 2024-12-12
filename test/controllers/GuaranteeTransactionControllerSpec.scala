@@ -17,8 +17,8 @@
 package controllers
 
 import connectors.{
-  AccountStatusOpen, CustomsFinancialsApiConnector,
-  NoTransactionsAvailable, TooManyTransactionsRequested, UnknownException
+  AccountStatusOpen, CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested,
+  UnknownException
 }
 import models._
 import play.api.http.Status
@@ -60,13 +60,12 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
           bind[DateTimeService].toInstance(mockDateTimeService),
           bind[DataStoreService].toInstance(mockDataStoreService)
         )
-        .configure(
-          "application.guarantee-account.numberOfItemsPerPage" -> "10")
+        .configure("application.guarantee-account.numberOfItemsPerPage" -> "10")
         .build()
 
       running(app) {
-        val request = FakeRequest(GET, routes.GuaranteeTransactionController.displayTransaction(
-          "19GB000056HG5w746", None).url)
+        val request =
+          FakeRequest(GET, routes.GuaranteeTransactionController.displayTransaction("19GB000056HG5w746", None).url)
 
         val result = route(app, request).value
 
@@ -81,11 +80,12 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       val app: Application = application
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector)
-        ).build()
+        )
+        .build()
 
       running(app) {
-        val request = FakeRequest(GET, routes.GuaranteeTransactionController.displayTransaction(
-          "19GB000056HG5w746", None).url)
+        val request =
+          FakeRequest(GET, routes.GuaranteeTransactionController.displayTransaction("19GB000056HG5w746", None).url)
 
         val result = route(app, request).value
 
@@ -114,8 +114,8 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         .build()
 
       running(app) {
-        val request = FakeRequest(GET, routes.GuaranteeTransactionController.displayTransaction(
-          "19GB000056HG5w746", None).url)
+        val request =
+          FakeRequest(GET, routes.GuaranteeTransactionController.displayTransaction("19GB000056HG5w746", None).url)
 
         val result = route(app, request).value
 
@@ -142,8 +142,8 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         .build()
 
       running(app) {
-        val request = FakeRequest(GET, routes.GuaranteeTransactionController.displayTransaction(
-          "19GB000056HG5w746", None).url)
+        val request =
+          FakeRequest(GET, routes.GuaranteeTransactionController.displayTransaction("19GB000056HG5w746", None).url)
 
         val result = route(app, request).value
 
@@ -172,8 +172,8 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         .build()
 
       running(app) {
-        val request = FakeRequest(GET, routes.GuaranteeTransactionController.displayTransaction(
-          "19GB000056HG5w746", None).url)
+        val request =
+          FakeRequest(GET, routes.GuaranteeTransactionController.displayTransaction("19GB000056HG5w746", None).url)
 
         val result = route(app, request).value
 
@@ -202,8 +202,8 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         .build()
 
       running(app) {
-        val request = FakeRequest(GET, routes.GuaranteeTransactionController.displayTransaction(
-          "19GB000056HG5w745", None).url)
+        val request =
+          FakeRequest(GET, routes.GuaranteeTransactionController.displayTransaction("19GB000056HG5w745", None).url)
 
         val result = route(app, request).value
 
@@ -214,33 +214,38 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
 
   trait Setup {
 
-    val eori = "GB001"
+    val eori    = "GB001"
     val someGan = "GAN-1"
-    val limit = 123000
+    val limit   = 123000
     val balance = 123.45
 
-    val mockDateTimeService: DateTimeService = mock[DateTimeService]
+    val mockDateTimeService: DateTimeService                             = mock[DateTimeService]
     val mockCustomsFinancialsApiConnector: CustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
-    val mockDataStoreService: DataStoreService = mock[DataStoreService]
+    val mockDataStoreService: DataStoreService                           = mock[DataStoreService]
 
     val guaranteeAccount: GuaranteeAccount = GuaranteeAccount(
-      someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(BigDecimal(limit), BigDecimal(balance))))
+      someGan,
+      eori,
+      AccountStatusOpen,
+      Some(GeneralGuaranteeBalance(BigDecimal(limit), BigDecimal(balance)))
+    )
 
-    val amt: Amounts = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
-    val tt: TaxType = TaxType("VAT", amt)
+    val amt: Amounts      = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
+    val tt: TaxType       = TaxType("VAT", amt)
     val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
 
     val dd: DueDate =
       DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
-    val year = 2018
+    val year           = 2018
     val dayTwentyThree = 23
-    val dayTwentyTwo = 22
-    val dayTwentyOne = 21
-    val dayTwenty = 20
+    val dayTwentyTwo   = 22
+    val dayTwentyOne   = 21
+    val dayTwenty      = 20
 
     val ganTransactions: Seq[GuaranteeTransaction] = List(
-      GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwentyThree),
+      GuaranteeTransaction(
+        LocalDate.of(year, Month.JULY, dayTwentyThree),
         "MRN-1",
         None,
         BigDecimal(45367.12),
@@ -251,9 +256,10 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         BigDecimal(11.50),
         None,
         None,
-        dueDates = Seq(dd)),
-
-      GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwentyTwo),
+        dueDates = Seq(dd)
+      ),
+      GuaranteeTransaction(
+        LocalDate.of(year, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12367.50),
@@ -264,9 +270,10 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         BigDecimal(25.20),
         None,
         None,
-        dueDates = Seq(dd)),
-
-      GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwentyOne),
+        dueDates = Seq(dd)
+      ),
+      GuaranteeTransaction(
+        LocalDate.of(year, Month.JULY, dayTwentyOne),
         "MRN-3",
         None,
         BigDecimal(12368.50),
@@ -277,9 +284,10 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         BigDecimal(27.20),
         None,
         Some("C18-1"),
-        dueDates = Seq(dd)),
-
-      GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwenty),
+        dueDates = Seq(dd)
+      ),
+      GuaranteeTransaction(
+        LocalDate.of(year, Month.JULY, dayTwenty),
         "MRN-4",
         None,
         BigDecimal(12369.50),
@@ -290,16 +298,18 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         BigDecimal(26.20),
         None,
         Some("C18-2"),
-        dueDates = Seq(dd)))
+        dueDates = Seq(dd)
+      )
+    )
 
-    val nonFatalResponse: UpstreamErrorResponse = UpstreamErrorResponse(
-      "ServiceUnavailable", Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
+    val nonFatalResponse: UpstreamErrorResponse =
+      UpstreamErrorResponse("ServiceUnavailable", Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
   }
 
   val randomValLimit = 36
-  val randomString1 = 18
-  val randomString2 = 20
-  val randomString3 = 17
+  val randomString1  = 18
+  val randomString2  = 20
+  val randomString3  = 17
 
   def randomString(length: Int): String = Random.alphanumeric.take(length).mkString
 
@@ -324,7 +334,8 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       randomBigDecimal,
       None,
       None,
-      Seq.empty)
+      Seq.empty
+    )
 
   def randomGuaranteeTransactions(howMany: Int): Seq[GuaranteeTransaction] =
     List.fill(howMany)(randomGuaranteeTransaction)

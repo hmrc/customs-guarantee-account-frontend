@@ -29,7 +29,7 @@ import java.time.{LocalDate, LocalDateTime}
 
 class FormattersSpec extends SpecBase {
 
-  val app: Application = application.build()
+  val app: Application            = application.build()
   implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
   val mockDateTimeService: DateTimeService = mock[DateTimeService]
@@ -49,7 +49,7 @@ class FormattersSpec extends SpecBase {
   "filenameWithRequestDates" should {
     "return a correctly formatted filename for the given dates" in {
       val fromDate = LocalDate.parse("2020-11-06")
-      val toDate = LocalDate.parse("2020-12-12")
+      val toDate   = LocalDate.parse("2020-12-12")
       running(app) {
         val result = Formatters.filenameWithRequestDates(fromDate, toDate)(messages)
 

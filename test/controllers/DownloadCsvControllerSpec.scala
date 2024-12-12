@@ -17,8 +17,8 @@
 package controllers
 
 import connectors.{
-  AccountStatusOpen, CustomsFinancialsApiConnector,
-  NoTransactionsAvailable, TooManyTransactionsRequested, UnknownException
+  AccountStatusOpen, CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested,
+  UnknownException
 }
 import models._
 import play.api.http.Status
@@ -56,14 +56,15 @@ class DownloadCsvControllerSpec extends SpecBase {
 
       running(app) {
         val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
 
-        contentAsString(result) must include(ganTransactions.head.movementReferenceNumber)
-        contentAsString(result) must include(""","MRN-1",""")
-        contentAsString(result) must include(""","MRN-2",""")
+        contentAsString(result)                  must include(ganTransactions.head.movementReferenceNumber)
+        contentAsString(result)                  must include(""","MRN-1",""")
+        contentAsString(result)                  must include(""","MRN-2",""")
         contentAsString(result).split("\n").head must startWith(""""Date","MRN","UCR",""")
         contentAsString(result).split("\n").last must startWith(
-          """"Guarantee account guidance, including an explanation of tax codes, can be found at https://www.gov.uk""")
+          """"Guarantee account guidance, including an explanation of tax codes, can be found at https://www.gov.uk"""
+        )
       }
     }
 
@@ -74,12 +75,12 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Right(ganTransactions)))
 
-      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any)).thenReturn(
-        Future.successful(AuditResult.Success))
+      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any))
+        .thenReturn(Future.successful(AuditResult.Success))
 
       running(app) {
         val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
 
         status(result) must be(Status.OK)
       }
@@ -92,12 +93,12 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Right(ganTransactions)))
 
-      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any)).thenReturn(
-        Future.successful(AuditResult.Success))
+      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any))
+        .thenReturn(Future.successful(AuditResult.Success))
 
       running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
-        val result = route(app, request).value
+        val request       = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+        val result        = route(app, request).value
         val actualHeaders = headers(result)
 
         actualHeaders("Content-Disposition") must startWith("attachment")
@@ -111,14 +112,13 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Right(ganTransactions)))
 
-      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any)).thenReturn(
-        Future.successful(AuditResult.Success))
+      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any))
+        .thenReturn(Future.successful(AuditResult.Success))
 
       running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(
-          disposition = Some("inline"), None).url)
+        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(disposition = Some("inline"), None).url)
 
-        val result = route(app, request).value
+        val result        = route(app, request).value
         val actualHeaders = headers(result)
 
         actualHeaders("Content-Disposition") must startWith("inline")
@@ -134,7 +134,7 @@ class DownloadCsvControllerSpec extends SpecBase {
 
       running(app) {
         val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
 
         redirectLocation(result).value mustEqual routes.DownloadCsvController.showUnableToDownloadCSV(None).url
       }
@@ -149,7 +149,7 @@ class DownloadCsvControllerSpec extends SpecBase {
 
       running(app) {
         val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
 
         redirectLocation(result).value mustEqual routes.DownloadCsvController.showUnableToDownloadCSV(None).url
       }
@@ -164,7 +164,7 @@ class DownloadCsvControllerSpec extends SpecBase {
 
       running(app) {
         val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
 
         redirectLocation(result).value mustEqual routes.DownloadCsvController.showUnableToDownloadCSV(None).url
       }
@@ -178,7 +178,7 @@ class DownloadCsvControllerSpec extends SpecBase {
 
         running(app) {
           val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
-          val result = route(app, request).value
+          val result  = route(app, request).value
 
           status(result) must be(Status.NOT_FOUND)
         }
@@ -196,12 +196,13 @@ class DownloadCsvControllerSpec extends SpecBase {
         .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
         .configure(
           "application.guarantee-account.numberOfItemsPerPage" -> "10",
-          "features.fixed-systemdate-for-tests" -> true)
+          "features.fixed-systemdate-for-tests"                -> true
+        )
         .build()
 
       running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
-        val result = route(app, request).value
+        val request       = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+        val result        = route(app, request).value
         val actualHeaders = headers(result)
 
         actualHeaders("Content-Disposition") must include(s"filename=Open_Guarantees_20271220123000.CSV")
@@ -221,7 +222,7 @@ class DownloadCsvControllerSpec extends SpecBase {
 
         running(app) {
           val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
-          val result = route(app, request).value
+          val result  = route(app, request).value
 
           status(result) mustEqual OK
         }
@@ -234,13 +235,12 @@ class DownloadCsvControllerSpec extends SpecBase {
 
       override val app: Application = application
         .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
-        .configure(
-          "application.guarantee-account.numberOfItemsPerPage" -> "10")
+        .configure("application.guarantee-account.numberOfItemsPerPage" -> "10")
         .build()
 
       running(app) {
         val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
 
         status(result) must be(Status.INTERNAL_SERVER_ERROR)
       }
@@ -252,15 +252,20 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
-      when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(
-        eqTo(someGan), any, any, any)(any)).thenReturn(Future.successful(Right(ganTransactions)))
+      when(
+        mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, any, any)(
+          any
+        )
+      ).thenReturn(Future.successful(Right(ganTransactions)))
 
       when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any))
         .thenReturn(Future.successful(AuditResult.Success))
 
       running(appRequested) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(
-          None, "2019-10-10", "2019-10-30", None).url)
+        val request = FakeRequest(
+          GET,
+          routes.DownloadCsvController.downloadRequestedCsv(None, "2019-10-10", "2019-10-30", None).url
+        )
 
         val result = route(appRequested, request).value
 
@@ -283,13 +288,20 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
-      when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(
-        eqTo(someGan), any, any, any)(any)).thenReturn(Future.successful(Left(NoTransactionsAvailable)))
+      when(
+        mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, any, any)(
+          any
+        )
+      ).thenReturn(Future.successful(Left(NoTransactionsAvailable)))
 
       val request: FakeRequest[AnyContentAsFormUrlEncoded] =
-        fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(
-          None, "2019-10-10", "2019-10-10", None).url).withFormUrlEncodedBody(
-          "start.month" -> "10", "start.year" -> "2019", "end.month" -> "10", "end.year" -> "2019")
+        fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(None, "2019-10-10", "2019-10-10", None).url)
+          .withFormUrlEncodedBody(
+            "start.month" -> "10",
+            "start.year"  -> "2019",
+            "end.month"   -> "10",
+            "end.year"    -> "2019"
+          )
 
       running(appRequested) {
         val result = route(appRequested, request).value
@@ -304,8 +316,11 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
-      when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(
-        eqTo(someGan), any, any, any)(any)).thenReturn(Future.successful(Left(TooManyTransactionsRequested)))
+      when(
+        mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, any, any)(
+          any
+        )
+      ).thenReturn(Future.successful(Left(TooManyTransactionsRequested)))
 
       val request: FakeRequest[AnyContentAsEmpty.type] =
         fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(None, "2019-10-10", "2020-10-31", None).url)
@@ -321,8 +336,11 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
-      when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(
-        eqTo(someGan), any, any, any)(any)).thenReturn(Future.successful(Left(UnknownException)))
+      when(
+        mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, any, any)(
+          any
+        )
+      ).thenReturn(Future.successful(Left(UnknownException)))
 
       val request: FakeRequest[AnyContentAsEmpty.type] =
         fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(None, "2019-10-10", "2020-10-31", None).url)
@@ -338,8 +356,11 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
-      when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(
-        eqTo(someGan), any, any, any)(any)).thenReturn(Future.successful(Left(UnknownException)))
+      when(
+        mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, any, any)(
+          any
+        )
+      ).thenReturn(Future.successful(Left(UnknownException)))
 
       val request: FakeRequest[AnyContentAsEmpty.type] =
         fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(None, "2019-10-10", "2020-10-31", None).url)
@@ -355,12 +376,17 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
-      when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(
-        eqTo(someGan), any, any, any)(any)).thenReturn(Future.successful(Left(UnknownException)))
+      when(
+        mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, any, any)(
+          any
+        )
+      ).thenReturn(Future.successful(Left(UnknownException)))
 
       running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(
-          None, fromDate.toString, toDate.toString, None).url)
+        val request = FakeRequest(
+          GET,
+          routes.DownloadCsvController.downloadRequestedCsv(None, fromDate.toString, toDate.toString, None).url
+        )
 
         val result = route(app, request).value
 
@@ -372,12 +398,17 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(Some(guaranteeAccount)))
 
-      when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(
-        eqTo(someGan), any, any, any)(any)).thenReturn(Future.successful(Left(UnknownException)))
+      when(
+        mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, any, any)(
+          any
+        )
+      ).thenReturn(Future.successful(Left(UnknownException)))
 
       running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(
-          None, fromDate.toString, toDate.toString, None).url)
+        val request = FakeRequest(
+          GET,
+          routes.DownloadCsvController.downloadRequestedCsv(None, fromDate.toString, toDate.toString, None).url
+        )
 
         val result = route(app, request).value
 
@@ -392,8 +423,10 @@ class DownloadCsvControllerSpec extends SpecBase {
           .thenReturn(Future.successful(None))
 
         running(app) {
-          val request = FakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(
-            None, fromDate.toString, toDate.toString, None).url)
+          val request = FakeRequest(
+            GET,
+            routes.DownloadCsvController.downloadRequestedCsv(None, fromDate.toString, toDate.toString, None).url
+          )
 
           val result = route(app, request).value
 
@@ -407,8 +440,10 @@ class DownloadCsvControllerSpec extends SpecBase {
         .thenReturn(Future.failed(new RuntimeException("Unknown Exception")))
 
       running(appRequested) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(
-          None, "2019-10-10", "2019-10-30", None).url)
+        val request = FakeRequest(
+          GET,
+          routes.DownloadCsvController.downloadRequestedCsv(None, "2019-10-10", "2019-10-30", None).url
+        )
 
         val result = route(appRequested, request).value
 
@@ -429,12 +464,16 @@ class DownloadCsvControllerSpec extends SpecBase {
 
     running(app) {
       val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
-      val result = route(app, request).value
+      val result  = route(app, request).value
 
       await(result)
 
-      verify(mockAuditingService).auditCsvDownload(eqTo(eori), eqTo(someGan), eqTo(
-        LocalDateTime.parse("2027-12-20T12:30:00")), eqTo(None))(any, any)
+      verify(mockAuditingService).auditCsvDownload(
+        eqTo(eori),
+        eqTo(someGan),
+        eqTo(LocalDateTime.parse("2027-12-20T12:30:00")),
+        eqTo(None)
+      )(any, any)
     }
   }
 
@@ -443,7 +482,7 @@ class DownloadCsvControllerSpec extends SpecBase {
 
       running(app) {
         val request = FakeRequest(GET, routes.DownloadCsvController.showUnableToDownloadCSV(None).url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
 
         status(result) must be(Status.OK)
       }
@@ -454,48 +493,61 @@ class DownloadCsvControllerSpec extends SpecBase {
     when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
       .thenReturn(Future.successful(Some(guaranteeAccount)))
 
-    when(mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(
-      eqTo(someGan), any, eqTo(fromDate), eqTo(toDate))(any)).thenReturn(Future.successful(Right(ganTransactions)))
+    when(
+      mockCustomsFinancialsApiConnector
+        .retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, eqTo(fromDate), eqTo(toDate))(any)
+    ).thenReturn(Future.successful(Right(ganTransactions)))
 
     when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any))
       .thenReturn(Future.successful(AuditResult.Success))
 
     running(app) {
-      val request = FakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(
-        None, fromDate.toString, toDate.toString, None).url)
+      val request = FakeRequest(
+        GET,
+        routes.DownloadCsvController.downloadRequestedCsv(None, fromDate.toString, toDate.toString, None).url
+      )
 
       val result = route(app, request).value
       await(result)
 
-      verify(mockAuditingService).auditCsvDownload(eqTo(eori), eqTo(someGan), eqTo(
-        LocalDateTime.parse("2027-12-20T12:30:00")), eqTo(Some(RequestDates(fromDate, toDate))))(any, any)
+      verify(mockAuditingService).auditCsvDownload(
+        eqTo(eori),
+        eqTo(someGan),
+        eqTo(LocalDateTime.parse("2027-12-20T12:30:00")),
+        eqTo(Some(RequestDates(fromDate, toDate)))
+      )(any, any)
     }
   }
 
   trait Setup {
-    val eori = "GB001"
-    val someGan = "GAN-1"
+    val eori                = "GB001"
+    val someGan             = "GAN-1"
     val fromDate: LocalDate = LocalDate.parse("2020-10-20")
-    val toDate: LocalDate = LocalDate.parse("2020-12-22")
-    val limit = 123000
-    val balance = 123.45
+    val toDate: LocalDate   = LocalDate.parse("2020-12-22")
+    val limit               = 123000
+    val balance             = 123.45
 
     val guaranteeAccount: GuaranteeAccount = GuaranteeAccount(
-      someGan, eori, AccountStatusOpen, Some(GeneralGuaranteeBalance(BigDecimal(limit), BigDecimal(balance))))
+      someGan,
+      eori,
+      AccountStatusOpen,
+      Some(GeneralGuaranteeBalance(BigDecimal(limit), BigDecimal(balance)))
+    )
 
-    val amt: Amounts = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
-    val tt: TaxType = TaxType("VAT", amt)
+    val amt: Amounts      = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
+    val tt: TaxType       = TaxType("VAT", amt)
     val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
 
     val dd: DueDate =
       DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
-    val year = 2018
+    val year           = 2018
     val dayTwentyThree = 23
-    val dayTwentyTwo = 22
+    val dayTwentyTwo   = 22
 
     val ganTransactions: Seq[GuaranteeTransaction] = List(
-      GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwentyThree),
+      GuaranteeTransaction(
+        LocalDate.of(year, Month.JULY, dayTwentyThree),
         "MRN-1",
         None,
         BigDecimal(45367.12),
@@ -506,9 +558,10 @@ class DownloadCsvControllerSpec extends SpecBase {
         BigDecimal(11.50),
         None,
         None,
-        dueDates = Seq(dd)),
-
-      GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwentyTwo),
+        dueDates = Seq(dd)
+      ),
+      GuaranteeTransaction(
+        LocalDate.of(year, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12367.50),
@@ -519,9 +572,10 @@ class DownloadCsvControllerSpec extends SpecBase {
         BigDecimal(25.20),
         None,
         None,
-        dueDates = Seq(dd)),
-
-      GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwentyTwo),
+        dueDates = Seq(dd)
+      ),
+      GuaranteeTransaction(
+        LocalDate.of(year, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12368.50),
@@ -532,9 +586,10 @@ class DownloadCsvControllerSpec extends SpecBase {
         BigDecimal(27.20),
         None,
         Some("C18-1"),
-        dueDates = Seq(dd)),
-
-      GuaranteeTransaction(LocalDate.of(year, Month.JULY, dayTwentyTwo),
+        dueDates = Seq(dd)
+      ),
+      GuaranteeTransaction(
+        LocalDate.of(year, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12369.50),
@@ -545,19 +600,22 @@ class DownloadCsvControllerSpec extends SpecBase {
         BigDecimal(26.20),
         None,
         Some("C18-2"),
-        dueDates = Seq(dd))
+        dueDates = Seq(dd)
+      )
     )
 
     val mockCustomsFinancialsApiConnector: CustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
-    val mockAuditingService: AuditingService = mock[AuditingService]
+    val mockAuditingService: AuditingService                             = mock[AuditingService]
 
     val app: Application = application
       .overrides(
         bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
-        bind[AuditingService].toInstance(mockAuditingService))
+        bind[AuditingService].toInstance(mockAuditingService)
+      )
       .configure(
         "application.guarantee-account.numberOfItemsPerPage" -> "10",
-        "features.fixed-systemdate-for-tests" -> true)
+        "features.fixed-systemdate-for-tests"                -> true
+      )
       .build()
 
     lazy val appRequested: Application = application
@@ -565,11 +623,10 @@ class DownloadCsvControllerSpec extends SpecBase {
         bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
         bind[AuditingService].toInstance(mockAuditingService)
       )
-      .configure(
-        "features.fixed-systemdate-for-tests" -> true)
+      .configure("features.fixed-systemdate-for-tests" -> true)
       .build()
 
-    val nonFatalResponse: UpstreamErrorResponse = UpstreamErrorResponse("ServiceUnavailable",
-      Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
+    val nonFatalResponse: UpstreamErrorResponse =
+      UpstreamErrorResponse("ServiceUnavailable", Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
   }
 }

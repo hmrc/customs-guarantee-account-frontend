@@ -20,7 +20,7 @@ import cats.data.EitherT
 import cats.data.EitherT.fromOptionF
 import config.AppConfig
 import connectors._
-import controllers.actions.{IdentifierAction, EmailAction}
+import controllers.actions.{EmailAction, IdentifierAction}
 import models.GuaranteeAccount
 import models.request.IdentifierRequest
 import play.api.Logging
@@ -36,26 +36,29 @@ import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RequestedTransactionsController @Inject()(apiConnector: CustomsFinancialsApiConnector,
-                                                identify: IdentifierAction,
-                                                checkEmailIsVerified: EmailAction,
-                                                dateTimeService: DateTimeService,
-                                                cache: RequestedTransactionsCache,
-                                                tooManyResults: guarantee_transactions_too_many_results,
-                                                noResults: guarantee_transactions_no_result,
-                                                guaranteeAccountTransactionsNotAvailable: guarantee_account_transactions_not_available,
-                                                resultView: guarantee_transactions_result_page,
-                                                notFound: not_found,
-                                                mcc: MessagesControllerComponents)(
-                                                 implicit executionContext: ExecutionContext, appConfig: AppConfig)
-  extends FrontendController(mcc) with I18nSupport with Logging {
+class RequestedTransactionsController @Inject() (
+  apiConnector: CustomsFinancialsApiConnector,
+  identify: IdentifierAction,
+  checkEmailIsVerified: EmailAction,
+  dateTimeService: DateTimeService,
+  cache: RequestedTransactionsCache,
+  tooManyResults: guarantee_transactions_too_many_results,
+  noResults: guarantee_transactions_no_result,
+  guaranteeAccountTransactionsNotAvailable: guarantee_account_transactions_not_available,
+  resultView: guarantee_transactions_result_page,
+  notFound: not_found,
+  mcc: MessagesControllerComponents
+)(implicit executionContext: ExecutionContext, appConfig: AppConfig)
+    extends FrontendController(mcc)
+    with I18nSupport
+    with Logging {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
 
     val result: EitherT[Future, Result, Result] = for {
-      dates <- fromOptionF(cache.get(request.eori), Redirect(routes.RequestTransactionsController.onPageLoad()))
+      dates   <- fromOptionF(cache.get(request.eori), Redirect(routes.RequestTransactionsController.onPageLoad()))
       account <- fromOptionF(apiConnector.getGuaranteeAccount(request.eori), NotFound(notFound()))
-      page <- EitherT.liftF(showAccountWithTransactionDetails(account, dates.start, dates.end))
+      page    <- EitherT.liftF(showAccountWithTransactionDetails(account, dates.start, dates.end))
     } yield page
 
     result.merge.recover { case e =>
@@ -64,24 +67,36 @@ class RequestedTransactionsController @Inject()(apiConnector: CustomsFinancialsA
     }
   }
 
-  private def showAccountWithTransactionDetails(account: GuaranteeAccount,
-                                                from: LocalDate,
-                                                to: LocalDate)(
-    implicit req: IdentifierRequest[AnyContent]): Future[Result] = {
+  private def showAccountWithTransactionDetails(account: GuaranteeAccount, from: LocalDate, to: LocalDate)(implicit
+    req: IdentifierRequest[AnyContent]
+  ): Future[Result] =
     apiConnector.retrieveRequestedGuaranteeTransactionsDetail(account.number, onlyOpenItems = true, from, to).map {
 
-      case Left(error) => error match {
-        case NoTransactionsAvailable => Ok(noResults(new ResultsPageSummary(from, to)))
+      case Left(error) =>
+        error match {
+          case NoTransactionsAvailable => Ok(noResults(new ResultsPageSummary(from, to)))
 
-        case TooManyTransactionsRequested => Ok(tooManyResults(
-          new ResultsPageSummary(from, to), controllers.routes.RequestTransactionsController.onPageLoad().url))
+          case TooManyTransactionsRequested =>
+            Ok(
+              tooManyResults(
+                new ResultsPageSummary(from, to),
+                controllers.routes.RequestTransactionsController.onPageLoad().url
+              )
+            )
 
-        case UnknownException => Ok(guaranteeAccountTransactionsNotAvailable(
-          GuaranteeAccountViewModel(account, dateTimeService.localDateTime())))
-      }
-      case Right(_) => Ok(resultView(
-        new ResultsPageSummary(from, to),
-        controllers.routes.GuaranteeAccountController.showAccountDetails(None).url))
+          case UnknownException =>
+            Ok(
+              guaranteeAccountTransactionsNotAvailable(
+                GuaranteeAccountViewModel(account, dateTimeService.localDateTime())
+              )
+            )
+        }
+      case Right(_)    =>
+        Ok(
+          resultView(
+            new ResultsPageSummary(from, to),
+            controllers.routes.GuaranteeAccountController.showAccountDetails(None).url
+          )
+        )
     }
-  }
 }

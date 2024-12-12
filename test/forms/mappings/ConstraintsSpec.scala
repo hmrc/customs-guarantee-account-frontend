@@ -64,17 +64,17 @@ class ConstraintsSpec extends SpecBase with Constraints {
 
   trait Setup {
 
-    val day = 1
-    val month = 10
-    val year = 2018
-    val eighteen = 18
+    val day         = 1
+    val month       = 10
+    val year        = 2018
+    val eighteen    = 18
     val twoThousand = 2000
 
     def ld: LocalDate = LocalDateTime.now().toLocalDate
 
     val systemStartDateErrorKey: String = "You cannot enter a date before October 2019"
-    val taxYearErrorKey: String = "The from date cannot be older than 6 years from now"
-    val yearLengthError: String = "Year must include 4 numbers"
+    val taxYearErrorKey: String         = "The from date cannot be older than 6 years from now"
+    val yearLengthError: String         = "Year must include 4 numbers"
 
     implicit val clock: Clock = Clock.systemUTC()
   }

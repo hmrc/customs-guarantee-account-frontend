@@ -27,4 +27,3 @@ object EmailUnverifiedResponse {
 sealed trait EmailResponses
 
 case object UnverifiedEmail extends EmailResponses
-

@@ -34,27 +34,26 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConnector) {
+class AuditingService @Inject() (appConfig: AppConfig, auditConnector: AuditConnector) {
 
   val log: LoggerLike = Logger(this.getClass)
 
-  val referrer: HeaderCarrier => String = _.headers(
-    Seq(HeaderNames.REFERER)).headOption.map(_._2).getOrElse(underScore)
+  val referrer: HeaderCarrier => String = _.headers(Seq(HeaderNames.REFERER)).headOption.map(_._2).getOrElse(underScore)
 
-  def audit(auditModel: AuditModel)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+  def audit(auditModel: AuditModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val dataEvent = toExtendedDataEvent(appConfig.appName, auditModel, referrer(hc))
 
-    auditConnector.sendExtendedEvent(dataEvent)
+    auditConnector
+      .sendExtendedEvent(dataEvent)
       .map { auditResult =>
         logAuditResult(auditResult)
         auditResult
       }
   }
 
-  private def toExtendedDataEvent(appName: String,
-                                  auditModel: AuditModel,
-                                  path: String)(implicit hc: HeaderCarrier): ExtendedDataEvent =
+  private def toExtendedDataEvent(appName: String, auditModel: AuditModel, path: String)(implicit
+    hc: HeaderCarrier
+  ): ExtendedDataEvent =
     ExtendedDataEvent(
       auditSource = appName,
       auditType = auditModel.auditType,
@@ -63,32 +62,60 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
     )
 
   private def logAuditResult(auditResult: AuditResult): Unit = auditResult match {
-    case Success => log.debug("Splunk Audit Successful")
+    case Success         => log.debug("Splunk Audit Successful")
     case Failure(err, _) => log.debug(s"Splunk Audit Error, message: $err")
-    case Disabled => log.debug(s"Auditing Disabled")
+    case Disabled        => log.debug(s"Auditing Disabled")
   }
 
-
-  def auditCsvDownload(eori: String,
-                       guaranteeAccountNumber: String,
-                       dateTime: LocalDateTime,
-                       dates: Option[RequestDates])(
-                        implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Unit] = {
+  def auditCsvDownload(
+    eori: String,
+    guaranteeAccountNumber: String,
+    dateTime: LocalDateTime,
+    dates: Option[RequestDates]
+  )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Unit] = {
 
     val eventualResult = dates match {
       case Some(value) =>
-        audit(AuditModel("DownloadGuaranteeStatement", "Download guarantee transactions",
-          Json.toJson(GuaranteeCsvAuditData(eori, guaranteeAccountNumber,
-            "open", dateTimeAsIso8601(dateTime), "CSV", Some(value.dateFrom), Some(value.dateTo)))))
-      case None =>
-        audit(AuditModel("DownloadGuaranteeStatement", "Download guarantee transactions",
-          Json.toJson(GuaranteeCsvAuditData(eori, guaranteeAccountNumber,
-            "open", dateTimeAsIso8601(dateTime), "CSV", None, None))))
+        audit(
+          AuditModel(
+            "DownloadGuaranteeStatement",
+            "Download guarantee transactions",
+            Json.toJson(
+              GuaranteeCsvAuditData(
+                eori,
+                guaranteeAccountNumber,
+                "open",
+                dateTimeAsIso8601(dateTime),
+                "CSV",
+                Some(value.dateFrom),
+                Some(value.dateTo)
+              )
+            )
+          )
+        )
+      case None        =>
+        audit(
+          AuditModel(
+            "DownloadGuaranteeStatement",
+            "Download guarantee transactions",
+            Json.toJson(
+              GuaranteeCsvAuditData(
+                eori,
+                guaranteeAccountNumber,
+                "open",
+                dateTimeAsIso8601(dateTime),
+                "CSV",
+                None,
+                None
+              )
+            )
+          )
+        )
     }
 
     eventualResult.map {
       case _: AuditResult.Failure => log.error("Guarantee CSV download auditing failed")
-      case _ => ()
+      case _                      => ()
     }
   }
 }

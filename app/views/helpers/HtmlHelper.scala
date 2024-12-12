@@ -23,15 +23,15 @@ object HtmlHelper {
   implicit class Attribute(val status: CDSAccountStatus) {
 
     val statusAttribute: String = status match {
-      case AccountStatusOpen => "account-status-open"
+      case AccountStatusOpen      => "account-status-open"
       case AccountStatusSuspended => "account-status-suspended"
-      case AccountStatusClosed => "account-status-closed"
+      case AccountStatusClosed    => "account-status-closed"
     }
 
     val balanceAttribute: String = status match {
-      case AccountStatusOpen => "account-balance-status-open"
+      case AccountStatusOpen      => "account-balance-status-open"
       case AccountStatusSuspended => "account-balance-status-suspended"
-      case AccountStatusClosed => "account-balance-status-closed"
+      case AccountStatusClosed    => "account-balance-status-closed"
     }
   }
 }

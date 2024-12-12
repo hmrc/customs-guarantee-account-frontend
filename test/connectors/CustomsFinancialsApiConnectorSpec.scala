@@ -56,13 +56,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
-        ).build()
+        )
+        .build()
 
       val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector
-          .getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "12345678")))
+        val result = await(
+          connector
+            .getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "12345678"))
+        )
 
         result.value mustEqual guaranteeAccount
       }
@@ -87,13 +90,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder),
           bind[MetricsReporterService].toInstance(mockMetricsReporterService)
-        ).build()
+        )
+        .build()
 
       val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector
-          .getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "12345678")))
+        val result = await(
+          connector
+            .getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "12345678"))
+        )
 
         result.value mustEqual guaranteeAccount
 
@@ -120,26 +126,22 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
   "CDSAccountStatus" must {
     "read correctly based on json value" in new Setup {
 
-      val accStatusVal01: JsResult[CDSAccountStatus] = CDSAccountStatus
-        .CDSAccountStatusReads
+      val accStatusVal01: JsResult[CDSAccountStatus] = CDSAccountStatus.CDSAccountStatusReads
         .reads(JsString("Open"))
 
       accStatusVal01 mustBe JsSuccess(AccountStatusOpen)
 
-      val accStatusVal02: JsResult[CDSAccountStatus] = CDSAccountStatus
-        .CDSAccountStatusReads
+      val accStatusVal02: JsResult[CDSAccountStatus] = CDSAccountStatus.CDSAccountStatusReads
         .reads(JsString("Suspended"))
 
       accStatusVal02 mustBe JsSuccess(AccountStatusSuspended)
 
-      val accStatusVal03: JsResult[CDSAccountStatus] = CDSAccountStatus
-        .CDSAccountStatusReads
+      val accStatusVal03: JsResult[CDSAccountStatus] = CDSAccountStatus.CDSAccountStatusReads
         .reads(JsString("Closed"))
 
       accStatusVal03 mustBe JsSuccess(AccountStatusClosed)
 
-      val accStatusVal04: JsResult[CDSAccountStatus] = CDSAccountStatus
-        .CDSAccountStatusReads
+      val accStatusVal04: JsResult[CDSAccountStatus] = CDSAccountStatus.CDSAccountStatusReads
         .reads(JsString("Unknown"))
       accStatusVal04 mustBe JsSuccess(AccountStatusOpen)
     }
@@ -175,7 +177,8 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
-        ).build()
+        )
+        .build()
 
       val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
@@ -203,7 +206,8 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
-        ).build()
+        )
+        .build()
 
       val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
@@ -233,7 +237,9 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       val upstream4xxResponse: UpstreamErrorResponse = UpstreamErrorResponse(
         "Entity too large to download",
-        Status.REQUEST_ENTITY_TOO_LARGE, Status.REQUEST_ENTITY_TOO_LARGE)
+        Status.REQUEST_ENTITY_TOO_LARGE,
+        Status.REQUEST_ENTITY_TOO_LARGE
+      )
 
       when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
 
@@ -247,7 +253,8 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
-        ).build()
+        )
+        .build()
 
       val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
@@ -260,9 +267,8 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
     "return NotFound exception if no results are returned from the API" in new Setup {
 
-      val upstream4xxResponse: UpstreamErrorResponse = UpstreamErrorResponse(
-        "Not Found",
-        Status.NOT_FOUND, Status.NOT_FOUND)
+      val upstream4xxResponse: UpstreamErrorResponse =
+        UpstreamErrorResponse("Not Found", Status.NOT_FOUND, Status.NOT_FOUND)
 
       when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
 
@@ -276,7 +282,8 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
-        ).build()
+        )
+        .build()
 
       val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
@@ -301,7 +308,8 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
-        ).build()
+        )
+        .build()
 
       val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
@@ -327,13 +335,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
-        ).build()
+        )
+        .build()
 
       val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector
-          .retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly))
+        val result = await(
+          connector
+            .retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly)
+        )
 
         result mustBe Right(ganTransactions)
       }
@@ -343,7 +354,9 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       val upstream4xxResponse: UpstreamErrorResponse = UpstreamErrorResponse(
         "Entity too large to download",
-        Status.REQUEST_ENTITY_TOO_LARGE, Status.REQUEST_ENTITY_TOO_LARGE)
+        Status.REQUEST_ENTITY_TOO_LARGE,
+        Status.REQUEST_ENTITY_TOO_LARGE
+      )
 
       when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
 
@@ -352,16 +365,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       when(mockHttpClient.post(any[URL]())(any)).thenReturn(requestBuilder)
 
       val app: Application = application
-        .overrides(
-          bind[HttpClientV2].toInstance(mockHttpClient),
-          bind[RequestBuilder].toInstance(requestBuilder))
+        .overrides(bind[HttpClientV2].toInstance(mockHttpClient), bind[RequestBuilder].toInstance(requestBuilder))
         .build()
 
       val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector
-          .retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly))
+        val result = await(
+          connector
+            .retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly)
+        )
 
         result mustBe Left(TooManyTransactionsRequested)
       }
@@ -369,9 +382,8 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
     "return NotFound exception if no results are returned from the API" in new Setup {
 
-      val upstream4xxResponse: UpstreamErrorResponse = UpstreamErrorResponse(
-        "Not Found",
-        Status.NOT_FOUND, Status.NOT_FOUND)
+      val upstream4xxResponse: UpstreamErrorResponse =
+        UpstreamErrorResponse("Not Found", Status.NOT_FOUND, Status.NOT_FOUND)
 
       when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
 
@@ -383,13 +395,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
-        ).build()
+        )
+        .build()
 
       val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector
-          .retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly))
+        val result = await(
+          connector
+            .retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly)
+        )
 
         result mustBe Left(NoTransactionsAvailable)
       }
@@ -407,13 +422,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
-        ).build()
+        )
+        .build()
 
       val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       running(app) {
-        val result = await(connector
-          .retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly))
+        val result = await(
+          connector
+            .retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly)
+        )
 
         result mustBe Left(UnknownException)
       }
@@ -421,30 +439,28 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
   }
 
   trait Setup {
-    private val traderEori = "12345678"
-    private val accountNumber = "987654"
-    val sessionId: SessionId = SessionId("session_1234")
+    private val traderEori         = "12345678"
+    private val accountNumber      = "987654"
+    val sessionId: SessionId       = SessionId("session_1234")
     implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(sessionId))
 
-    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+    val mockHttpClient: HttpClientV2   = mock[HttpClientV2]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
 
-    val amt: Amounts = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
-    val tt: TaxType = TaxType("VAT", amt)
+    val amt: Amounts      = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
+    val tt: TaxType       = TaxType("VAT", amt)
     val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
 
-    val dd: DueDate = DueDate(
-      dueDate = "2020-07-28",
-      reasonForSecurity = Some("T24"),
-      amounts = amt,
-      taxTypeGroups = Seq(ttg))
+    val dd: DueDate =
+      DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
-    val year = 2019
+    val year           = 2019
     val dayTwentyThree = 23
-    val dayTwentyTwo = 22
+    val dayTwentyTwo   = 22
 
     val ganTransactions: Seq[GuaranteeTransaction] = List(
-      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyThree),
+      GuaranteeTransaction(
+        LocalDate.of(year, Month.OCTOBER, dayTwentyThree),
         "19GB000056HG5w746",
         None,
         BigDecimal(45367.12),
@@ -455,9 +471,10 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         BigDecimal(11.50),
         None,
         None,
-        dueDates = Seq(dd)),
-
-      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
+        dueDates = Seq(dd)
+      ),
+      GuaranteeTransaction(
+        LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12367.50),
@@ -468,9 +485,10 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         BigDecimal(25.20),
         None,
         None,
-        dueDates = Seq(dd)),
-
-      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
+        dueDates = Seq(dd)
+      ),
+      GuaranteeTransaction(
+        LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12368.50),
@@ -481,9 +499,10 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         BigDecimal(27.20),
         None,
         Some("C18-1747"),
-        dueDates = Seq(dd)),
-
-      GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
+        dueDates = Seq(dd)
+      ),
+      GuaranteeTransaction(
+        LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12369.50),
@@ -494,24 +513,23 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         BigDecimal(26.20),
         None,
         Some("C18-1809"),
-        dueDates = Seq(dd)))
+        dueDates = Seq(dd)
+      )
+    )
 
-    val generalGuaranteeAccount: GeneralGuaranteeAccount = GeneralGuaranteeAccount(Account(
-      accountNumber, "123456789", traderEori), Some("999.99"), None)
+    val generalGuaranteeAccount: GeneralGuaranteeAccount =
+      GeneralGuaranteeAccount(Account(accountNumber, "123456789", traderEori), Some("999.99"), None)
 
     val guaranteeAccount: GuaranteeAccount = generalGuaranteeAccount.toDomain()
 
     val fromDate: LocalDate = LocalDate.parse("2019-10-08")
-    val toDate: LocalDate = LocalDate.parse("2020-04-08")
+    val toDate: LocalDate   = LocalDate.parse("2020-04-08")
 
-    val eori = "123456789"
+    val eori                                                 = "123456789"
     val traderAccounts: AccountsAndBalancesResponseContainer = AccountsAndBalancesResponseContainer(
       AccountsAndBalancesResponse(
         Some(AccountResponseCommon(emptyString, Some(emptyString), emptyString, None)),
-        AccountResponseDetail(
-          Some("123456789"),
-          None,
-          Some(Seq(generalGuaranteeAccount)))
+        AccountResponseDetail(Some("123456789"), None, Some(Seq(generalGuaranteeAccount)))
       )
     )
   }

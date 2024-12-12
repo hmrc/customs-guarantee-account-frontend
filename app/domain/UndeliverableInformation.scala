@@ -20,11 +20,13 @@ import org.joda.time.DateTime
 import play.api.libs.json.{Json, OFormat}
 import domain.UndeliverableInformationEvent
 
-case class UndeliverableInformation(subject: String,
-                                    eventId: String,
-                                    groupId: String,
-                                    timestamp: DateTime,
-                                    event: UndeliverableInformationEvent)
+case class UndeliverableInformation(
+  subject: String,
+  eventId: String,
+  groupId: String,
+  timestamp: DateTime,
+  event: UndeliverableInformationEvent
+)
 
 object UndeliverableInformation {
   import play.api.libs.json.JodaReads._

@@ -35,19 +35,22 @@ import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClientV2,
-                                              appConfig: AppConfig,
-                                              metricsReporter: MetricsReporterService,
-                                              cacheRepository: CacheRepository)(implicit ec: ExecutionContext) {
+class CustomsFinancialsApiConnector @Inject() (
+  httpClient: HttpClientV2,
+  appConfig: AppConfig,
+  metricsReporter: MetricsReporterService,
+  cacheRepository: CacheRepository
+)(implicit ec: ExecutionContext) {
 
-  private val logger = LoggerFactory.getLogger("application." + getClass.getCanonicalName)
-  private val baseUrl = appConfig.customsFinancialsApi
-  private val accountsUrl = s"$baseUrl/eori/accounts"
+  private val logger                                     = LoggerFactory.getLogger("application." + getClass.getCanonicalName)
+  private val baseUrl                                    = appConfig.customsFinancialsApi
+  private val accountsUrl                                = s"$baseUrl/eori/accounts"
   private val retrieveOpenGuaranteeTransactionsDetailUrl = s"$baseUrl/account/guarantee/open-transactions-detail"
 
-  def getGuaranteeAccount(eori: String)(implicit hc: HeaderCarrier,
-                                        request: IdentifierRequest[AnyContent]): Future[Option[GuaranteeAccount]] = {
-    val requestDetail = AccountsRequestDetail(eori, None, None, None)
+  def getGuaranteeAccount(
+    eori: String
+  )(implicit hc: HeaderCarrier, request: IdentifierRequest[AnyContent]): Future[Option[GuaranteeAccount]] = {
+    val requestDetail              = AccountsRequestDetail(eori, None, None, None)
     val accountsAndBalancesRequest = AccountsAndBalancesRequestContainer(
       AccountsAndBalancesRequest(AccountsRequestCommon.generate(), requestDetail)
     )
@@ -61,47 +64,48 @@ class CustomsFinancialsApiConnector @Inject()(httpClient: HttpClientV2,
     }
   }.map(_.find(_.owner == request.eori))
 
-  def retrieveOpenGuaranteeTransactionsDetail(gan: String)(
-    implicit hc: HeaderCarrier): Future[Either[GuaranteeResponses, Seq[GuaranteeTransaction]]] = {
+  def retrieveOpenGuaranteeTransactionsDetail(
+    gan: String
+  )(implicit hc: HeaderCarrier): Future[Either[GuaranteeResponses, Seq[GuaranteeTransaction]]] = {
     val openGuaranteeTransactionsRequest = GuaranteeTransactionsRequest(gan, openItems = true, None)
 
-    cacheRepository.get(gan).flatMap {
-      case Some(value) => Future.successful(Right(value))
-      case None =>
-        httpClient
-          .post(url"$retrieveOpenGuaranteeTransactionsDetailUrl")
-          .withBody(Json.toJson(openGuaranteeTransactionsRequest))
-          .execute[Seq[GuaranteeTransaction]]
-          .flatMap { transactions =>
-            val transactionsWithUUID = transactions.map(_.copy(
-              secureMovementReferenceNumber = Some(UUID.randomUUID().toString)))
-            cacheRepository.set(gan, transactionsWithUUID).map { successfulWrite =>
-              if (!successfulWrite) {
-                logger.error("Failed to store data in the session cache defaulting to the api response")
+    cacheRepository
+      .get(gan)
+      .flatMap {
+        case Some(value) => Future.successful(Right(value))
+        case None        =>
+          httpClient
+            .post(url"$retrieveOpenGuaranteeTransactionsDetailUrl")
+            .withBody(Json.toJson(openGuaranteeTransactionsRequest))
+            .execute[Seq[GuaranteeTransaction]]
+            .flatMap { transactions =>
+              val transactionsWithUUID =
+                transactions.map(_.copy(secureMovementReferenceNumber = Some(UUID.randomUUID().toString)))
+              cacheRepository.set(gan, transactionsWithUUID).map { successfulWrite =>
+                if (!successfulWrite) {
+                  logger.error("Failed to store data in the session cache defaulting to the api response")
+                }
+                Right(transactionsWithUUID)
               }
-              Right(transactionsWithUUID)
             }
-          }
-    }.recover {
-      case UpstreamErrorResponse(_, REQUEST_ENTITY_TOO_LARGE, _, _) =>
-        logger.error(s"Entity too large to download"); Left(TooManyTransactionsRequested)
+      }
+      .recover {
+        case UpstreamErrorResponse(_, REQUEST_ENTITY_TOO_LARGE, _, _) =>
+          logger.error(s"Entity too large to download"); Left(TooManyTransactionsRequested)
 
-      case UpstreamErrorResponse(_, _, _, _) =>
-        logger.info(s"No data found"); Left(NoTransactionsAvailable)
+        case UpstreamErrorResponse(_, _, _, _) =>
+          logger.info(s"No data found"); Left(NoTransactionsAvailable)
 
-      case e => logger.error(s"Unable to download CSV :${e.getMessage}"); Left(UnknownException)
-    }
+        case e => logger.error(s"Unable to download CSV :${e.getMessage}"); Left(UnknownException)
+      }
   }
 
-  def retrieveRequestedGuaranteeTransactionsDetail(gan: String,
-                                                   onlyOpenItems: Boolean,
-                                                   from: LocalDate,
-                                                   to: LocalDate)
-                                                  (implicit hc: HeaderCarrier
-                                                  ): Future[Either[GuaranteeResponses, Seq[GuaranteeTransaction]]] = {
+  def retrieveRequestedGuaranteeTransactionsDetail(gan: String, onlyOpenItems: Boolean, from: LocalDate, to: LocalDate)(
+    implicit hc: HeaderCarrier
+  ): Future[Either[GuaranteeResponses, Seq[GuaranteeTransaction]]] = {
 
-    val openGuaranteeTransactionsRequest = GuaranteeTransactionsRequest(
-      gan, onlyOpenItems, Some(RequestDates(from, to)))
+    val openGuaranteeTransactionsRequest =
+      GuaranteeTransactionsRequest(gan, onlyOpenItems, Some(RequestDates(from, to)))
 
     httpClient
       .post(url"$retrieveOpenGuaranteeTransactionsDetailUrl")

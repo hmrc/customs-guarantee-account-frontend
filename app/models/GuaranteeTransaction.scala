@@ -23,42 +23,42 @@ import viewmodels.{CSVWritable, FieldNames}
 
 import java.time.LocalDate
 
-case class Amounts(totalAmount: String,
-                   clearedAmount: Option[String],
-                   openAmount: Option[String],
-                   updateDate: String)
+case class Amounts(totalAmount: String, clearedAmount: Option[String], openAmount: Option[String], updateDate: String)
 
-case class DueDate(dueDate: String,
-                   reasonForSecurity: Option[String],
-                   amounts: Amounts,
-                   taxTypeGroups: Seq[TaxTypeGroup]) {
+case class DueDate(
+  dueDate: String,
+  reasonForSecurity: Option[String],
+  amounts: Amounts,
+  taxTypeGroups: Seq[TaxTypeGroup]
+) {
 
-  def securityReason: Option[SecurityReason] = {
+  def securityReason: Option[SecurityReason] =
     (reasonForSecurity, taxTypeGroups) match {
       case (_, taxTypeGroups) if taxTypeGroups.isEmpty => None
-      case (Some(taxCode), taxTypeGroups) => Some(SecurityReason(taxCode, taxTypeGroups))
-      case _ => None
+      case (Some(taxCode), taxTypeGroups)              => Some(SecurityReason(taxCode, taxTypeGroups))
+      case _                                           => None
     }
-  }
 }
 
 case class TaxTypeGroup(taxTypeGroup: String, amounts: Amounts, taxType: TaxType)
 
 case class TaxType(taxType: String, amounts: Amounts)
 
-case class GuaranteeTransaction(date: LocalDate,
-                                movementReferenceNumber: String,
-                                secureMovementReferenceNumber: Option[String],
-                                balance: BigDecimal,
-                                uniqueConsignmentReference: Option[String],
-                                declarantEori: EORI,
-                                consigneeEori: EORI,
-                                originalCharge: BigDecimal,
-                                dischargedAmount: BigDecimal,
-                                interestCharge: Option[String],
-                                c18Reference: Option[String],
-                                dueDates: Seq[DueDate]
-                               ) extends CSVWritable with FieldNames {
+case class GuaranteeTransaction(
+  date: LocalDate,
+  movementReferenceNumber: String,
+  secureMovementReferenceNumber: Option[String],
+  balance: BigDecimal,
+  uniqueConsignmentReference: Option[String],
+  declarantEori: EORI,
+  consigneeEori: EORI,
+  originalCharge: BigDecimal,
+  dischargedAmount: BigDecimal,
+  interestCharge: Option[String],
+  c18Reference: Option[String],
+  dueDates: Seq[DueDate]
+) extends CSVWritable
+    with FieldNames {
   def moreThanOne: Boolean = dueDates.size > 1
 
   override def fieldNames: Seq[String] = Seq(
@@ -77,7 +77,10 @@ case class GuaranteeTransaction(date: LocalDate,
   )
 }
 
-case class GuaranteeAccountTransaction(guaranteeTransaction: GuaranteeTransaction, c18References: Seq[GuaranteeTransaction])
+case class GuaranteeAccountTransaction(
+  guaranteeTransaction: GuaranteeTransaction,
+  c18References: Seq[GuaranteeTransaction]
+)
 
 object GuaranteeTransaction {
 
@@ -104,7 +107,7 @@ object GuaranteeTransaction {
         (__ \ "interestCharge").readNullable[String] and
         (__ \ "c18Reference").readNullable[String] and
         (__ \ "dueDates").read[Seq[DueDate]]
-      )(GuaranteeTransaction.apply _)
+    )(GuaranteeTransaction.apply _)
   }
 }
 

@@ -26,7 +26,6 @@ import java.time.{LocalDate, LocalDateTime, Month}
 
 class GuaranteeAccountViewModelSpec extends SpecBase {
 
-
   "GuaranteeAccountViewModel" should {
 
     "include the usedPercentage and usedFunds" in new Setup {
@@ -38,19 +37,27 @@ class GuaranteeAccountViewModelSpec extends SpecBase {
 
       val amt = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
       val ttg = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = TaxType("VAT", amt))
-      val dd = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"),
-        amounts = amt, taxTypeGroups = Seq(ttg))
+      val dd  = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
       val year = 2019
-      val day = 23
+      val day  = 23
 
-      val guranteeTxn = GuaranteeTransaction(LocalDate.of(year, Month.OCTOBER, day),
-        "19GB000056HG5w746", None, BigDecimal(45367.12),
-        Some("MGH-500000"), "GB10000", "GB20000",
-        BigDecimal(21.00), BigDecimal(11.50),
-        None, None, dueDates = Seq(dd))
+      val guranteeTxn = GuaranteeTransaction(
+        LocalDate.of(year, Month.OCTOBER, day),
+        "19GB000056HG5w746",
+        None,
+        BigDecimal(45367.12),
+        Some("MGH-500000"),
+        "GB10000",
+        "GB20000",
+        BigDecimal(21.00),
+        BigDecimal(11.50),
+        None,
+        None,
+        dueDates = Seq(dd)
+      )
 
-      model02.taxCode(guranteeTxn).head.get mustEqual ("T24")
+      model02.taxCode(guranteeTxn).head.get mustEqual "T24"
     }
 
     "include the formatted available balance" in new Setup {
@@ -72,18 +79,26 @@ class GuaranteeAccountViewModelSpec extends SpecBase {
 
   trait Setup {
 
-    val guaranteeAccount = GuaranteeAccount("gan", "eori", AccountStatusOpen,
-      Some(GeneralGuaranteeBalance(BigDecimal(10000.50), BigDecimal(5000.10))))
+    val guaranteeAccount = GuaranteeAccount(
+      "gan",
+      "eori",
+      AccountStatusOpen,
+      Some(GeneralGuaranteeBalance(BigDecimal(10000.50), BigDecimal(5000.10)))
+    )
 
-    val guaranteeAccount02 = GuaranteeAccount("gan", "eori", AccountStatusOpen,
-      Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(5000.10))))
+    val guaranteeAccount02 = GuaranteeAccount(
+      "gan",
+      "eori",
+      AccountStatusOpen,
+      Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(5000.10)))
+    )
 
     val appConfig = mock[AppConfig]
 
-    val model = GuaranteeAccountViewModel(guaranteeAccount,
-      LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
+    val model =
+      GuaranteeAccountViewModel(guaranteeAccount, LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
 
-    val model02 = GuaranteeAccountViewModel(guaranteeAccount02,
-      LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
+    val model02 =
+      GuaranteeAccountViewModel(guaranteeAccount02, LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())
   }
 }

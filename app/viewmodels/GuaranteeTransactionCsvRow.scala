@@ -21,23 +21,26 @@ import play.api.i18n.Messages
 
 import java.time.format.DateTimeFormatter
 
-case class GuaranteeTransactionCsvRow(date: Option[String] = None,
-                                      movementReferenceNumber: Option[String] = None,
-                                      uniqueConsignmentReference: Option[String] = None,
-                                      consigneeEori: Option[String] = None,
-                                      declarantEori: Option[String] = None,
-                                      totalOriginalCharge: Option[BigDecimal] = None,
-                                      totalDischargedAmount: Option[BigDecimal] = None,
-                                      totalBalance: Option[BigDecimal] = None,
-                                      interestCharge: Option[BigDecimal] = None,
-                                      c18Reference: Option[String] = None,
-                                      securityReasonBreakdown: Option[String] = None,
-                                      taxCode: Option[String] = None,
-                                      expiryDate: Option[String] = None,
-                                      originalCharge: Option[BigDecimal] = None,
-                                      dischargedAmount: Option[BigDecimal] = None,
-                                      balance: Option[BigDecimal] = None,
-                                      lastUpdated: Option[String] = None) extends CSVWritable with FieldNames {
+case class GuaranteeTransactionCsvRow(
+  date: Option[String] = None,
+  movementReferenceNumber: Option[String] = None,
+  uniqueConsignmentReference: Option[String] = None,
+  consigneeEori: Option[String] = None,
+  declarantEori: Option[String] = None,
+  totalOriginalCharge: Option[BigDecimal] = None,
+  totalDischargedAmount: Option[BigDecimal] = None,
+  totalBalance: Option[BigDecimal] = None,
+  interestCharge: Option[BigDecimal] = None,
+  c18Reference: Option[String] = None,
+  securityReasonBreakdown: Option[String] = None,
+  taxCode: Option[String] = None,
+  expiryDate: Option[String] = None,
+  originalCharge: Option[BigDecimal] = None,
+  dischargedAmount: Option[BigDecimal] = None,
+  balance: Option[BigDecimal] = None,
+  lastUpdated: Option[String] = None
+) extends CSVWritable
+    with FieldNames {
   override def fieldNames: Seq[String] = Seq(
     "date",
     "movementReferenceNumber",
@@ -61,19 +64,19 @@ case class GuaranteeTransactionCsvRow(date: Option[String] = None,
 
 object GuaranteeTransactionCsvRow {
 
-  implicit class GuaranteeTransactionCsvRowViewModel(guaranteeTransaction: GuaranteeTransaction)
-                                                    (implicit messages: Messages) {
+  implicit class GuaranteeTransactionCsvRowViewModel(guaranteeTransaction: GuaranteeTransaction)(implicit
+    messages: Messages
+  ) {
 
     private val indentation = "   "
 
-    def toReportLayout: Seq[GuaranteeTransactionCsvRow] = {
-      guaranteeTransaction.dueDates.zipWithIndex.flatMap {
-        case (dueDate, index) => dueDateBreakdown(dueDate, index, guaranteeTransaction.dueDates.size)
+    def toReportLayout: Seq[GuaranteeTransactionCsvRow] =
+      guaranteeTransaction.dueDates.zipWithIndex.flatMap { case (dueDate, index) =>
+        dueDateBreakdown(dueDate, index, guaranteeTransaction.dueDates.size)
       }
-    }
 
     private def dueDateBreakdown(dueDate: DueDate, index: Int, of: Int) = {
-      val summaryRow = dueDateSummary(dueDate, index, of)
+      val summaryRow       = dueDateSummary(dueDate, index, of)
       val taxBreakdownRows = dueDate.taxTypeGroups.map(taxBreakdown)
       summaryRow +: taxBreakdownRows
     }

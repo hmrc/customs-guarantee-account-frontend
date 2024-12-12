@@ -45,23 +45,24 @@ class CustomsDataStoreConnectorSpec extends SpecBase {
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
-        ).build()
+        )
+        .build()
 
       val connector: CustomsDataStoreConnector = app.injector.instanceOf[CustomsDataStoreConnector]
 
       running(app) {
-        connector.retrieveUnverifiedEmail(hc) map {
-          res => res mustBe Some("unverified@email.com")
+        connector.retrieveUnverifiedEmail(hc) map { res =>
+          res mustBe Some("unverified@email.com")
         }
       }
     }
   }
 
   trait Setup {
-    val sessionId: SessionId = SessionId("session_1234")
+    val sessionId: SessionId       = SessionId("session_1234")
     implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(sessionId))
 
-    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+    val mockHttpClient: HttpClientV2   = mock[HttpClientV2]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
   }
 }

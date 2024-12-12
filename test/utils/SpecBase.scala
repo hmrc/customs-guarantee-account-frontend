@@ -35,30 +35,33 @@ import utils.Utils.{emptyString, singleSpace}
 
 class FakeMetrics extends MetricRegistry {
   val defaultRegistry: MetricRegistry = new MetricRegistry
-  val toJson: String = "{}"
+  val toJson: String                  = "{}"
 }
 
-trait SpecBase extends AnyWordSpecLike
-  with Matchers
-  with MockitoSugar
-  with OptionValues
-  with ScalaFutures
-  with IntegrationPatience {
+trait SpecBase
+    extends AnyWordSpecLike
+    with Matchers
+    with MockitoSugar
+    with OptionValues
+    with ScalaFutures
+    with IntegrationPatience {
 
-  val mockCacheRepository: CacheRepository = mock[CacheRepository]
+  val mockCacheRepository: CacheRepository                       = mock[CacheRepository]
   val mockRequestedTransactionsCache: RequestedTransactionsCache = mock[RequestedTransactionsCache]
 
-  def application: GuiceApplicationBuilder = new GuiceApplicationBuilder().overrides(
+  def application: GuiceApplicationBuilder = new GuiceApplicationBuilder()
+    .overrides(
       bind[IdentifierAction].to[FakeIdentifierAction],
       bind[MetricRegistry].toInstance(new FakeMetrics),
       bind[CacheRepository].toInstance(mockCacheRepository),
       bind[RequestedTransactionsCache].toInstance(mockRequestedTransactionsCache)
-    ).configure("auditing.enabled" -> false)
+    )
+    .configure("auditing.enabled" -> false)
     .configure("metrics.enabled" -> false)
 
   def fakeRequest(method: String = emptyString, path: String = emptyString): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(method, path).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(
-    fakeRequest(emptyString, singleSpace))
+  def messages(app: Application): Messages =
+    app.injector.instanceOf[MessagesApi].preferred(fakeRequest(emptyString, singleSpace))
 }

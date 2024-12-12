@@ -27,7 +27,7 @@ class MongoDateTimeFormatsSpec extends SpecBase {
     "read datetime from json string" in new Setup {
 
       val testData: JsValue = Json.parse(" {\"" + dollar + "date\": " + dateInMilliSeconds + "}  ")
-      val res = MongoDateTimeFormats.localDateTimeRead.reads(testData)
+      val res               = MongoDateTimeFormats.localDateTimeRead.reads(testData)
 
       res.isSuccess mustBe true
       res.get.toInstant(ZoneOffset.UTC).toEpochMilli mustEqual dateInMilliSeconds
@@ -41,9 +41,9 @@ class MongoDateTimeFormatsSpec extends SpecBase {
   }
 
   trait Setup {
-    val date = LocalDateTime.now()
-    val dateInMilliSeconds = date.atZone(ZoneOffset.UTC).toInstant.toEpochMilli
+    val date                = LocalDateTime.now()
+    val dateInMilliSeconds  = date.atZone(ZoneOffset.UTC).toInstant.toEpochMilli
     val testWrites: JsValue = Json.obj("$" + "date" -> dateInMilliSeconds)
-    val dollar = "$"
+    val dollar              = "$"
   }
 }
