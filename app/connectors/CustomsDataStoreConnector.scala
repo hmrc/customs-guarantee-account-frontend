@@ -25,8 +25,9 @@ import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CustomsDataStoreConnector @Inject()(httpClient: HttpClientV2,
-                                          appConfig: AppConfig)(implicit ec: ExecutionContext) {
+class CustomsDataStoreConnector @Inject() (httpClient: HttpClientV2, appConfig: AppConfig)(implicit
+  ec: ExecutionContext
+) {
 
   def retrieveUnverifiedEmail(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val endPoint = s"${appConfig.customsDataStore}/subscriptions/unverified-email-display"

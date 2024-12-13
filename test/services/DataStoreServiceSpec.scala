@@ -52,7 +52,7 @@ class DataStoreServiceSpec extends SpecBase {
 
       running(app) {
         val response = service.getEmail(eori)
-        val result = await(response)
+        val result   = await(response)
 
         result mustBe Right(Email("someemail@mail.com"))
       }
@@ -61,12 +61,29 @@ class DataStoreServiceSpec extends SpecBase {
     "return unverified email" in new Setup {
       val hundred = 100
 
-      val undeliverableEventData: UndeliverableInformationEvent = UndeliverableInformationEvent("someid", "someevent",
-        "someemail", emptyString, Some(hundred), Some("sample"), "sample")
+      val undeliverableEventData: UndeliverableInformationEvent = UndeliverableInformationEvent(
+        "someid",
+        "someevent",
+        "someemail",
+        emptyString,
+        Some(hundred),
+        Some("sample"),
+        "sample"
+      )
 
-      val emailResponse: EmailResponse = EmailResponse(Some("sample@email.com"), Some("time"),
-        Some(UndeliverableInformation("subject-example", "ex-event-id-01", "ex-group-id-01",
-          DateTime.now(), undeliverableEventData)))
+      val emailResponse: EmailResponse = EmailResponse(
+        Some("sample@email.com"),
+        Some("time"),
+        Some(
+          UndeliverableInformation(
+            "subject-example",
+            "ex-event-id-01",
+            "ex-group-id-01",
+            DateTime.now(),
+            undeliverableEventData
+          )
+        )
+      )
 
       when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
 
@@ -77,7 +94,7 @@ class DataStoreServiceSpec extends SpecBase {
 
       running(app) {
         val response = service.getEmail(eori)
-        val result = await(response)
+        val result   = await(response)
 
         result mustBe Left(UnverifiedEmail)
       }
@@ -116,23 +133,25 @@ class DataStoreServiceSpec extends SpecBase {
 
   trait Setup {
     val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-    val eori = "GB11111"
+    implicit val hc: HeaderCarrier   = HeaderCarrier()
+    val eori                         = "GB11111"
 
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
-    val requestBuilder: RequestBuilder = mock[RequestBuilder]
+    val requestBuilder: RequestBuilder                     = mock[RequestBuilder]
 
-    val app: Application = application.overrides(
-      inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-      inject.bind[HttpClientV2].toInstance(mockHttpClient),
-      inject.bind[RequestBuilder].toInstance(requestBuilder)
-    ).build()
+    val app: Application = application
+      .overrides(
+        inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+        inject.bind[HttpClientV2].toInstance(mockHttpClient),
+        inject.bind[RequestBuilder].toInstance(requestBuilder)
+      )
+      .build()
 
     val service: DataStoreService = app.injector.instanceOf[DataStoreService]
 
     when(mockMetricsReporterService.withResponseTimeLogging[Email](any)(any)(any))
-      .thenAnswer((i: InvocationOnMock) => {
+      .thenAnswer { (i: InvocationOnMock) =>
         i.getArgument[Future[Email]](1)
-      })
+      }
   }
 }

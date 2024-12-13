@@ -21,15 +21,12 @@ import utils.SpecBase
 class GuaranteeTransactionSpec extends SpecBase {
 
   val amt = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
-  val tt = TaxType("VAT", amt)
+  val tt  = TaxType("VAT", amt)
   val ttg = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
-  val dd = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
+  val dd  = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
-  val ddNoTaxTypeGroups = DueDate(
-    dueDate = "2020-07-28",
-    reasonForSecurity = Some("T24"),
-    amounts = amt,
-    taxTypeGroups = Seq.empty)
+  val ddNoTaxTypeGroups =
+    DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq.empty)
 
   "getSecurityReason" should {
     "return None when dueDates are empty " in {

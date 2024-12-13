@@ -59,14 +59,14 @@ class GuaranteeTransactionsRequestPageSpec extends SpecBase {
 
     val app: Application = application.build()
 
-    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-    implicit val msg: Messages = messages(app)
+    implicit val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
+    implicit val msg: Messages                                = messages(app)
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
-    implicit val clock: Clock = Clock.systemUTC()
+    implicit val clock: Clock                                 = Clock.systemUTC()
 
     val form: Form[GuaranteeTransactionDates] = new GuaranteeTransactionsRequestPageFormProvider().apply()
 
     val view: Document = Jsoup.parse(app.injector.instanceOf[guarantee_transactions_request_page].apply(form).body)
-    val textDoc = view.text()
+    val textDoc        = view.text()
   }
 }

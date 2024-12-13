@@ -23,15 +23,16 @@ import scala.math.Numeric.BigDecimalIsFractional.zero
 
 trait Balances
 
-case class GuaranteeAccount(number: String,
-                            owner: String,
-                            status: CDSAccountStatus,
-                            balances: Option[GeneralGuaranteeBalance])
+case class GuaranteeAccount(
+  number: String,
+  owner: String,
+  status: CDSAccountStatus,
+  balances: Option[GeneralGuaranteeBalance]
+)
 
-case class GeneralGuaranteeBalance(GuaranteeLimit: BigDecimal,
-                                   AvailableGuaranteeBalance: BigDecimal) extends Balances {
+case class GeneralGuaranteeBalance(GuaranteeLimit: BigDecimal, AvailableGuaranteeBalance: BigDecimal) extends Balances {
 
-  val usedFunds: BigDecimal = GuaranteeLimit - AvailableGuaranteeBalance
+  val usedFunds: BigDecimal      = GuaranteeLimit - AvailableGuaranteeBalance
   val usedPercentage: BigDecimal = if (GuaranteeLimit.equals(zero)) zero else usedFunds / GuaranteeLimit * 100
 }
 

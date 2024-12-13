@@ -21,24 +21,22 @@ import config.AppConfig
 import java.time._
 import javax.inject.Inject
 
-class DateTimeService @Inject()(appConfig: AppConfig) {
+class DateTimeService @Inject() (appConfig: AppConfig) {
 
-  val year = 2027
-  val month = 12
-  val day = 20
-  val hour = 12
+  val year   = 2027
+  val month  = 12
+  val day    = 20
+  val hour   = 12
   val minute = 30
 
   def getTimeStamp: OffsetDateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.UTC)
 
-  def systemDateTime(zoneId: ZoneId): LocalDateTime = {
-
+  def systemDateTime(zoneId: ZoneId): LocalDateTime =
     if (appConfig.fixedDateTime) {
       LocalDateTime.of(LocalDate.of(year, month, day), LocalTime.of(hour, minute))
     } else {
       LocalDateTime.now(zoneId)
     }
-  }
 
   def utcDateTime(): LocalDateTime = systemDateTime(ZoneId.of("UTC"))
 

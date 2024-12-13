@@ -20,7 +20,7 @@ import cats.data.EitherT._
 import cats.instances.future._
 import config.AppConfig
 import connectors._
-import controllers.actions.{IdentifierAction, EmailAction}
+import controllers.actions.{EmailAction, IdentifierAction}
 import helpers.DateFormatters
 import models._
 import models.request.IdentifierRequest
@@ -36,84 +36,96 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
-class GuaranteeAccountController @Inject()(identify: IdentifierAction,
-                                           checkEmailIsVerified: EmailAction,
-                                           apiConnector: CustomsFinancialsApiConnector,
-                                           dateTimeService: DateTimeService,
-                                           guaranteeAccount: guarantee_account,
-                                           guaranteeAccountNotAvailable: guarantee_account_not_available,
-                                           tooManyResults: guarantee_account_exceed_threshold,
-                                           guaranteeAccountTransactionsNotAvailable: guarantee_account_transactions_not_available,
-                                           notFound: not_found
-                                          )(implicit mcc: MessagesControllerComponents,
-                                            ec: ExecutionContext, appConfig: AppConfig)
-  extends FrontendController(mcc) with I18nSupport with DateFormatters {
+class GuaranteeAccountController @Inject() (
+  identify: IdentifierAction,
+  checkEmailIsVerified: EmailAction,
+  apiConnector: CustomsFinancialsApiConnector,
+  dateTimeService: DateTimeService,
+  guaranteeAccount: guarantee_account,
+  guaranteeAccountNotAvailable: guarantee_account_not_available,
+  tooManyResults: guarantee_account_exceed_threshold,
+  guaranteeAccountTransactionsNotAvailable: guarantee_account_transactions_not_available,
+  notFound: not_found
+)(implicit mcc: MessagesControllerComponents, ec: ExecutionContext, appConfig: AppConfig)
+    extends FrontendController(mcc)
+    with I18nSupport
+    with DateFormatters {
 
   val log: Logger = Logger(this.getClass)
 
-  def showAccountDetails(page: Option[Int]): Action[AnyContent] = (
-    identify andThen checkEmailIsVerified).async { implicit request =>
+  def showAccountDetails(page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified).async {
+    implicit request =>
 
-    val result = for {
-      account <- fromOptionF[Future, Result, GuaranteeAccount](
-        apiConnector.getGuaranteeAccount(request.eori), NotFound(notFound()))
+      val result = for {
+        account <- fromOptionF[Future, Result, GuaranteeAccount](
+                     apiConnector.getGuaranteeAccount(request.eori),
+                     NotFound(notFound())
+                   )
 
-      page <- liftF[Future, Result, Result](showAccountWithTransactionDetails(account, page))
-    } yield page
+        page <- liftF[Future, Result, Result](showAccountWithTransactionDetails(account, page))
+      } yield page
 
-    result.merge.recover {
-      case NonFatal(t) =>
+      result.merge.recover { case NonFatal(t) =>
         log.error(s"Unable to retrieve account details: ${t.getMessage}")
         Redirect(routes.GuaranteeAccountController.showAccountUnavailable)
-    }
+      }
   }
 
-  private def showAccountWithTransactionDetails(account: GuaranteeAccount, page: Option[Int])(
-    implicit req: IdentifierRequest[AnyContent]): Future[Result] = {
-
+  private def showAccountWithTransactionDetails(account: GuaranteeAccount, page: Option[Int])(implicit
+    req: IdentifierRequest[AnyContent]
+  ): Future[Result] =
     for {
       transactions <- apiConnector.retrieveOpenGuaranteeTransactionsDetail(account.number)
-      result = transactions match {
-        case Left(error) => error match {
-          case NoTransactionsAvailable => Ok(guaranteeAccount(
-            GuaranteeAccountViewModel(account, dateTimeService.localDateTime()),
-            GuaranteeAccountTransactionsViewModel(Seq.empty, page)))
+      result        = transactions match {
+                        case Left(error) =>
+                          error match {
+                            case NoTransactionsAvailable =>
+                              Ok(
+                                guaranteeAccount(
+                                  GuaranteeAccountViewModel(account, dateTimeService.localDateTime()),
+                                  GuaranteeAccountTransactionsViewModel(Seq.empty, page)
+                                )
+                              )
 
-          case TooManyTransactionsRequested => Ok(tooManyResults(
-            GuaranteeAccountViewModel(account, dateTimeService.localDateTime())))
+                            case TooManyTransactionsRequested =>
+                              Ok(tooManyResults(GuaranteeAccountViewModel(account, dateTimeService.localDateTime())))
 
-          case UnknownException => Redirect(routes.GuaranteeAccountController.showTransactionsUnavailable())
-        }
+                            case UnknownException => Redirect(routes.GuaranteeAccountController.showTransactionsUnavailable())
+                          }
 
-        case Right(transactions) =>
-          val (nonC18Transactions, c18Transactions) = transactions.partition(_.c18Reference.isEmpty)
-          val filteredTransactions = nonC18Transactions.map { transaction =>
-            GuaranteeAccountTransaction(
-              transaction,
-              c18Transactions.filter(_.movementReferenceNumber == transaction.movementReferenceNumber)
-            )
-          }
-          Ok(guaranteeAccount(GuaranteeAccountViewModel(account, dateTimeService.localDateTime()),
-            GuaranteeAccountTransactionsViewModel(filteredTransactions, page)))
-      }
+                        case Right(transactions) =>
+                          val (nonC18Transactions, c18Transactions) = transactions.partition(_.c18Reference.isEmpty)
+                          val filteredTransactions                  = nonC18Transactions.map { transaction =>
+                            GuaranteeAccountTransaction(
+                              transaction,
+                              c18Transactions.filter(_.movementReferenceNumber == transaction.movementReferenceNumber)
+                            )
+                          }
+                          Ok(
+                            guaranteeAccount(
+                              GuaranteeAccountViewModel(account, dateTimeService.localDateTime()),
+                              GuaranteeAccountTransactionsViewModel(filteredTransactions, page)
+                            )
+                          )
+                      }
     } yield result
-  }
 
-  def showTransactionsUnavailable(): Action[AnyContent] = (
-    identify andThen checkEmailIsVerified).async { implicit request =>
+  def showTransactionsUnavailable(): Action[AnyContent] = (identify andThen checkEmailIsVerified).async {
+    implicit request =>
 
-    val result = for {
-      account <- fromOptionF[Future, Result, GuaranteeAccount](
-        apiConnector.getGuaranteeAccount(request.eori), NotFound(notFound()))
-    } yield
-      Ok(guaranteeAccountTransactionsNotAvailable(GuaranteeAccountViewModel(
-        account, dateTimeService.localDateTime())))
+      val result = for {
+        account <- fromOptionF[Future, Result, GuaranteeAccount](
+                     apiConnector.getGuaranteeAccount(request.eori),
+                     NotFound(notFound())
+                   )
+      } yield Ok(
+        guaranteeAccountTransactionsNotAvailable(GuaranteeAccountViewModel(account, dateTimeService.localDateTime()))
+      )
 
-    result.merge.recover {
-      case NonFatal(e) =>
+      result.merge.recover { case NonFatal(e) =>
         log.error(s"Unable to retrieve account details: ${e.getMessage}")
         Redirect(routes.GuaranteeAccountController.showAccountUnavailable)
-    }
+      }
   }
 
   def showAccountUnavailable: Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit req =>

@@ -16,11 +16,11 @@
 
 package models
 
-import utils.Utils.{emptyString, asterix}
+import utils.Utils.{asterix, emptyString}
 
 package object domain {
   type EORI = String
-  type GAN = String
+  type GAN  = String
 
   private val lengthToReveal = 4
 

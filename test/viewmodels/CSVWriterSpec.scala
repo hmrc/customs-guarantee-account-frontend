@@ -18,13 +18,11 @@ package viewmodels
 
 import utils.SpecBase
 
-
 class CSVWriterSpec extends SpecBase {
 
-  case class Foo(columnA: Option[String],
-                 columnB: Option[String],
-                 columnC: Option[String])
-    extends CSVWritable with FieldNames {
+  case class Foo(columnA: Option[String], columnB: Option[String], columnC: Option[String])
+      extends CSVWritable
+      with FieldNames {
     override def fieldNames: Seq[String] = Seq("columnA", "columnB", "columnC")
   }
 
@@ -42,8 +40,7 @@ class CSVWriterSpec extends SpecBase {
         Foo(Some("A"), Some("B"), Some("C")),
         Foo(Some("X"), Some("Y"), Some("Z"))
       )
-      CSVWriter.toCSVWithHeaders(records) must be(
-        """"columnA","columnB","columnC"
+      CSVWriter.toCSVWithHeaders(records) must be(""""columnA","columnB","columnC"
           |"A","B","C"
           |"X","Y","Z"""".stripMargin)
     }
@@ -54,8 +51,7 @@ class CSVWriterSpec extends SpecBase {
       val records = Seq(
         Foo(Some("a"), Some("b"), Some("c"))
       )
-      CSVWriter.toCSVWithHeaders(records, mappingFn) must be(
-        """"COLUMNA","COLUMNB","COLUMNC"
+      CSVWriter.toCSVWithHeaders(records, mappingFn) must be(""""COLUMNA","COLUMNB","COLUMNC"
           |"a","b","c"""".stripMargin)
     }
 
@@ -64,8 +60,7 @@ class CSVWriterSpec extends SpecBase {
         Foo(Some("A"), Some("B"), Some("C")),
         Foo(Some("X"), Some("Y"), Some("Z"))
       )
-      CSVWriter.toCSVWithHeaders(records, footer = Some("footer text")) must be(
-        """"columnA","columnB","columnC"
+      CSVWriter.toCSVWithHeaders(records, footer = Some("footer text")) must be(""""columnA","columnB","columnC"
           |"A","B","C"
           |"X","Y","Z"
           |

@@ -24,13 +24,13 @@ class AppConfigSpec extends SpecBase {
   "AppConfig" should {
     "include the app name" in new Setup {
       running(app) {
-        appConfig.appName mustBe ("customs-guarantee-account-frontend")
+        appConfig.appName mustBe "customs-guarantee-account-frontend"
       }
     }
   }
 
   trait Setup {
-    val app = application.build()
+    val app       = application.build()
     val appConfig = app.injector.instanceOf[AppConfig]
   }
 }

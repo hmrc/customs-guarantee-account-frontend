@@ -32,8 +32,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DataStoreService @Inject()(httpClient: HttpClientV2, metricsReporter: MetricsReporterService)
-                                (implicit appConfig: AppConfig, ec: ExecutionContext) {
+class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: MetricsReporterService)(implicit
+  appConfig: AppConfig,
+  ec: ExecutionContext
+) {
 
   val log: Logger = Logger(this.getClass)
 
@@ -46,17 +48,20 @@ class DataStoreService @Inject()(httpClient: HttpClientV2, metricsReporter: Metr
         .execute[EmailResponse]
         .map {
           case EmailResponse(Some(address), _, None) => Right(Email(address))
-          case _ => Left(UnverifiedEmail)
-        }.recover {
-          case UpstreamErrorResponse(_, NOT_FOUND, _, _) => Left(UnverifiedEmail)
+          case _                                     => Left(UnverifiedEmail)
+        }
+        .recover { case UpstreamErrorResponse(_, NOT_FOUND, _, _) =>
+          Left(UnverifiedEmail)
         }
     }
   }
 }
 
-case class EmailResponse(address: Option[String],
-                         imestamp: Option[String],
-                         undeliverable: Option[UndeliverableInformation])
+case class EmailResponse(
+  address: Option[String],
+  imestamp: Option[String],
+  undeliverable: Option[UndeliverableInformation]
+)
 
 object EmailResponse {
   implicit val format: OFormat[EmailResponse] = Json.format[EmailResponse]

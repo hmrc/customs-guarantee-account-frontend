@@ -23,12 +23,10 @@ import utils.Utils.emptyString
 
 trait SummaryListRowHelper {
 
-  def summaryListRow(value: String,
-                     secondValue: Option[String] = None,
-                     actions: Actions): SummaryListRow =
+  def summaryListRow(value: String, secondValue: Option[String] = None, actions: Actions): SummaryListRow =
     SummaryListRow(
       value = Value(content = HtmlContent(value)),
-      secondValue = secondValue.map { value => Value(content = HtmlContent(value)) },
+      secondValue = secondValue.map(value => Value(content = HtmlContent(value))),
       classes = emptyString,
       actions = Some(actions)
     )

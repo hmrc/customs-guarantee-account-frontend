@@ -28,10 +28,10 @@ class PaginatedSpec extends SpecBase {
 
       val testPage: Paginated = new Paginated {
         override val itemsGroupedByDate: Seq[GuaranteeAccountTransactionsByDate] = Seq.empty
-        override val itemsPerPage: Int = 10
-        override val requestedPage: Int = 1
-        override val urlForPage: Int => String = pageNumber =>
-          s"https://gov.uk/customs-guarantee-account-frontend/page/${pageNumber}"
+        override val itemsPerPage: Int                                           = 10
+        override val requestedPage: Int                                          = 1
+        override val urlForPage: Int => String                                   =
+          pageNumber => s"https://gov.uk/customs-guarantee-account-frontend/page/$pageNumber"
       }
 
       testPage.pageSummary(msgs) mustBe msgs("cf.pager.summary")
@@ -39,8 +39,8 @@ class PaginatedSpec extends SpecBase {
   }
 
   trait Setup {
-    val app = application.build()
+    val app                     = application.build()
     implicit val msgs: Messages = messages(app)
-    val appConfig = app.injector.instanceOf[AppConfig]
+    val appConfig               = app.injector.instanceOf[AppConfig]
   }
 }

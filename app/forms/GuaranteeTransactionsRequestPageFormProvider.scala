@@ -23,40 +23,49 @@ import play.api.data.Forms.mapping
 import java.time.Clock
 import javax.inject.Inject
 
-class GuaranteeTransactionsRequestPageFormProvider @Inject()(implicit clock: Clock) extends Mappings {
+class GuaranteeTransactionsRequestPageFormProvider @Inject() (implicit clock: Clock) extends Mappings {
 
-  def apply(): Form[GuaranteeTransactionDates] = {
-    Form(mapping(
-      "start" -> localDate(
-        invalidMonth = "cf.form.error.month.invalid",
-        invalidYear = "cf.form.error.year.invalid",
-        emptyStartMonth = "cf.form.error.start.month.date-number-invalid",
-        emptyStartYear = "cf.form.error.start.year.date-number-invalid",
-        emptyStartDate = "cf.form.error.start.date-missing",
-        emptyEndMonth = "cf.form.error.end.month.date-number-invalid",
-        emptyEndYear = "cf.form.error.end.year.date-number-invalid",
-        emptyEndDate = "cf.form.error.end.date-missing",
-        endOfMonth = false,
-        args = Seq.empty
-      ).verifying(equalToOrBeforeToday("cf.form.error.start-future-date"))
-        .verifying(checkDates("cf.form.error.startDate.date-earlier-than-system-start-date",
-          "cf.form.error.start.date-too-far-in-past","cf.form.error.date.year.length")),
-
-      "end" -> localDate(
-        invalidMonth = "cf.form.error.month.invalid",
-        invalidYear = "cf.form.error.year.invalid",
-        emptyStartMonth = "cf.form.error.start.month.date-number-invalid",
-        emptyStartYear = "cf.form.error.start.year.date-number-invalid",
-        emptyStartDate = "cf.form.error.start.date-missing",
-        emptyEndMonth = "cf.form.error.end.month.date-number-invalid",
-        emptyEndYear = "cf.form.error.end.year.date-number-invalid",
-        emptyEndDate = "cf.form.error.end.date-missing",
-        endOfMonth = true,
-        args = Seq.empty
-      ).verifying(equalToOrBeforeToday("cf.form.error.end-future-date"))
-        .verifying(checkDates("cf.form.error.endDate.date-earlier-than-system-start-date",
-          "cf.form.error.end.date-too-far-in-past","cf.form.error.date.year.length"))
-    )(GuaranteeTransactionDates.apply)(GuaranteeTransactionDates.unapply)
+  def apply(): Form[GuaranteeTransactionDates] =
+    Form(
+      mapping(
+        "start" -> localDate(
+          invalidMonth = "cf.form.error.month.invalid",
+          invalidYear = "cf.form.error.year.invalid",
+          emptyStartMonth = "cf.form.error.start.month.date-number-invalid",
+          emptyStartYear = "cf.form.error.start.year.date-number-invalid",
+          emptyStartDate = "cf.form.error.start.date-missing",
+          emptyEndMonth = "cf.form.error.end.month.date-number-invalid",
+          emptyEndYear = "cf.form.error.end.year.date-number-invalid",
+          emptyEndDate = "cf.form.error.end.date-missing",
+          endOfMonth = false,
+          args = Seq.empty
+        ).verifying(equalToOrBeforeToday("cf.form.error.start-future-date"))
+          .verifying(
+            checkDates(
+              "cf.form.error.startDate.date-earlier-than-system-start-date",
+              "cf.form.error.start.date-too-far-in-past",
+              "cf.form.error.date.year.length"
+            )
+          ),
+        "end"   -> localDate(
+          invalidMonth = "cf.form.error.month.invalid",
+          invalidYear = "cf.form.error.year.invalid",
+          emptyStartMonth = "cf.form.error.start.month.date-number-invalid",
+          emptyStartYear = "cf.form.error.start.year.date-number-invalid",
+          emptyStartDate = "cf.form.error.start.date-missing",
+          emptyEndMonth = "cf.form.error.end.month.date-number-invalid",
+          emptyEndYear = "cf.form.error.end.year.date-number-invalid",
+          emptyEndDate = "cf.form.error.end.date-missing",
+          endOfMonth = true,
+          args = Seq.empty
+        ).verifying(equalToOrBeforeToday("cf.form.error.end-future-date"))
+          .verifying(
+            checkDates(
+              "cf.form.error.endDate.date-earlier-than-system-start-date",
+              "cf.form.error.end.date-too-far-in-past",
+              "cf.form.error.date.year.length"
+            )
+          )
+      )(GuaranteeTransactionDates.apply)(GuaranteeTransactionDates.unapply)
     )
-  }
 }

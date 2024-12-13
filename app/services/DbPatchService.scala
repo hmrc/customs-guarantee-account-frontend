@@ -27,9 +27,11 @@ import scala.concurrent.ExecutionContext
 import org.mongodb.scala.SingleObservableFuture
 
 @Singleton
-class DbPatchService @Inject()(appConfig: AppConfig, mongoComponent: MongoComponent)(implicit val ec: ExecutionContext) {
+class DbPatchService @Inject() (appConfig: AppConfig, mongoComponent: MongoComponent)(implicit
+  val ec: ExecutionContext
+) {
 
-  private val log: Logger = Logger(this.getClass)
+  private val log: Logger  = Logger(this.getClass)
   private val documentName = "guarantee-account-cache"
 
   if (appConfig.deleteGuaranteeAccountCacheDocuments) {
@@ -46,19 +48,18 @@ class DbPatchService @Inject()(appConfig: AppConfig, mongoComponent: MongoCompon
     deleteDocuments(collection, collectionName)
   }
 
-  private def getMongoCollection(collectionName: String): MongoCollection[Document] = {
+  private def getMongoCollection(collectionName: String): MongoCollection[Document] =
     mongoComponent.database.getCollection(collectionName)
-  }
 
-  private def deleteDocuments(collection: MongoCollection[Document], collectionName: String): Unit = {
-    collection.deleteMany(empty())
+  private def deleteDocuments(collection: MongoCollection[Document], collectionName: String): Unit =
+    collection
+      .deleteMany(empty())
       .toFuture()
       .map { result =>
         log.warn(s"Deleted documents from : $collectionName")
         log.warn(s"Total deleted documents in the $collectionName: ${result.getDeletedCount}")
-      }.recover {
-        case e: Exception =>
-          log.error(s"Collection drop failed : $collectionName with Exception : ${e.getMessage}")
       }
-  }
+      .recover { case e: Exception =>
+        log.error(s"Collection drop failed : $collectionName with Exception : ${e.getMessage}")
+      }
 }

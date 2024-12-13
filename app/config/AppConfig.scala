@@ -22,13 +22,13 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
+class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig) {
 
-  lazy val appName: String = config.get[String]("appName")
-  lazy val loginUrl: String = config.get[String]("urls.login")
+  lazy val appName: String          = config.get[String]("appName")
+  lazy val loginUrl: String         = config.get[String]("urls.login")
   lazy val loginContinueUrl: String = config.get[String]("urls.loginContinue")
-  lazy val signOutUrl: String = config.get[String]("urls.signOut")
-  lazy val feedbackService = config.getOptional[String]("feedback.url").getOrElse("/feedback") +
+  lazy val signOutUrl: String       = config.get[String]("urls.signOut")
+  lazy val feedbackService          = config.getOptional[String]("feedback.url").getOrElse("/feedback") +
     config.getOptional[String]("feedback.source").getOrElse("/CDS-FIN")
 
   lazy val viewGeneralGuaranteeAccountLink: String = config.get[String]("urls.viewGeneralGuaranteeAccountLink")
@@ -39,15 +39,15 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig)
   lazy val customsDataStore: String = servicesConfig.baseUrl("customs-data-store") +
     config.get[String]("microservice.services.customs-data-store.context")
 
-  lazy val numberOfItemsPerPage: Int = config.get[Int]("application.guarantee-account.numberOfItemsPerPage")
-  lazy val subscribeCdsUrl = config.get[String]("urls.cdsSubscribeUrl")
-  lazy val customsFinancialsFrontendHomepage = config.get[String]("urls.customsFinancialsHomepage")
-  lazy val timeout: Int = config.get[Int]("timeout.timeout")
-  lazy val countdown: Int = config.get[Int]("timeout.countdown")
-  lazy val fixedDateTime = config.get[Boolean]("features.fixed-systemdate-for-tests")
+  lazy val numberOfItemsPerPage: Int            = config.get[Int]("application.guarantee-account.numberOfItemsPerPage")
+  lazy val subscribeCdsUrl                      = config.get[String]("urls.cdsSubscribeUrl")
+  lazy val customsFinancialsFrontendHomepage    = config.get[String]("urls.customsFinancialsHomepage")
+  lazy val timeout: Int                         = config.get[Int]("timeout.timeout")
+  lazy val countdown: Int                       = config.get[Int]("timeout.countdown")
+  lazy val fixedDateTime                        = config.get[Boolean]("features.fixed-systemdate-for-tests")
   lazy val deleteGuaranteeAccountCacheDocuments =
     config.get[Boolean]("features.delete-guarantee-account-cache-documents")
-  lazy val helpMakeGovUkBetterUrl: String = config.get[String]("urls.helpMakeGovUkBetterUrl")
-  lazy val guaranteeAccountGuidanceUrl: String = config.get[String]("urls.guaranteeAccountGuidanceUrl")
-  lazy val emailFrontendUrl: String = config.get[String]("microservice.services.customs-email-frontend.url")
+  lazy val helpMakeGovUkBetterUrl: String       = config.get[String]("urls.helpMakeGovUkBetterUrl")
+  lazy val guaranteeAccountGuidanceUrl: String  = config.get[String]("urls.guaranteeAccountGuidanceUrl")
+  lazy val emailFrontendUrl: String             = config.get[String]("microservice.services.customs-email-frontend.url")
 }

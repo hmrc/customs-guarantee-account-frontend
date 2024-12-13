@@ -43,20 +43,18 @@ trait DateFormatters {
   def timeAsHourMinutesWithAmPm(dateTime: LocalDateTime): String =
     DateTimeFormatter.ofPattern("hh:mm a").format(dateTime)
 
-  def updatedDateTime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
+  def updatedDateTime(dateTime: LocalDateTime)(implicit messages: Messages): String =
     Formatters.timeAsHourMinutesWithAmPm(dateTime).toLowerCase +
       singleSpace + messages(s"cf.guarantee-account.updated.time.on") +
       singleSpace + Formatters.dateAsDayMonthAndYear(dateTime.toLocalDate)
-  }
 
-  def dateTimeAsIso8601(dateTime: LocalDateTime): String = {
+  def dateTimeAsIso8601(dateTime: LocalDateTime): String =
     s"${DateTimeFormatter.ISO_DATE_TIME.format(dateTime.truncatedTo(ChronoUnit.SECONDS))}Z"
-  }
 }
 
 trait CurrencyFormatters {
   def formatCurrencyAmount(amount: BigDecimal): String = {
-    val maxDecimalPlaces: Int = 2
+    val maxDecimalPlaces: Int      = 2
     val numberFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.UK)
 
     numberFormat.setMaximumFractionDigits(maxDecimalPlaces)
@@ -65,8 +63,8 @@ trait CurrencyFormatters {
   }
 
   def formatCurrencyAmount0dp(amount: BigDecimal): String = {
-    val numberFormat: NumberFormat =NumberFormat.getCurrencyInstance(Locale.UK)
-    val outputDecimals = if (amount.isWhole) 0 else 2
+    val numberFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.UK)
+    val outputDecimals             = if (amount.isWhole) 0 else 2
 
     numberFormat.setMaximumFractionDigits(outputDecimals)
     numberFormat.setMinimumFractionDigits(outputDecimals)
@@ -83,7 +81,7 @@ trait FileFormatters {
   def filenameWithRequestDates(start: LocalDate, end: LocalDate)(implicit messages: Messages): String = {
     val formatted = DateTimeFormatter.ofPattern("yyyyMM")
     val startDate = formatted.format(start)
-    val endDate = formatted.format(end)
+    val endDate   = formatted.format(end)
     messages.apply("cf.guarantee-account.requested.csv.filename", startDate, endDate)
   }
 }

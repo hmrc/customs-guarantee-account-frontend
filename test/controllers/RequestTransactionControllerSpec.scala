@@ -67,7 +67,7 @@ class RequestTransactionControllerSpec extends SpecBase {
 
       running(app) {
         val result = route(app, store).value
-        val test = route(app, clear).value
+        val test   = route(app, clear).value
 
         status(result) mustBe OK
         status(test) mustBe OK
@@ -83,7 +83,11 @@ class RequestTransactionControllerSpec extends SpecBase {
       val request: FakeRequest[AnyContentAsFormUrlEncoded] =
         fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
           .withFormUrlEncodedBody(
-            "start.month" -> "10", "start.year" -> "2019", "end.month" -> "10", "end.year" -> "2019")
+            "start.month" -> "10",
+            "start.year"  -> "2019",
+            "end.month"   -> "10",
+            "end.year"    -> "2019"
+          )
 
       running(app) {
         val result = route(app, request).value
@@ -97,7 +101,11 @@ class RequestTransactionControllerSpec extends SpecBase {
       val request: FakeRequest[AnyContentAsFormUrlEncoded] =
         fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
           .withFormUrlEncodedBody(
-            "start.month" -> "9", "start.year" -> "2019", "end.month" -> "10", "end.year" -> "2019")
+            "start.month" -> "9",
+            "start.year"  -> "2019",
+            "end.month"   -> "10",
+            "end.year"    -> "2019"
+          )
 
       running(app) {
         val result = route(app, request).value
@@ -110,7 +118,11 @@ class RequestTransactionControllerSpec extends SpecBase {
       val request: FakeRequest[AnyContentAsFormUrlEncoded] =
         fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
           .withFormUrlEncodedBody(
-            "start.month" -> "10", "start.year" -> "2019", "end.month" -> "9", "end.year" -> "2019")
+            "start.month" -> "10",
+            "start.year"  -> "2019",
+            "end.month"   -> "9",
+            "end.year"    -> "2019"
+          )
 
       running(app) {
         val result = route(app, request).value
@@ -123,7 +135,11 @@ class RequestTransactionControllerSpec extends SpecBase {
       val request: FakeRequest[AnyContentAsFormUrlEncoded] =
         fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
           .withFormUrlEncodedBody(
-            "start.month" -> "10", "start.year" -> "2021", "end.month" -> "9", "end.year" -> "2019")
+            "start.month" -> "10",
+            "start.year"  -> "2021",
+            "end.month"   -> "9",
+            "end.year"    -> "2019"
+          )
 
       running(app) {
         val result = route(app, request).value
@@ -138,7 +154,11 @@ class RequestTransactionControllerSpec extends SpecBase {
       val request: FakeRequest[AnyContentAsFormUrlEncoded] =
         fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
           .withFormUrlEncodedBody(
-            "start.month" -> "10", "start.year" -> "2019", "end.month" -> "10", "end.year" -> year)
+            "start.month" -> "10",
+            "start.year"  -> "2019",
+            "end.month"   -> "10",
+            "end.year"    -> year
+          )
 
       running(app) {
         val result = route(app, request).value
@@ -151,7 +171,11 @@ class RequestTransactionControllerSpec extends SpecBase {
       val request: FakeRequest[AnyContentAsFormUrlEncoded] =
         fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
           .withFormUrlEncodedBody(
-            "start.month" -> "11", "start.year" -> "2019", "end.month" -> "10", "end.year" -> "2019")
+            "start.month" -> "11",
+            "start.year"  -> "2019",
+            "end.month"   -> "10",
+            "end.year"    -> "2019"
+          )
 
       running(app) {
         val result = route(app, request).value
@@ -164,7 +188,11 @@ class RequestTransactionControllerSpec extends SpecBase {
       val request: FakeRequest[AnyContentAsFormUrlEncoded] =
         fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
           .withFormUrlEncodedBody(
-            "start.month" -> "10", "start.year" -> "2000", "end.month" -> "10", "end.year" -> "2000")
+            "start.month" -> "10",
+            "start.year"  -> "2000",
+            "end.month"   -> "10",
+            "end.year"    -> "2000"
+          )
 
       running(app) {
         val result = route(app, request).value
@@ -176,8 +204,12 @@ class RequestTransactionControllerSpec extends SpecBase {
     "return BAD_REQUEST when invalid data submitted" in new Setup {
       val request: FakeRequest[AnyContentAsFormUrlEncoded] =
         fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
-          .withFormUrlEncodedBody("start.invalid" -> "10",
-            "start.year" -> "2019", "end.month" -> "10", "end.year" -> "2019")
+          .withFormUrlEncodedBody(
+            "start.invalid" -> "10",
+            "start.year"    -> "2019",
+            "end.month"     -> "10",
+            "end.year"      -> "2019"
+          )
 
       running(app) {
         val result = route(app, request).value
@@ -189,8 +221,12 @@ class RequestTransactionControllerSpec extends SpecBase {
     "return BAD_REQUEST when start date and end date are empty" in new Setup {
       val request: FakeRequest[AnyContentAsFormUrlEncoded] =
         fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
-          .withFormUrlEncodedBody("start.month" -> emptyString,
-            "start.year" -> "2019", "end.month" -> emptyString, "end.year" -> "2019")
+          .withFormUrlEncodedBody(
+            "start.month" -> emptyString,
+            "start.year"  -> "2019",
+            "end.month"   -> emptyString,
+            "end.year"    -> "2019"
+          )
 
       running(app) {
         val result = route(app, request).value

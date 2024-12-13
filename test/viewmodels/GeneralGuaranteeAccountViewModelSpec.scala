@@ -25,8 +25,8 @@ class GeneralGuaranteeAccountViewModelSpec extends SpecBase {
   "ViewModel" when {
     "account status is open" should {
       val balance = 100
-      val account = GuaranteeAccount("GAN1234", "EORI1234",
-        AccountStatusOpen, Some(GeneralGuaranteeBalance(balance, balance)))
+      val account =
+        GuaranteeAccount("GAN1234", "EORI1234", AccountStatusOpen, Some(GeneralGuaranteeBalance(balance, balance)))
 
       val viewModel = GeneralGuaranteeAccountViewModel(account)
 
@@ -40,7 +40,7 @@ class GeneralGuaranteeAccountViewModelSpec extends SpecBase {
     }
 
     "account status with no balances is open" should {
-      val account = GuaranteeAccount("GAN1234", "EORI1234", AccountStatusOpen, None)
+      val account   = GuaranteeAccount("GAN1234", "EORI1234", AccountStatusOpen, None)
       val viewModel = GeneralGuaranteeAccountViewModel(account)
 
       "have 'account-status-open' status html class attribute" in {
@@ -54,8 +54,8 @@ class GeneralGuaranteeAccountViewModelSpec extends SpecBase {
 
     "account status is suspended" should {
       val balance = 100
-      val account = GuaranteeAccount("GAN1234", "EORI1234", AccountStatusSuspended,
-        Some(GeneralGuaranteeBalance(balance, balance)))
+      val account =
+        GuaranteeAccount("GAN1234", "EORI1234", AccountStatusSuspended, Some(GeneralGuaranteeBalance(balance, balance)))
 
       val viewModel = GeneralGuaranteeAccountViewModel(account)
 
@@ -69,9 +69,9 @@ class GeneralGuaranteeAccountViewModelSpec extends SpecBase {
     }
 
     "account status is closed" should {
-      val balance = 100
-      val account = GuaranteeAccount("GAN1234", "EORI1234", AccountStatusClosed,
-        Some(GeneralGuaranteeBalance(balance, balance)))
+      val balance   = 100
+      val account   =
+        GuaranteeAccount("GAN1234", "EORI1234", AccountStatusClosed, Some(GeneralGuaranteeBalance(balance, balance)))
       val viewModel = GeneralGuaranteeAccountViewModel(account)
 
       "have 'account-status-closed' status html class attribute" in {

@@ -18,9 +18,9 @@ package utils
 
 object Utils {
   val emptyString = ""
-  val comma = ","
+  val comma       = ","
   val singleSpace = " "
-  val hyphen = "-"
-  val asterix = "*"
-  val underScore = "_"
+  val hyphen      = "-"
+  val asterix     = "*"
+  val underScore  = "_"
 }
