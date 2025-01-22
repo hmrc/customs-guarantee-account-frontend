@@ -58,9 +58,7 @@ class EmailControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val expectedResult: Option[String] = Some("unverifiedEmail")
-    implicit val hc: HeaderCarrier     = HeaderCarrier()
-
+    val expectedResult: Option[String]                     = Some("unverifiedEmail")
     private val mockHttpClient                             = mock[HttpClientV2]
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
     val requestBuilder: RequestBuilder                     = mock[RequestBuilder]
@@ -74,7 +72,7 @@ class EmailControllerSpec extends SpecBase {
 
     when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
-    val app: Application = application
+    val app: Application = applicationBuilder
       .overrides(
         bind[MetricsReporterService].toInstance(mockMetricsReporterService),
         bind[HttpClientV2].toInstance(mockHttpClient),

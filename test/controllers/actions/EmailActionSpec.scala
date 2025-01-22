@@ -73,7 +73,7 @@ class EmailActionSpec extends SpecBase {
   trait Setup {
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
 
-    val app: Application = application
+    val app: Application = applicationBuilder
       .overrides(
         inject.bind[DataStoreService].toInstance(mockDataStoreService)
       )

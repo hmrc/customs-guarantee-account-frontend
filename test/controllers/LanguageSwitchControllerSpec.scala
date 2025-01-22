@@ -28,7 +28,7 @@ class LanguageSwitchControllerSpec extends SpecBase {
 
     "set the language to Cymraeg" in {
 
-      val app: Application = application.configure("features.welsh-translation" -> true).build()
+      val app: Application = applicationBuilder.configure("features.welsh-translation" -> true).build()
 
       running(app) {
         val request = FakeRequest(GET, routes.LanguageSwitchController.switchToLanguage(Language.Cymraeg).url)
@@ -42,7 +42,7 @@ class LanguageSwitchControllerSpec extends SpecBase {
 
     "should set the language to English" in {
 
-      val app = application.configure("features.welsh-translation" -> true).build()
+      val app = applicationBuilder.configure("features.welsh-translation" -> true).build()
 
       running(app) {
         val request = FakeRequest(GET, routes.LanguageSwitchController.switchToLanguage(Language.English).url)

@@ -36,11 +36,11 @@ class DbPatchServiceSpec extends SpecBase {
   "Database Patch Service" should {
 
     "delete documents when 'delete-guarantee-account-cache-documents' feature flag is set to true" in new Setup {
-      when(appConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(true)
+      when(mockAppConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(true)
       commonSetupForDeletion()
 
       running(app) {
-        new DbPatchService(appConfig, mockComponent)
+        new DbPatchService(mockAppConfig, mockComponent)
 
         whenReady(mockDeleteObservable.toFuture()) { result =>
           result.getDeletedCount mustBe documents
@@ -49,23 +49,23 @@ class DbPatchServiceSpec extends SpecBase {
     }
 
     "not delete documents when 'delete-guarantee-account-cache-documents' feature flag is set to false" in new Setup {
-      when(appConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(false)
+      when(mockAppConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(false)
       when(mockComponent.database).thenReturn(mockDatabase)
 
       running(app) {
-        new DbPatchService(appConfig, mockComponent)
+        new DbPatchService(mockAppConfig, mockComponent)
 
         verify(mockComponent.database, never).getCollection(collectionName)
       }
     }
 
     "delete all documents and ensure collection is empty" in new Setup {
-      when(appConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(true)
+      when(mockAppConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(true)
       when(mockCollection.countDocuments()).thenReturn(SingleObservable(emptyCollection))
       commonSetupForDeletion()
 
       running(app) {
-        new DbPatchService(appConfig, mockComponent)
+        new DbPatchService(mockAppConfig, mockComponent)
 
         whenReady(mockDeleteObservable.toFuture()) { result =>
           result.getDeletedCount mustBe documents
@@ -78,11 +78,11 @@ class DbPatchServiceSpec extends SpecBase {
     }
 
     "handle exception during document deletion" in new Setup {
-      when(appConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(true)
+      when(mockAppConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(true)
       commonSetupForException()
 
       running(app) {
-        new DbPatchService(appConfig, mockComponent)
+        new DbPatchService(mockAppConfig, mockComponent)
 
         verify(mockDatabase).getCollection[Document](eqTo(collectionName))(any, any)
         verify(mockCollection).deleteMany(any)
@@ -96,7 +96,7 @@ class DbPatchServiceSpec extends SpecBase {
     val timesCalled     = 1
     val emptyCollection = 0L
 
-    val appConfig: AppConfig                                 = mock[AppConfig]
+    val mockAppConfig: AppConfig                             = mock[AppConfig]
     val mockComponent: MongoComponent                        = mock[MongoComponent]
     val mockDatabase: MongoDatabase                          = mock[MongoDatabase]
     val mockCollection: MongoCollection[Document]            = mock[MongoCollection[Document]]
@@ -106,7 +106,7 @@ class DbPatchServiceSpec extends SpecBase {
 
     when(appConfig.customsFinancialsApi).thenReturn(emptyString)
 
-    val app: Application = application
+    val app: Application = applicationBuilder
       .overrides(
         inject.bind[MongoComponent].toInstance(mockComponent),
         inject.bind[AppConfig].toInstance(appConfig),

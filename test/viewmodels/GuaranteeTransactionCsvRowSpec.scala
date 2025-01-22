@@ -24,10 +24,7 @@ import utils.SpecBase
 import java.time.LocalDate
 
 class GuaranteeTransactionCsvRowSpec extends SpecBase {
-
   import viewmodels.GuaranteeTransactionCsvRow._
-
-  implicit val messages: Messages = Helpers.stubMessages()
 
   val amt = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
   val tt  = TaxType("VAT", amt)

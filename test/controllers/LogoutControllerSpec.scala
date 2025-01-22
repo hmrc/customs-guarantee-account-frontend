@@ -24,7 +24,7 @@ class LogoutControllerSpec extends SpecBase {
 
   "logout" must {
     "redirect the user to logout with the continue as the feedback survey url" in {
-      val app = application
+      val app = applicationBuilder
         .configure("feedback.url" -> "/some-continue", "feedback.source" -> "/CDS-FIN")
         .build()
       running(app) {
@@ -40,7 +40,7 @@ class LogoutControllerSpec extends SpecBase {
 
   "logoutNoSurvey" must {
     "redirect the user to logout with no continue location" in {
-      val app = application
+      val app = applicationBuilder
         .configure("feedback.url" -> "/some-continue", "feedback.source" -> "/CDS-FIN")
         .build()
       running(app) {

@@ -37,8 +37,8 @@ class ErrorSummarySpec extends SpecBase {
   "ErrorSummary component" must {
     "show correct error with unchanged key when isErrorKeyUpdateEnabled is false" in new SetUp {
       val errorSum: ErrorSummary = ErrorSummary(
-        errorList = Seq(ErrorLink(Some("#start"), content = Text(msgs("cf.form.error.end.year.date-number-invalid")))),
-        title = Text(msgs("error.summary.title"))
+        errorList = Seq(ErrorLink(Some("#start"), content = Text(messages("cf.form.error.end.year.date-number-invalid")))),
+        title = Text(messages("error.summary.title"))
       )
 
       val govSummaryHtmlFormat: HtmlFormat.Appendable = new GovukErrorSummary().apply(errorSum)
@@ -58,8 +58,8 @@ class ErrorSummarySpec extends SpecBase {
 
         val errorSum: ErrorSummary = ErrorSummary(
           errorList =
-            Seq(ErrorLink(Some("#start.month"), content = Text(msgs("cf.form.error.start.month.date-number-invalid")))),
-          title = Text(msgs("error.summary.title"))
+            Seq(ErrorLink(Some("#start.month"), content = Text(messages("cf.form.error.start.month.date-number-invalid")))),
+          title = Text(messages("error.summary.title"))
         )
 
         val govSummaryHtmlFormat: HtmlFormat.Appendable = new GovukErrorSummary().apply(errorSum)
@@ -85,8 +85,8 @@ class ErrorSummarySpec extends SpecBase {
       " isErrorKeyUpdateEnabled is true and updateFormErrorKeyForTheMessage function is provided" in new SetUp {
 
         val errorSum: ErrorSummary = ErrorSummary(
-          errorList = Seq(ErrorLink(Some("#start.year"), content = Text(msgs("cf.form.error.year.invalid")))),
-          title = Text(msgs("error.summary.title"))
+          errorList = Seq(ErrorLink(Some("#start.year"), content = Text(messages("cf.form.error.year.invalid")))),
+          title = Text(messages("error.summary.title"))
         )
 
         val govSummaryHtmlFormat: HtmlFormat.Appendable = new GovukErrorSummary().apply(errorSum)
@@ -109,8 +109,8 @@ class ErrorSummarySpec extends SpecBase {
       "updateFormErrorKeyForTheMessage function is provided" in new SetUp {
 
         val errorSum: ErrorSummary = ErrorSummary(
-          errorList = Seq(ErrorLink(Some("#end.month"), content = Text(msgs("cf.form.error.end-future-date")))),
-          title = Text(msgs("error.summary.title"))
+          errorList = Seq(ErrorLink(Some("#end.month"), content = Text(messages("cf.form.error.end-future-date")))),
+          title = Text(messages("error.summary.title"))
         )
 
         val govSummaryHtmlFormat: HtmlFormat.Appendable = new GovukErrorSummary().apply(errorSum)
@@ -134,8 +134,8 @@ class ErrorSummarySpec extends SpecBase {
       " isErrorKeyUpdateEnabled is true and updateFormErrorKeyForTheMessage function is provided" in new SetUp {
 
         val errorSum: ErrorSummary = ErrorSummary(
-          errorList = Seq(ErrorLink(Some("#end.year"), content = Text(msgs("cf.form.error.year.invalid")))),
-          title = Text(msgs("error.summary.title"))
+          errorList = Seq(ErrorLink(Some("#end.year"), content = Text(messages("cf.form.error.year.invalid")))),
+          title = Text(messages("error.summary.title"))
         )
 
         val govSummaryHtmlFormat: HtmlFormat.Appendable = new GovukErrorSummary().apply(errorSum)
@@ -156,10 +156,9 @@ class ErrorSummarySpec extends SpecBase {
   }
 
   trait SetUp {
-    implicit val msgs: Messages           = Helpers.stubMessages()
     val mockGovSummary: GovukErrorSummary = mock[GovukErrorSummary]
 
-    val app: Application = application
+    val app: Application = applicationBuilder
       .overrides(
         bind[GovukErrorSummary].toInstance(mockGovSummary)
       )

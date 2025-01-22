@@ -36,7 +36,7 @@ class InputDateSpec extends SpecBase {
       running(app) {
         val inputDateView                 = app.injector.instanceOf[views.html.components.inputDate]
         val output: HtmlFormat.Appendable =
-          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages(app))
+          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages)
         val html: Document                = Jsoup.parse(output.toString)
 
         html.getElementsByTag("h1").text()               must include("Date of Birth")
@@ -55,7 +55,7 @@ class InputDateSpec extends SpecBase {
       running(app) {
         val inputDateView                 = app.injector.instanceOf[views.html.components.inputDate]
         val output: HtmlFormat.Appendable =
-          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages(app))
+          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages)
         val html: Document                = Jsoup.parse(output.toString)
 
         html.getElementsByTag("h1").text()              must include("Date of Birth")
@@ -74,7 +74,7 @@ class InputDateSpec extends SpecBase {
       running(app) {
         val inputDateView                 = app.injector.instanceOf[views.html.components.inputDate]
         val output: HtmlFormat.Appendable =
-          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages(app))
+          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages)
         val html: Document                = Jsoup.parse(output.toString)
 
         html.getElementsByTag("h1").text()               must include("Date of Birth")
@@ -95,7 +95,7 @@ class InputDateSpec extends SpecBase {
         val inputDateView = app.injector.instanceOf[views.html.components.inputDate]
 
         val output: HtmlFormat.Appendable =
-          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages(app))
+          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages)
 
         val html: Document = Jsoup.parse(output.toString)
 
@@ -111,6 +111,6 @@ class InputDateSpec extends SpecBase {
   trait Setup {
     implicit val clk: Clock = Clock.systemUTC()
     val form                = new GuaranteeTransactionsRequestPageFormProvider().apply()
-    val app: Application    = application.build()
+    val app: Application    = applicationBuilder.build()
   }
 }

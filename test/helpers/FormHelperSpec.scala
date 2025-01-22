@@ -18,12 +18,13 @@ package helpers
 
 import org.scalatest.matchers.should.Matchers.shouldBe
 import utils.SpecBase
+import utils.TestData.{defaultKey, endKey, startKey}
 
 class FormHelperSpec extends SpecBase {
   "updateFormErrorKeyForStartAndEndDate" must {
     "append .month in the FormError key when key is either start or end and error msg key is " +
       "olderStartDateKey, earlierStartDateKey, futureStartDateKey, " +
-      "invalidStartMonthKey and invalidStartYearKey" in new SetUp {
+      "invalidStartMonthKey and invalidStartYearKey" in {
 
         FormHelper.updateFormErrorKeyForStartAndEndDate()(
           startKey,
@@ -77,7 +78,7 @@ class FormHelperSpec extends SpecBase {
       }
 
     "append .year in the FormError key when key is either start or end and " +
-      "error msg key is of invalid year length" in new SetUp {
+      "error msg key is of invalid year length" in {
 
         FormHelper.updateFormErrorKeyForStartAndEndDate()(
           startKey,
@@ -87,16 +88,10 @@ class FormHelperSpec extends SpecBase {
         FormHelper.updateFormErrorKeyForStartAndEndDate()(endKey, "cf.form.error.year.invalid") shouldBe s"$endKey.year"
       }
 
-    "return the unchanged key when key in neither start or end" in new SetUp {
+    "return the unchanged key when key in neither start or end" in {
       FormHelper.updateFormErrorKeyForStartAndEndDate()(defaultKey, "cf.form.error.year.invalid") shouldBe defaultKey
 
       FormHelper.updateFormErrorKeyForStartAndEndDate()(defaultKey, "cf.form.error.year.invalid") shouldBe defaultKey
     }
-  }
-
-  trait SetUp {
-    val startKey   = "start"
-    val endKey     = "end"
-    val defaultKey = "default"
   }
 }

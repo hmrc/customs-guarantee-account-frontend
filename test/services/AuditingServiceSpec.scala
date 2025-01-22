@@ -26,6 +26,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector._
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 import utils.SpecBase
+import utils.TestData.eori
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -205,9 +206,6 @@ class AuditingServiceSpec extends SpecBase {
   }
 
   trait Setup {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-
-    val eori                   = "GB744638982000"
     val guaranteeAccountNumber = "1234567"
     val fromDate: LocalDate    = LocalDate.parse("2020-10-20")
     val toDate: LocalDate      = LocalDate.parse("2020-12-22")
@@ -242,8 +240,10 @@ class AuditingServiceSpec extends SpecBase {
 
     when(mockAuditConnector.sendExtendedEvent(any)(any, any)).thenReturn(Future.successful(AuditResult.Success))
 
-    val app: Application                     = application.overrides(bind[AuditConnector].toInstance(mockAuditConnector)).build()
+    val app: Application                     = applicationBuilder
+      .overrides(bind[AuditConnector].toInstance(mockAuditConnector))
+      .build()
+    
     val testAuditingService: AuditingService = app.injector.instanceOf[AuditingService]
-
   }
 }

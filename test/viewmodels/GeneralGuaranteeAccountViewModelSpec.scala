@@ -19,12 +19,12 @@ package viewmodels
 import connectors.{AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended}
 import models.{GeneralGuaranteeBalance, GuaranteeAccount}
 import utils.SpecBase
+import utils.TestData.balance
 
 class GeneralGuaranteeAccountViewModelSpec extends SpecBase {
 
   "ViewModel" when {
     "account status is open" should {
-      val balance = 100
       val account =
         GuaranteeAccount("GAN1234", "EORI1234", AccountStatusOpen, Some(GeneralGuaranteeBalance(balance, balance)))
 
@@ -53,7 +53,6 @@ class GeneralGuaranteeAccountViewModelSpec extends SpecBase {
     }
 
     "account status is suspended" should {
-      val balance = 100
       val account =
         GuaranteeAccount("GAN1234", "EORI1234", AccountStatusSuspended, Some(GeneralGuaranteeBalance(balance, balance)))
 
@@ -69,7 +68,6 @@ class GeneralGuaranteeAccountViewModelSpec extends SpecBase {
     }
 
     "account status is closed" should {
-      val balance   = 100
       val account   =
         GuaranteeAccount("GAN1234", "EORI1234", AccountStatusClosed, Some(GeneralGuaranteeBalance(balance, balance)))
       val viewModel = GeneralGuaranteeAccountViewModel(account)

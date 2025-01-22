@@ -17,18 +17,46 @@
 package utils
 
 import crypto.EncryptedValue
+import play.api.libs.json.{JsValue, Json}
+import uk.gov.hmrc.http.SessionId
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.{LocalDate, LocalDateTime, ZoneOffset}
 
 object TestData {
 
   val YEAR_2024 = 2024
+  val YEAR_2018 = 2018
+  val YEAR      = 2019
   val MONTH_7   = 7
   val DAY_26    = 26
   val DAY_29    = 29
   val HOUR_12   = 12
   val MINUTES   = 10
   val SECONDS   = 55
+
+  val dayOne         = 1
+  val dayTwenty      = 20
+  val dayTwentyOne   = 21
+  val dayTwentyTwo   = 22
+  val dayTwentyThree = 23
+  val twoThousand    = 2000
+  val eighteen       = 18
+
+  val eori                 = "123456789"
+  val sessionId: SessionId = SessionId("session_1234")
+  val accountNumber        = "987654"
+  val someGan              = "GAN-1"
+  val limit                = 123000
+  val balance              = 123.45
+
+  val startKey   = "start"
+  val endKey     = "end"
+  val defaultKey = "default"
+
+  val date               = LocalDate.now()
+  val dateTime           = LocalDateTime.now()
+  val dateInMilliSeconds = dateTime.atZone(ZoneOffset.UTC).toInstant.toEpochMilli
+  val dollar             = "$"
 
   val LOCAL_DATE_TIME: LocalDateTime = LocalDateTime.of(YEAR_2024, MONTH_7, DAY_26, HOUR_12, MINUTES, SECONDS)
   val LOCAL_DATE: LocalDate          = LocalDate.of(YEAR_2024, MONTH_7, DAY_29)

@@ -25,6 +25,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
+import utils.TestData.{eori, someGan, YEAR, dayTwentyTwo, dayTwentyThree, limit, balance}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -139,11 +140,6 @@ class RequestedTransactionsControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val eori    = "GB001"
-    val someGan = "GAN-1"
-    val limit   = 123000
-    val balance = 123.45
-
     val mockCustomsFinancialsApiConnector: CustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
 
     val guaranteeAccount: GuaranteeAccount = GuaranteeAccount(
@@ -164,13 +160,9 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       taxTypeGroups = Seq(taxTypeGroup)
     )
 
-    val year           = 2019
-    val dayTwentyThree = 23
-    val dayTwentyTwo   = 22
-
     val ganTransactions: Seq[GuaranteeTransaction] = List(
       GuaranteeTransaction(
-        LocalDate.of(year, Month.OCTOBER, dayTwentyThree),
+        LocalDate.of(YEAR, Month.OCTOBER, dayTwentyThree),
         "MRN-1",
         None,
         BigDecimal(45367.12),
@@ -184,7 +176,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         dueDates = Seq(dueDate)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(YEAR, Month.OCTOBER, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12367.50),
@@ -198,7 +190,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         dueDates = Seq(dueDate)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(YEAR, Month.OCTOBER, dayTwentyTwo),
         "MRN-3",
         None,
         BigDecimal(12368.50),
@@ -212,7 +204,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         dueDates = Seq(dueDate)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(YEAR, Month.OCTOBER, dayTwentyTwo),
         "MRN-4",
         None,
         BigDecimal(12369.50),
@@ -230,7 +222,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
     val nonFatalResponse: UpstreamErrorResponse =
       UpstreamErrorResponse("ServiceUnavailable", Status.SERVICE_UNAVAILABLE, Status.SERVICE_UNAVAILABLE)
 
-    val app: Application = application
+    val app: Application = applicationBuilder
       .overrides(
         bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector)
       )

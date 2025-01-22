@@ -29,6 +29,7 @@ import services.AuditingService
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.SpecBase
+import utils.TestData.{balance, dayTwentyThree, dayTwentyTwo, eori, limit, someGan, YEAR_2018}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.mockito.Mockito.verify
@@ -49,7 +50,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Right(ganTransactions.reverse)))
 
-      override val app: Application = application
+      override val app: Application = applicationBuilder
         .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
         .configure("application.guarantee-account.numberOfItemsPerPage" -> "10")
         .build()
@@ -192,7 +193,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Right(ganTransactions)))
 
-      override val app: Application = application
+      override val app: Application = applicationBuilder
         .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
         .configure(
           "application.guarantee-account.numberOfItemsPerPage" -> "10",
@@ -233,7 +234,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.failed(new RuntimeException("Unknown Exception")))
 
-      override val app: Application = application
+      override val app: Application = applicationBuilder
         .overrides(bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector))
         .configure("application.guarantee-account.numberOfItemsPerPage" -> "10")
         .build()
@@ -520,12 +521,8 @@ class DownloadCsvControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val eori                = "GB001"
-    val someGan             = "GAN-1"
     val fromDate: LocalDate = LocalDate.parse("2020-10-20")
     val toDate: LocalDate   = LocalDate.parse("2020-12-22")
-    val limit               = 123000
-    val balance             = 123.45
 
     val guaranteeAccount: GuaranteeAccount = GuaranteeAccount(
       someGan,
@@ -541,13 +538,9 @@ class DownloadCsvControllerSpec extends SpecBase {
     val dd: DueDate =
       DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
-    val year           = 2018
-    val dayTwentyThree = 23
-    val dayTwentyTwo   = 22
-
     val ganTransactions: Seq[GuaranteeTransaction] = List(
       GuaranteeTransaction(
-        LocalDate.of(year, Month.JULY, dayTwentyThree),
+        LocalDate.of(YEAR_2018, Month.JULY, dayTwentyThree),
         "MRN-1",
         None,
         BigDecimal(45367.12),
@@ -561,7 +554,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.JULY, dayTwentyTwo),
+        LocalDate.of(YEAR_2018, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12367.50),
@@ -575,7 +568,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.JULY, dayTwentyTwo),
+        LocalDate.of(YEAR_2018, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12368.50),
@@ -589,7 +582,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.JULY, dayTwentyTwo),
+        LocalDate.of(YEAR_2018, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12369.50),
@@ -607,7 +600,7 @@ class DownloadCsvControllerSpec extends SpecBase {
     val mockCustomsFinancialsApiConnector: CustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
     val mockAuditingService: AuditingService                             = mock[AuditingService]
 
-    val app: Application = application
+    val app: Application = applicationBuilder
       .overrides(
         bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
         bind[AuditingService].toInstance(mockAuditingService)
@@ -618,7 +611,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       )
       .build()
 
-    lazy val appRequested: Application = application
+    lazy val appRequested: Application = applicationBuilder
       .overrides(
         bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
         bind[AuditingService].toInstance(mockAuditingService)

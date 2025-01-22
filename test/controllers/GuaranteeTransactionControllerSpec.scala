@@ -29,6 +29,7 @@ import services.{DataStoreService, DateTimeService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
+import utils.TestData.{eori, someGan, YEAR, dayTwenty, dayTwentyOne, dayTwentyTwo, dayTwentyThree, limit, balance}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -54,7 +55,7 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       when(mockDataStoreService.getEmail(eqTo(eori))(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
@@ -77,7 +78,7 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
         .thenReturn(Future.successful(None))
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector)
         )
@@ -105,7 +106,7 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       when(mockDataStoreService.getEmail(eqTo(eori))(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
@@ -134,7 +135,7 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       when(mockDataStoreService.getEmail(eqTo(eori))(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DataStoreService].toInstance(mockDataStoreService)
@@ -163,7 +164,7 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       when(mockDataStoreService.getEmail(eqTo(eori))(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
@@ -193,7 +194,7 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
       when(mockDataStoreService.getEmail(eqTo(eori))(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[CustomsFinancialsApiConnector].toInstance(mockCustomsFinancialsApiConnector),
           bind[DateTimeService].toInstance(mockDateTimeService),
@@ -213,12 +214,6 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
   }
 
   trait Setup {
-
-    val eori    = "GB001"
-    val someGan = "GAN-1"
-    val limit   = 123000
-    val balance = 123.45
-
     val mockDateTimeService: DateTimeService                             = mock[DateTimeService]
     val mockCustomsFinancialsApiConnector: CustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
     val mockDataStoreService: DataStoreService                           = mock[DataStoreService]
@@ -237,15 +232,9 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
     val dd: DueDate =
       DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
-    val year           = 2018
-    val dayTwentyThree = 23
-    val dayTwentyTwo   = 22
-    val dayTwentyOne   = 21
-    val dayTwenty      = 20
-
     val ganTransactions: Seq[GuaranteeTransaction] = List(
       GuaranteeTransaction(
-        LocalDate.of(year, Month.JULY, dayTwentyThree),
+        LocalDate.of(YEAR, Month.JULY, dayTwentyThree),
         "MRN-1",
         None,
         BigDecimal(45367.12),
@@ -259,7 +248,7 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.JULY, dayTwentyTwo),
+        LocalDate.of(YEAR, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12367.50),
@@ -273,7 +262,7 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.JULY, dayTwentyOne),
+        LocalDate.of(YEAR, Month.JULY, dayTwentyOne),
         "MRN-3",
         None,
         BigDecimal(12368.50),
@@ -287,7 +276,7 @@ class GuaranteeTransactionControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.JULY, dayTwenty),
+        LocalDate.of(YEAR, Month.JULY, dayTwenty),
         "MRN-4",
         None,
         BigDecimal(12369.50),

@@ -24,6 +24,7 @@ import org.scalatest.Assertion
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
+import utils.TestData.{YEAR_2024, YEAR_2018, MONTH_7, dayOne}
 import viewmodels._
 import views.html.components.pager
 
@@ -56,16 +57,6 @@ class PagerSpec extends SpecBase {
   }
 
   trait Setup {
-    val app: Application     = application.build()
-    val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-
-    implicit val msg: Messages = messages(app)
-
-    val year2024      = 2024
-    val year2018      = 2018
-    val monthOfYear   = 1
-    val dayOfTheMonth = 22
-
     val totAmt   = "20.00"
     val clearAmt = "30.00"
     val openAmt  = "10.00"
@@ -79,7 +70,7 @@ class PagerSpec extends SpecBase {
 
     val guaranTrans: GuaranteeTransaction =
       GuaranteeTransaction(
-        LocalDate.of(year2018, Month.JULY, dayOfTheMonth),
+        LocalDate.of(YEAR_2018, Month.JULY, dayOne),
         "MRN-2",
         None,
         BigDecimal(12368.50),
@@ -98,7 +89,7 @@ class PagerSpec extends SpecBase {
 
     val guaranteeAccTransDate: GuaranteeAccountTransactionsByDate =
       GuaranteeAccountTransactionsByDate(
-        LocalDate.of(year2024, monthOfYear, dayOfTheMonth),
+        LocalDate.of(YEAR_2024, MONTH_7, dayOne),
         Seq(guaranteeAccountTrans)
       )
 
@@ -118,7 +109,7 @@ class PagerSpec extends SpecBase {
       override val urlForPage: Int => String = pageNumber => s"/page/$pageNumber"
     }
 
-    def view(model: Paginated): Document = Jsoup.parse(app.injector.instanceOf[pager].apply(model).body)
+    def view(model: Paginated): Document = Jsoup.parse(instanceOf[pager].apply(model).body)
   }
 
   private def shouldNotContainLinkToPreviousPage(view: Document)(implicit msg: Messages): Assertion = {

@@ -24,7 +24,7 @@ class PaginatedSpec extends SpecBase {
 
   "Paginated" should {
 
-    "return valid title when page summary is invoked" in new Setup {
+    "return valid title when page summary is invoked" in {
 
       val testPage: Paginated = new Paginated {
         override val itemsGroupedByDate: Seq[GuaranteeAccountTransactionsByDate] = Seq.empty
@@ -34,13 +34,7 @@ class PaginatedSpec extends SpecBase {
           pageNumber => s"https://gov.uk/customs-guarantee-account-frontend/page/$pageNumber"
       }
 
-      testPage.pageSummary(msgs) mustBe msgs("cf.pager.summary")
+      testPage.pageSummary(messages) mustBe messages("cf.pager.summary")
     }
-  }
-
-  trait Setup {
-    val app                     = application.build()
-    implicit val msgs: Messages = messages(app)
-    val appConfig               = app.injector.instanceOf[AppConfig]
   }
 }

@@ -237,6 +237,6 @@ class RequestTransactionControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val app: Application = application.configure("features.fixed-systemdate-for-tests" -> "true").build()
+    val app: Application = applicationBuilder.configure("features.fixed-systemdate-for-tests" -> "true").build()
   }
 }

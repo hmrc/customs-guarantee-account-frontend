@@ -23,8 +23,7 @@ import play.api.inject.bind
 import play.api.libs.json.{JsResult, JsString, JsSuccess, JsValue}
 import play.api.test.Helpers._
 import services.MetricsReporterService
-import uk.gov.hmrc.http.SessionId
-import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
@@ -37,6 +36,7 @@ import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import java.time.{LocalDate, Month}
 import scala.concurrent.{ExecutionContext, Future}
 import utils.Utils.emptyString
+import utils.TestData.{YEAR, accountNumber, dayTwentyThree, dayTwentyTwo, eori}
 
 import java.net.URL
 
@@ -52,7 +52,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockHttpClient.post(any[URL]())(any)).thenReturn(requestBuilder)
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
@@ -85,7 +85,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       when[Future[Seq[GuaranteeAccount]]](mockMetricsReporterService.withResponseTimeLogging(any)(any)(any))
         .thenReturn(Future.successful(Seq(guaranteeAccount)))
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder),
@@ -173,16 +173,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockCacheRepository.set(any, any)).thenReturn(Future.successful(true))
 
-      val app: Application = application
+      val application: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
         )
         .build()
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = instanceOf[CustomsFinancialsApiConnector]
 
-      running(app) {
+      running(application) {
         val result = await(connector.retrieveOpenGuaranteeTransactionsDetail("gan")(implicitly))
 
         result.isRight mustBe true
@@ -202,7 +202,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockCacheRepository.set(any, any)).thenReturn(Future.successful(false))
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
@@ -222,11 +222,9 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockCacheRepository.get(any)).thenReturn(Future.successful(Some(ganTransactions)))
 
-      val app: Application = application.build()
+      val connector: CustomsFinancialsApiConnector = instanceOf[CustomsFinancialsApiConnector]
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
-
-      running(app) {
+      running(application) {
         val result = await(connector.retrieveOpenGuaranteeTransactionsDetail("gan")(implicitly))
 
         result mustBe Right(ganTransactions)
@@ -249,7 +247,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockCacheRepository.get(any)).thenReturn(Future.successful(None))
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
@@ -278,7 +276,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockCacheRepository.get(any)).thenReturn(Future.successful(None))
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
@@ -304,7 +302,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockCacheRepository.get(any)).thenReturn(Future.successful(None))
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
@@ -331,7 +329,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockHttpClient.post(any[URL]())(any)).thenReturn(requestBuilder)
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
@@ -364,7 +362,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockHttpClient.post(any[URL]())(any)).thenReturn(requestBuilder)
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(bind[HttpClientV2].toInstance(mockHttpClient), bind[RequestBuilder].toInstance(requestBuilder))
         .build()
 
@@ -391,7 +389,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockHttpClient.post(any[URL]())(any)).thenReturn(requestBuilder)
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
@@ -418,7 +416,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockHttpClient.post(any[URL]())(any)).thenReturn(requestBuilder)
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
@@ -439,11 +437,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
   }
 
   trait Setup {
-    private val traderEori         = "12345678"
-    private val accountNumber      = "987654"
-    val sessionId: SessionId       = SessionId("session_1234")
-    implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(sessionId))
-
+    private val traderEori             = "12345678"
     val mockHttpClient: HttpClientV2   = mock[HttpClientV2]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
 
@@ -454,13 +448,9 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
     val dd: DueDate =
       DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
-    val year           = 2019
-    val dayTwentyThree = 23
-    val dayTwentyTwo   = 22
-
     val ganTransactions: Seq[GuaranteeTransaction] = List(
       GuaranteeTransaction(
-        LocalDate.of(year, Month.OCTOBER, dayTwentyThree),
+        LocalDate.of(YEAR, Month.OCTOBER, dayTwentyThree),
         "19GB000056HG5w746",
         None,
         BigDecimal(45367.12),
@@ -474,7 +464,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(YEAR, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12367.50),
@@ -488,7 +478,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(YEAR, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12368.50),
@@ -502,7 +492,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(YEAR, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12369.50),
@@ -525,7 +515,6 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
     val fromDate: LocalDate = LocalDate.parse("2019-10-08")
     val toDate: LocalDate   = LocalDate.parse("2020-04-08")
 
-    val eori                                                 = "123456789"
     val traderAccounts: AccountsAndBalancesResponseContainer = AccountsAndBalancesResponseContainer(
       AccountsAndBalancesResponse(
         Some(AccountResponseCommon(emptyString, Some(emptyString), emptyString, None)),

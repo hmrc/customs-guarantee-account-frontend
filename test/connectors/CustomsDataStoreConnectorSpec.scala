@@ -41,7 +41,7 @@ class CustomsDataStoreConnectorSpec extends SpecBase {
 
       when(mockHttpClient.get(any())(any())).thenReturn(requestBuilder)
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
@@ -59,9 +59,6 @@ class CustomsDataStoreConnectorSpec extends SpecBase {
   }
 
   trait Setup {
-    val sessionId: SessionId       = SessionId("session_1234")
-    implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(sessionId))
-
     val mockHttpClient: HttpClientV2   = mock[HttpClientV2]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
   }

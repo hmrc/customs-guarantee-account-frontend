@@ -20,6 +20,7 @@ import java.time.{Clock, LocalDate, LocalDateTime}
 import org.scalatest.matchers.should.Matchers._
 import play.api.data.validation.{Invalid, Valid, ValidationError, ValidationResult}
 import utils.SpecBase
+import utils.TestData.{YEAR, MONTH_7, dayOne, eighteen, twoThousand}
 
 class ConstraintsSpec extends SpecBase with Constraints {
 
@@ -41,21 +42,21 @@ class ConstraintsSpec extends SpecBase with Constraints {
     "checkDates" must {
       "return Invalid year error" in new Setup {
         val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
-          .apply(LocalDate.of(eighteen, month, day))
+          .apply(LocalDate.of(eighteen, MONTH_7, dayOne))
 
         result mustBe Invalid(List(ValidationError(List(yearLengthError))))
       }
 
       "return Invalid taxYearErrorKey" in new Setup {
         val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
-          .apply(LocalDate.of(twoThousand, month, day))
+          .apply(LocalDate.of(twoThousand, MONTH_7, dayOne))
 
         result mustBe Invalid(List(ValidationError(List(taxYearErrorKey))))
       }
 
       "return Invalid constraint for year before 2019" in new Setup {
         val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
-          .apply(LocalDate.of(year, month, day))
+          .apply(LocalDate.of(YEAR, MONTH_7, dayOne))
 
         result mustBe Invalid(List(ValidationError(List(systemStartDateErrorKey))))
       }
@@ -63,16 +64,9 @@ class ConstraintsSpec extends SpecBase with Constraints {
   }
 
   trait Setup {
-
-    val day         = 1
-    val month       = 10
-    val year        = 2018
-    val eighteen    = 18
-    val twoThousand = 2000
-
     def ld: LocalDate = LocalDateTime.now().toLocalDate
 
-    val systemStartDateErrorKey: String = "You cannot enter a date before October 2019"
+    val systemStartDateErrorKey: String = "You cannot enter a date before March 2019"
     val taxYearErrorKey: String         = "The from date cannot be older than 6 years from now"
     val yearLengthError: String         = "Year must include 4 numbers"
 
