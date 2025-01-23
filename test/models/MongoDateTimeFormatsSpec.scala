@@ -16,9 +16,9 @@
 
 package models
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import utils.SpecBase
-import utils.TestData.{dateTime, dateInMilliSeconds, dollar}
+import utils.TestData.{dateInMilliSeconds, dateTime, dollar}
 import java.time.ZoneOffset
 
 class MongoDateTimeFormatsSpec extends SpecBase {

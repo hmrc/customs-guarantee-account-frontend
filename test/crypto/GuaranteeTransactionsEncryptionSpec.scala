@@ -20,7 +20,7 @@ import models.*
 import play.api.Configuration
 import play.api.test.Helpers.running
 import utils.SpecBase
-import utils.TestData.{YEAR, dayTwentyTwo}
+import utils.TestData.{YEAR_2019, dayTwentyTwo}
 
 import java.time.{LocalDate, Month}
 
@@ -33,7 +33,7 @@ class GuaranteeTransactionsEncryptionSpec extends SpecBase {
     val dd  = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
     val transaction = GuaranteeTransaction(
-      LocalDate.of(YEAR, Month.JULY, dayTwentyTwo),
+      LocalDate.of(YEAR_2019, Month.JULY, dayTwentyTwo),
       "MRN-1",
       None,
       BigDecimal(12369.50),

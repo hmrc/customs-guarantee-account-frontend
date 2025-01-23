@@ -16,12 +16,11 @@
 
 package viewmodels
 
-import config.AppConfig
 import connectors.AccountStatusOpen
 import models.{Amounts, DueDate, GeneralGuaranteeBalance, GuaranteeAccount, GuaranteeTransaction, TaxType, TaxTypeGroup}
 import play.api.test.Helpers
 import utils.SpecBase
-import utils.TestData.{YEAR, dayOne}
+import utils.TestData.{YEAR_2019, dayOne}
 
 import java.time.{LocalDate, LocalDateTime, Month}
 
@@ -41,7 +40,7 @@ class GuaranteeAccountViewModelSpec extends SpecBase {
       val dd  = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
       val guranteeTxn = GuaranteeTransaction(
-        LocalDate.of(YEAR, Month.OCTOBER, dayOne),
+        LocalDate.of(YEAR_2019, Month.OCTOBER, dayOne),
         "19GB000056HG5w746",
         None,
         BigDecimal(45367.12),
@@ -90,8 +89,6 @@ class GuaranteeAccountViewModelSpec extends SpecBase {
       AccountStatusOpen,
       Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(5000.10)))
     )
-
-    val appConfig = mock[AppConfig]
 
     val model =
       GuaranteeAccountViewModel(guaranteeAccount, LocalDateTime.parse("2020-04-08T12:30"))(Helpers.stubMessages())

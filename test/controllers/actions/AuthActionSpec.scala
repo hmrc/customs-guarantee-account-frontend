@@ -17,11 +17,10 @@
 package controllers.actions
 
 import com.google.inject.Inject
-import config.AppConfig
 import controllers.routes
-import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
-import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core._
+import play.api.mvc.{Action, AnyContent, Results}
+import play.api.test.Helpers.*
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.http.HeaderCarrier

@@ -16,7 +16,7 @@
 
 package controllers
 
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import utils.SpecBase
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -36,8 +36,8 @@ class RequestTransactionControllerSpec extends SpecBase {
       val request: FakeRequest[AnyContentAsEmpty.type] =
         fakeRequest(GET, routes.RequestTransactionsController.onPageLoad().url)
 
-      running(app) {
-        val result = route(app, request).value
+      running(application) {
+        val result = route(application, request).value
 
         status(result) mustBe OK
       }
@@ -49,8 +49,8 @@ class RequestTransactionControllerSpec extends SpecBase {
       val request: FakeRequest[AnyContentAsEmpty.type] =
         fakeRequest(GET, routes.RequestTransactionsController.onPageLoad().url)
 
-      running(app) {
-        val result = route(app, request).value
+      running(application) {
+        val result = route(application, request).value
 
         status(result) mustBe OK
       }
@@ -65,9 +65,9 @@ class RequestTransactionControllerSpec extends SpecBase {
       val clear: FakeRequest[AnyContentAsEmpty.type] =
         fakeRequest(GET, routes.RequestTransactionsController.onPageLoad().url)
 
-      running(app) {
-        val result = route(app, store).value
-        val test   = route(app, clear).value
+      running(application) {
+        val result = route(application, store).value
+        val test   = route(application, clear).value
 
         status(result) mustBe OK
         status(test) mustBe OK
@@ -89,8 +89,8 @@ class RequestTransactionControllerSpec extends SpecBase {
             "end.year"    -> "2019"
           )
 
-      running(app) {
-        val result = route(app, request).value
+      running(application) {
+        val result = route(application, request).value
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.RequestedTransactionsController.onPageLoad().url
@@ -107,8 +107,8 @@ class RequestTransactionControllerSpec extends SpecBase {
             "end.year"    -> "2019"
           )
 
-      running(app) {
-        val result = route(app, request).value
+      running(application) {
+        val result = route(application, request).value
 
         status(result) mustBe BAD_REQUEST
       }
@@ -124,8 +124,8 @@ class RequestTransactionControllerSpec extends SpecBase {
             "end.year"    -> "2019"
           )
 
-      running(app) {
-        val result = route(app, request).value
+      running(application) {
+        val result = route(application, request).value
 
         status(result) mustBe BAD_REQUEST
       }
@@ -141,8 +141,8 @@ class RequestTransactionControllerSpec extends SpecBase {
             "end.year"    -> "2019"
           )
 
-      running(app) {
-        val result = route(app, request).value
+      running(application) {
+        val result = route(application, request).value
 
         status(result) mustBe BAD_REQUEST
       }
@@ -160,8 +160,8 @@ class RequestTransactionControllerSpec extends SpecBase {
             "end.year"    -> year
           )
 
-      running(app) {
-        val result = route(app, request).value
+      running(application) {
+        val result = route(application, request).value
 
         status(result) mustBe BAD_REQUEST
       }
@@ -177,8 +177,8 @@ class RequestTransactionControllerSpec extends SpecBase {
             "end.year"    -> "2019"
           )
 
-      running(app) {
-        val result = route(app, request).value
+      running(application) {
+        val result = route(application, request).value
 
         status(result) mustBe BAD_REQUEST
       }
@@ -194,8 +194,8 @@ class RequestTransactionControllerSpec extends SpecBase {
             "end.year"    -> "2000"
           )
 
-      running(app) {
-        val result = route(app, request).value
+      running(application) {
+        val result = route(application, request).value
 
         status(result) mustBe BAD_REQUEST
       }
@@ -211,8 +211,8 @@ class RequestTransactionControllerSpec extends SpecBase {
             "end.year"      -> "2019"
           )
 
-      running(app) {
-        val result = route(app, request).value
+      running(application) {
+        val result = route(application, request).value
 
         status(result) mustBe BAD_REQUEST
       }
@@ -228,8 +228,8 @@ class RequestTransactionControllerSpec extends SpecBase {
             "end.year"    -> "2019"
           )
 
-      running(app) {
-        val result = route(app, request).value
+      running(application) {
+        val result = route(application, request).value
 
         status(result) mustBe BAD_REQUEST
       }
@@ -237,6 +237,8 @@ class RequestTransactionControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val app: Application = applicationBuilder.configure("features.fixed-systemdate-for-tests" -> "true").build()
+    val application: Application = applicationBuilder
+      .configure("features.fixed-systemdate-for-tests" -> "true")
+      .build()
   }
 }

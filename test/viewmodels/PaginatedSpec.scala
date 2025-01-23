@@ -16,8 +16,6 @@
 
 package viewmodels
 
-import config.AppConfig
-import play.api.i18n.Messages
 import utils.SpecBase
 
 class PaginatedSpec extends SpecBase {

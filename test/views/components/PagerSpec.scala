@@ -16,16 +16,14 @@
 
 package views.components
 
-import config.AppConfig
-import models._
+import models.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.Assertion
-import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
-import utils.TestData.{YEAR_2024, YEAR_2018, MONTH_7, dayOne}
-import viewmodels._
+import utils.TestData.{MONTH_7, YEAR_2018, YEAR_2024, dayOne}
+import viewmodels.*
 import views.html.components.pager
 
 import java.time.{LocalDate, Month}

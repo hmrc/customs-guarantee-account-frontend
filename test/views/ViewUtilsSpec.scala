@@ -16,10 +16,8 @@
 
 package views
 
-import config.AppConfig
-import play.api.data._
-import play.api.data.Forms._
-import play.api.i18n.Messages
+import play.api.data.*
+import play.api.data.Forms.*
 import utils.SpecBase
 import utils.Utils.emptyString
 

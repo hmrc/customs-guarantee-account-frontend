@@ -16,13 +16,10 @@
 
 package views
 
-import config.AppConfig
 import models.GuaranteeTransactionDates
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.Application
 import play.api.data.Form
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import utils.SpecBase
@@ -40,10 +37,10 @@ class GuaranteeTransactionsRequestPageSpec extends SpecBase {
       view.title().contains(s"${messages("cf.guarantee-account.transactions.request.title")}")
       view.getElementsByTag("h1").text() mustBe messages("cf.guarantee-account.transactions.request.heading")
 
-      textDoc.contains (messages("cf.guarantee-account.transactions.request.from")) mustBe true
-      textDoc.contains (messages("cf.guarantee-account.transactions.request.startDate.hint")) mustBe true
-      textDoc.contains (messages("cf.guarantee-account.transactions.request.endDate.hint")) mustBe true
-      textDoc.contains (messages("cf.guarantee-account.transactions.request.to")) mustBe true
+      textDoc.contains(messages("cf.guarantee-account.transactions.request.from")) mustBe true
+      textDoc.contains(messages("cf.guarantee-account.transactions.request.startDate.hint")) mustBe true
+      textDoc.contains(messages("cf.guarantee-account.transactions.request.endDate.hint")) mustBe true
+      textDoc.contains(messages("cf.guarantee-account.transactions.request.to")) mustBe true
     }
 
     "not display previous or incorrect guidance and text" in new Setup {

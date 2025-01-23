@@ -20,16 +20,16 @@ import connectors.{
   AccountStatusOpen, CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested,
   UnknownException
 }
-import models._
+import models.*
 import play.api.http.Status
 import play.api.inject.bind
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.AuditingService
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.SpecBase
-import utils.TestData.{balance, dayTwentyThree, dayTwentyTwo, eori, limit, someGan, YEAR_2018}
+import utils.TestData.{YEAR_2018, balance, dayTwentyThree, dayTwentyTwo, eori, fromDate, limit, someGan, toDate}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.mockito.Mockito.verify
@@ -521,9 +521,6 @@ class DownloadCsvControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val fromDate: LocalDate = LocalDate.parse("2020-10-20")
-    val toDate: LocalDate   = LocalDate.parse("2020-12-22")
-
     val guaranteeAccount: GuaranteeAccount = GuaranteeAccount(
       someGan,
       eori,

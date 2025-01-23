@@ -20,7 +20,7 @@ import models.UnverifiedEmail
 import models.request.IdentifierRequest
 import play.api.{Application, inject}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.DataStoreService
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.ServiceUnavailableException

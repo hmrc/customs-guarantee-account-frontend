@@ -20,7 +20,7 @@ import config.AppConfig
 import utils.SpecBase
 
 import scala.concurrent.{ExecutionContext, Future}
-import org.mongodb.scala._
+import org.mongodb.scala.*
 import org.mongodb.scala.result.DeleteResult
 import play.api.test.Helpers.running
 import play.api.{Application, inject}
@@ -39,7 +39,7 @@ class DbPatchServiceSpec extends SpecBase {
       when(mockAppConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(true)
       commonSetupForDeletion()
 
-      running(app) {
+      running(application) {
         new DbPatchService(mockAppConfig, mockComponent)
 
         whenReady(mockDeleteObservable.toFuture()) { result =>
@@ -52,7 +52,7 @@ class DbPatchServiceSpec extends SpecBase {
       when(mockAppConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(false)
       when(mockComponent.database).thenReturn(mockDatabase)
 
-      running(app) {
+      running(application) {
         new DbPatchService(mockAppConfig, mockComponent)
 
         verify(mockComponent.database, never).getCollection(collectionName)
@@ -64,7 +64,7 @@ class DbPatchServiceSpec extends SpecBase {
       when(mockCollection.countDocuments()).thenReturn(SingleObservable(emptyCollection))
       commonSetupForDeletion()
 
-      running(app) {
+      running(application) {
         new DbPatchService(mockAppConfig, mockComponent)
 
         whenReady(mockDeleteObservable.toFuture()) { result =>
@@ -81,7 +81,7 @@ class DbPatchServiceSpec extends SpecBase {
       when(mockAppConfig.deleteGuaranteeAccountCacheDocuments).thenReturn(true)
       commonSetupForException()
 
-      running(app) {
+      running(application) {
         new DbPatchService(mockAppConfig, mockComponent)
 
         verify(mockDatabase).getCollection[Document](eqTo(collectionName))(any, any)
@@ -104,12 +104,12 @@ class DbPatchServiceSpec extends SpecBase {
     val mockDeleteObservable: SingleObservable[DeleteResult] = mock[SingleObservable[DeleteResult]]
     implicit val ec: ExecutionContext                        = scala.concurrent.ExecutionContext.Implicits.global
 
-    when(appConfig.customsFinancialsApi).thenReturn(emptyString)
+    when(mockAppConfig.customsFinancialsApi).thenReturn(emptyString)
 
-    val app: Application = applicationBuilder
+    val application: Application = applicationBuilder
       .overrides(
         inject.bind[MongoComponent].toInstance(mockComponent),
-        inject.bind[AppConfig].toInstance(appConfig),
+        inject.bind[AppConfig].toInstance(mockAppConfig),
         inject.bind[ExecutionContext].toInstance(ec)
       )
       .build()

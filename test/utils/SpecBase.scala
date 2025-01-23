@@ -55,7 +55,7 @@ trait SpecBase
   val mockCacheRepository: CacheRepository                       = mock[CacheRepository]
   val mockRequestedTransactionsCache: RequestedTransactionsCache = mock[RequestedTransactionsCache]
 
-  def applicationBuilder: GuiceApplicationBuilder = new GuiceApplicationBuilder()
+  lazy val applicationBuilder: GuiceApplicationBuilder = new GuiceApplicationBuilder()
     .overrides(
       bind[IdentifierAction].to[FakeIdentifierAction],
       bind[MetricRegistry].toInstance(new FakeMetrics),
@@ -76,7 +76,11 @@ trait SpecBase
 
   lazy implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(sessionId))
 
-  def instanceOf[T: ClassTag]: T = application.injector.instanceOf[T]
-
   lazy val bodyParsers = applicationBuilder.injector().instanceOf[BodyParsers.Default]
+
+  lazy val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+
+  lazy val requestBuilder: RequestBuilder = mock[RequestBuilder]
+
+  def instanceOf[T: ClassTag]: T = application.injector.instanceOf[T]
 }

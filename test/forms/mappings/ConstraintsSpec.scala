@@ -17,10 +17,10 @@
 package forms.mappings
 
 import java.time.{Clock, LocalDate, LocalDateTime}
-import org.scalatest.matchers.should.Matchers._
+import org.scalatest.matchers.should.Matchers.*
 import play.api.data.validation.{Invalid, Valid, ValidationError, ValidationResult}
 import utils.SpecBase
-import utils.TestData.{YEAR, MONTH_7, dayOne, eighteen, twoThousand}
+import utils.TestData.{MONTH_7, YEAR_2019, dayOne, eighteen, twoThousand}
 
 class ConstraintsSpec extends SpecBase with Constraints {
 
@@ -56,7 +56,7 @@ class ConstraintsSpec extends SpecBase with Constraints {
 
       "return Invalid constraint for year before 2019" in new Setup {
         val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
-          .apply(LocalDate.of(YEAR, MONTH_7, dayOne))
+          .apply(LocalDate.of(YEAR_2019, MONTH_7, dayOne))
 
         result mustBe Invalid(List(ValidationError(List(systemStartDateErrorKey))))
       }
