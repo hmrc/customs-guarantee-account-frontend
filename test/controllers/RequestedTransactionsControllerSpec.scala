@@ -149,15 +149,15 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       Some(GeneralGuaranteeBalance(BigDecimal(limit), BigDecimal(balance)))
     )
 
-    val amounts: Amounts           = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
-    val taxType: TaxType           = TaxType("VAT", amounts)
-    val taxTypeGroup: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amounts, taxType = taxType)
+    val amts: Amounts     = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
+    val tt: TaxType       = TaxType("VAT", amts)
+    val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amts, taxType = tt)
 
-    val dueDate: DueDate = DueDate(
+    val dd: DueDate = DueDate(
       dueDate = "2020-07-28",
       reasonForSecurity = Some("T24"),
-      amounts = amounts,
-      taxTypeGroups = Seq(taxTypeGroup)
+      amounts = amts,
+      taxTypeGroups = Seq(ttg)
     )
 
     val ganTransactions: Seq[GuaranteeTransaction] = List(
@@ -173,7 +173,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         BigDecimal(11.50),
         None,
         None,
-        dueDates = Seq(dueDate)
+        dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
         LocalDate.of(YEAR_2019, Month.OCTOBER, dayTwentyTwo),
@@ -187,7 +187,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         BigDecimal(25.20),
         None,
         None,
-        dueDates = Seq(dueDate)
+        dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
         LocalDate.of(YEAR_2019, Month.OCTOBER, dayTwentyTwo),
@@ -201,7 +201,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         BigDecimal(27.20),
         None,
         Some("C18-1"),
-        dueDates = Seq(dueDate)
+        dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
         LocalDate.of(YEAR_2019, Month.OCTOBER, dayTwentyTwo),
@@ -215,7 +215,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         BigDecimal(26.20),
         None,
         Some("C18-2"),
-        dueDates = Seq(dueDate)
+        dueDates = Seq(dd)
       )
     )
 
