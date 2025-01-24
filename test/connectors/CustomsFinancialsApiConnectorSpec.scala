@@ -64,7 +64,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       running(application) {
         val result = await(
           connector
-            .getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "12345678"))
+            .getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "GB001"))
         )
 
         result.value mustEqual guaranteeAccount
@@ -98,7 +98,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       running(application) {
         val result = await(
           connector
-            .getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "12345678"))
+            .getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "GB001"))
         )
 
         result.value mustEqual guaranteeAccount
@@ -437,8 +437,6 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
   }
 
   trait Setup {
-    private val traderEori = "12345678"
-
     val amt: Amounts      = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
     val tt: TaxType       = TaxType("VAT", amt)
     val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
@@ -506,7 +504,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
     )
 
     val generalGuaranteeAccount: GeneralGuaranteeAccount =
-      GeneralGuaranteeAccount(Account(accountNumber, "123456789", traderEori), Some("999.99"), None)
+      GeneralGuaranteeAccount(Account(accountNumber, "123456789", eori), Some("999.99"), None)
 
     val guaranteeAccount: GuaranteeAccount = generalGuaranteeAccount.toDomain()
 

@@ -32,7 +32,6 @@ import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 
 import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
-import scala.reflect.ClassTag
 
 class EmailControllerSpec extends SpecBase {
 
