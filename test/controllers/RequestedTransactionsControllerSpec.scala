@@ -25,7 +25,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
-import utils.TestData.{YEAR_2019, balance, dayTwentyThree, dayTwentyTwo, eori, limit, someGan}
+import utils.TestData.{year_2019, balance, dayTwentyThree, dayTwentyTwo, eori, limit, someGan}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -162,7 +162,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
 
     val ganTransactions: Seq[GuaranteeTransaction] = List(
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.OCTOBER, dayTwentyThree),
+        LocalDate.of(year_2019, Month.OCTOBER, dayTwentyThree),
         "MRN-1",
         None,
         BigDecimal(45367.12),
@@ -176,7 +176,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(year_2019, Month.OCTOBER, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12367.50),
@@ -190,7 +190,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(year_2019, Month.OCTOBER, dayTwentyTwo),
         "MRN-3",
         None,
         BigDecimal(12368.50),
@@ -204,7 +204,7 @@ class RequestedTransactionsControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(year_2019, Month.OCTOBER, dayTwentyTwo),
         "MRN-4",
         None,
         BigDecimal(12369.50),

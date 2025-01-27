@@ -18,7 +18,7 @@ package services
 
 import config.AppConfig
 import utils.SpecBase
-import utils.TestData.{DAY_20, HOUR_12, MINUTES_30, MONTH_12, YEAR_2027}
+import utils.TestData.{day_20, hour_12, minutes_30, month_12, year_2027}
 
 import java.time.*
 
@@ -64,6 +64,6 @@ class DateTimeServiceSpec extends SpecBase {
 
   trait Setup {
     val fixedTestDateTime =
-      LocalDateTime.of(LocalDate.of(YEAR_2027, MONTH_12, DAY_20), LocalTime.of(HOUR_12, MINUTES_30))
+      LocalDateTime.of(LocalDate.of(year_2027, month_12, day_20), LocalTime.of(hour_12, minutes_30))
   }
 }

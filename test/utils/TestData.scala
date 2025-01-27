@@ -22,19 +22,19 @@ import uk.gov.hmrc.http.SessionId
 import java.time.{LocalDate, LocalDateTime, ZoneOffset}
 
 object TestData {
-  val YEAR_2027  = 2027
-  val YEAR_2024  = 2024
-  val YEAR_2018  = 2018
-  val YEAR_2019  = 2019
-  val MONTH_12   = 12
-  val MONTH_7    = 7
-  val DAY_20     = 20
-  val DAY_26     = 26
-  val DAY_29     = 29
-  val HOUR_12    = 12
-  val MINUTES_30 = 30
-  val MINUTES    = 10
-  val SECONDS    = 55
+  val year_2027  = 2027
+  val year_2024  = 2024
+  val year_2018  = 2018
+  val year_2019  = 2019
+  val month_12   = 12
+  val month_7    = 7
+  val day_20     = 20
+  val day_26     = 26
+  val day_29     = 29
+  val hour_12    = 12
+  val minutes_30 = 30
+  val minutes    = 10
+  val seconds    = 55
 
   val dayOne         = 1
   val dayTwenty      = 20
@@ -62,12 +62,12 @@ object TestData {
   val fromDate: LocalDate      = LocalDate.parse("2020-10-20")
   val toDate: LocalDate        = LocalDate.parse("2020-12-22")
 
-  val LOCAL_DATE_TIME: LocalDateTime = LocalDateTime.of(YEAR_2024, MONTH_7, DAY_26, HOUR_12, MINUTES, SECONDS)
-  val LOCAL_DATE: LocalDate          = LocalDate.of(YEAR_2024, MONTH_7, DAY_29)
+  val localDateTime: LocalDateTime = LocalDateTime.of(year_2024, month_7, day_26, hour_12, minutes, seconds)
+  val localDate: LocalDate          = LocalDate.of(year_2024, month_7, day_29)
 
-  val ENCRYPTED_VALUE     = "sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI="
-  val NONCE_VALUE: String = "RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3" +
+  val encryptedValue     = "sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI="
+  val nonceValue: String = "RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3" +
     "fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"
 
-  val ENCRYPTED_VALUE_OBJECT: EncryptedValue = EncryptedValue(ENCRYPTED_VALUE, NONCE_VALUE)
+  val encryptedValueObject: EncryptedValue = EncryptedValue(encryptedValue, nonceValue)
 }

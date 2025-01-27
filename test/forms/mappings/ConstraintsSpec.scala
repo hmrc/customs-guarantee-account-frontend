@@ -20,7 +20,7 @@ import java.time.{Clock, LocalDate, LocalDateTime}
 import org.scalatest.matchers.should.Matchers.*
 import play.api.data.validation.{Invalid, Valid, ValidationError, ValidationResult}
 import utils.SpecBase
-import utils.TestData.{MONTH_7, YEAR_2019, dayOne, eighteen, twoThousand}
+import utils.TestData.{month_7, year_2019, dayOne, eighteen, twoThousand}
 
 class ConstraintsSpec extends SpecBase with Constraints {
 
@@ -42,21 +42,21 @@ class ConstraintsSpec extends SpecBase with Constraints {
     "checkDates" must {
       "return Invalid year error" in new Setup {
         val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
-          .apply(LocalDate.of(eighteen, MONTH_7, dayOne))
+          .apply(LocalDate.of(eighteen, month_7, dayOne))
 
         result mustBe Invalid(List(ValidationError(List(yearLengthError))))
       }
 
       "return Invalid taxYearErrorKey" in new Setup {
         val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
-          .apply(LocalDate.of(twoThousand, MONTH_7, dayOne))
+          .apply(LocalDate.of(twoThousand,  month_7, dayOne))
 
         result mustBe Invalid(List(ValidationError(List(taxYearErrorKey))))
       }
 
       "return Invalid constraint for year before 2019" in new Setup {
         val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
-          .apply(LocalDate.of(YEAR_2019, MONTH_7, dayOne))
+          .apply(LocalDate.of(year_2019, month_7, dayOne))
 
         result mustBe Invalid(List(ValidationError(List(systemStartDateErrorKey))))
       }

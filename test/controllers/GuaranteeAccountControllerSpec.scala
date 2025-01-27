@@ -30,7 +30,7 @@ import services.{AuditingService, DataStoreService, DateTimeService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
-import utils.TestData.{YEAR_2019, balance, dayTwenty, dayTwentyOne, dayTwentyThree, dayTwentyTwo, eori, limit, someGan}
+import utils.TestData.{year_2019, balance, dayTwenty, dayTwentyOne, dayTwentyThree, dayTwentyTwo, eori, limit, someGan}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -401,7 +401,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
     val ganTransactions: Seq[GuaranteeTransaction] = List(
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.JULY, dayTwentyThree),
+        LocalDate.of(year_2019, Month.JULY, dayTwentyThree),
         "MRN-1",
         None,
         BigDecimal(45367.12),
@@ -415,7 +415,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.JULY, dayTwentyTwo),
+        LocalDate.of(year_2019, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12367.50),
@@ -429,7 +429,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.JULY, dayTwentyOne),
+        LocalDate.of(year_2019, Month.JULY, dayTwentyOne),
         "MRN-3",
         None,
         BigDecimal(12368.50),
@@ -443,7 +443,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.JULY, dayTwenty),
+        LocalDate.of(year_2019, Month.JULY, dayTwenty),
         "MRN-4",
         None,
         BigDecimal(12369.50),

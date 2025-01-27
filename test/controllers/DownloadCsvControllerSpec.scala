@@ -29,7 +29,7 @@ import services.AuditingService
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.SpecBase
-import utils.TestData.{YEAR_2018, balance, dayTwentyThree, dayTwentyTwo, eori, fromDate, limit, someGan, toDate}
+import utils.TestData.{year_2018, balance, dayTwentyThree, dayTwentyTwo, eori, fromDate, limit, someGan, toDate}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.mockito.Mockito.verify
@@ -537,7 +537,7 @@ class DownloadCsvControllerSpec extends SpecBase {
 
     val ganTransactions: Seq[GuaranteeTransaction] = List(
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2018, Month.JULY, dayTwentyThree),
+        LocalDate.of(year_2018, Month.JULY, dayTwentyThree),
         "MRN-1",
         None,
         BigDecimal(45367.12),
@@ -551,7 +551,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2018, Month.JULY, dayTwentyTwo),
+        LocalDate.of(year_2018, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12367.50),
@@ -565,7 +565,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2018, Month.JULY, dayTwentyTwo),
+        LocalDate.of(year_2018, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12368.50),
@@ -579,7 +579,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2018, Month.JULY, dayTwentyTwo),
+        LocalDate.of(year_2018, Month.JULY, dayTwentyTwo),
         "MRN-2",
         None,
         BigDecimal(12369.50),

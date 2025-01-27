@@ -22,7 +22,7 @@ import org.jsoup.nodes.Document
 import org.scalatest.Assertion
 import play.api.i18n.Messages
 import utils.SpecBase
-import utils.TestData.{MONTH_7, YEAR_2018, YEAR_2024, dayOne}
+import utils.TestData.{month_7, year_2018, year_2024, dayOne}
 import viewmodels.*
 import views.html.components.pager
 
@@ -68,7 +68,7 @@ class PagerSpec extends SpecBase {
 
     val guaranTrans: GuaranteeTransaction =
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2018, Month.JULY, dayOne),
+        LocalDate.of(year_2018, Month.JULY, dayOne),
         "MRN-2",
         None,
         BigDecimal(12368.50),
@@ -87,7 +87,7 @@ class PagerSpec extends SpecBase {
 
     val guaranteeAccTransDate: GuaranteeAccountTransactionsByDate =
       GuaranteeAccountTransactionsByDate(
-        LocalDate.of(YEAR_2024, MONTH_7, dayOne),
+        LocalDate.of(year_2024, month_7, dayOne),
         Seq(guaranteeAccountTrans)
       )
 

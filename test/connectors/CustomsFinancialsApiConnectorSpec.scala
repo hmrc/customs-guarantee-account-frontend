@@ -36,7 +36,7 @@ import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import java.time.{LocalDate, Month}
 import scala.concurrent.{ExecutionContext, Future}
 import utils.Utils.emptyString
-import utils.TestData.{YEAR_2019, accountNumber, dayTwentyThree, dayTwentyTwo, eori}
+import utils.TestData.{year_2019, accountNumber, dayTwentyThree, dayTwentyTwo, eori}
 
 import java.net.URL
 
@@ -446,7 +446,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
     val ganTransactions: Seq[GuaranteeTransaction] = List(
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.OCTOBER, dayTwentyThree),
+        LocalDate.of(year_2019, Month.OCTOBER, dayTwentyThree),
         "19GB000056HG5w746",
         None,
         BigDecimal(45367.12),
@@ -460,7 +460,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(year_2019, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12367.50),
@@ -474,7 +474,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(year_2019, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12368.50),
@@ -488,7 +488,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(year_2019, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12369.50),

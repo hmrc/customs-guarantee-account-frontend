@@ -20,7 +20,7 @@ import connectors.AccountStatusOpen
 import models.{Amounts, DueDate, GeneralGuaranteeBalance, GuaranteeAccount, GuaranteeTransaction, TaxType, TaxTypeGroup}
 import play.api.test.Helpers
 import utils.SpecBase
-import utils.TestData.{YEAR_2019, dayOne}
+import utils.TestData.{year_2019, dayOne}
 
 import java.time.{LocalDate, LocalDateTime, Month}
 
@@ -40,7 +40,7 @@ class GuaranteeAccountViewModelSpec extends SpecBase {
       val dd  = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
       val guranteeTxn = GuaranteeTransaction(
-        LocalDate.of(YEAR_2019, Month.OCTOBER, dayOne),
+        LocalDate.of(year_2019, Month.OCTOBER, dayOne),
         "19GB000056HG5w746",
         None,
         BigDecimal(45367.12),
