@@ -27,6 +27,7 @@ class LogoutControllerSpec extends SpecBase {
       val application = applicationBuilder
         .configure("feedback.url" -> "/some-continue", "feedback.source" -> "/CDS-FIN")
         .build()
+
       running(application) {
         val request = FakeRequest(GET, routes.LogoutController.logout.url)
 

@@ -33,8 +33,9 @@ object TestData {
   val day_29     = 29
   val hour_12    = 12
   val minutes_30 = 30
-  val minutes    = 10
-  val seconds    = 55
+  val seconds_55 = 55
+  val zero       = 0
+  val ten        = 10
 
   val dayOne         = 1
   val dayTwenty      = 20
@@ -62,7 +63,7 @@ object TestData {
   val fromDate: LocalDate      = LocalDate.parse("2020-10-20")
   val toDate: LocalDate        = LocalDate.parse("2020-12-22")
 
-  val localDateTime: LocalDateTime = LocalDateTime.of(year_2024, month_7, day_26, hour_12, minutes, seconds)
+  val localDateTime: LocalDateTime = LocalDateTime.of(year_2024, month_7, day_26, hour_12, ten, seconds_55)
   val localDate: LocalDate         = LocalDate.of(year_2024, month_7, day_29)
 
   val encryptedValue     = "sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI="

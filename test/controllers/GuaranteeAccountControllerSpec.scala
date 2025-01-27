@@ -30,7 +30,9 @@ import services.{AuditingService, DataStoreService, DateTimeService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
-import utils.TestData.{balance, dayTwenty, dayTwentyOne, dayTwentyThree, dayTwentyTwo, eori, limit, someGan, year_2019}
+import utils.TestData.{
+  balance, dayTwenty, dayTwentyOne, dayTwentyThree, dayTwentyTwo, eori, limit, someGan, ten, year_2019, zero
+}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -376,8 +378,6 @@ class GuaranteeAccountControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val ten          = "10"
-    val zero         = 0
     val fiveFiveFive = 555
 
     val mockDateTimeService: DateTimeService                             = mock[DateTimeService]
