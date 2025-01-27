@@ -22,7 +22,7 @@ import org.jsoup.nodes.Document
 import org.scalatest.Assertion
 import play.api.i18n.Messages
 import utils.SpecBase
-import utils.TestData.{month_7, year_2018, year_2024, dayOne}
+import utils.TestData.{dayOne, month_7, year_2018, year_2024}
 import viewmodels.*
 import views.html.components.pager
 

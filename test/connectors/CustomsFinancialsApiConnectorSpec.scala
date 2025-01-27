@@ -36,7 +36,7 @@ import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import java.time.{LocalDate, Month}
 import scala.concurrent.{ExecutionContext, Future}
 import utils.Utils.emptyString
-import utils.TestData.{year_2019, accountNumber, dayTwentyThree, dayTwentyTwo, eori}
+import utils.TestData.{accountNumber, dayTwentyThree, dayTwentyTwo, eori, year_2019}
 
 import java.net.URL
 

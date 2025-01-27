@@ -29,7 +29,7 @@ import services.{DataStoreService, DateTimeService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
-import utils.TestData.{year_2019, balance, dayTwenty, dayTwentyOne, dayTwentyThree, dayTwentyTwo, eori, limit, someGan}
+import utils.TestData.{balance, dayTwenty, dayTwentyOne, dayTwentyThree, dayTwentyTwo, eori, limit, someGan, year_2019}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock

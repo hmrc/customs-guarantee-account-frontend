@@ -25,7 +25,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
-import utils.TestData.{year_2019, balance, dayTwentyThree, dayTwentyTwo, eori, limit, someGan}
+import utils.TestData.{balance, dayTwentyThree, dayTwentyTwo, eori, limit, someGan, year_2019}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock

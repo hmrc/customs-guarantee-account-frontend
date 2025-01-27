@@ -20,7 +20,7 @@ import connectors.AccountStatusOpen
 import models.{Amounts, DueDate, GeneralGuaranteeBalance, GuaranteeAccount, GuaranteeTransaction, TaxType, TaxTypeGroup}
 import play.api.test.Helpers
 import utils.SpecBase
-import utils.TestData.{year_2019, dayOne}
+import utils.TestData.{dayOne, year_2019}
 
 import java.time.{LocalDate, LocalDateTime, Month}
 

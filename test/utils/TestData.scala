@@ -63,7 +63,7 @@ object TestData {
   val toDate: LocalDate        = LocalDate.parse("2020-12-22")
 
   val localDateTime: LocalDateTime = LocalDateTime.of(year_2024, month_7, day_26, hour_12, minutes, seconds)
-  val localDate: LocalDate          = LocalDate.of(year_2024, month_7, day_29)
+  val localDate: LocalDate         = LocalDate.of(year_2024, month_7, day_29)
 
   val encryptedValue     = "sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI="
   val nonceValue: String = "RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3" +

@@ -29,7 +29,7 @@ import services.AuditingService
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.SpecBase
-import utils.TestData.{year_2018, balance, dayTwentyThree, dayTwentyTwo, eori, fromDate, limit, someGan, toDate}
+import utils.TestData.{balance, dayTwentyThree, dayTwentyTwo, eori, fromDate, limit, someGan, toDate, year_2018}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.mockito.Mockito.verify

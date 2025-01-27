@@ -20,7 +20,7 @@ import models.*
 import play.api.Configuration
 import play.api.test.Helpers.running
 import utils.SpecBase
-import utils.TestData.{year_2019, dayTwentyTwo}
+import utils.TestData.{dayTwentyTwo, year_2019}
 
 import java.time.{LocalDate, Month}
 
