@@ -29,7 +29,7 @@ import services.AuditingService
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.SpecBase
-import utils.TestData.{balance, dayTwentyThree, dayTwentyTwo, eori, fromDate, limit, someGan, toDate, year_2018}
+import utils.TestData.{balance, dayTwentyThree, dayTwentyTwo, dd, eori, fromDate, limit, someGan, toDate, year_2018}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.mockito.Mockito.verify
@@ -527,13 +527,6 @@ class DownloadCsvControllerSpec extends SpecBase {
       AccountStatusOpen,
       Some(GeneralGuaranteeBalance(BigDecimal(limit), BigDecimal(balance)))
     )
-
-    val amt: Amounts      = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
-    val tt: TaxType       = TaxType("VAT", amt)
-    val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
-
-    val dd: DueDate =
-      DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
     val ganTransactions: Seq[GuaranteeTransaction] = List(
       GuaranteeTransaction(

@@ -18,6 +18,7 @@ package utils
 
 import crypto.EncryptedValue
 import uk.gov.hmrc.http.SessionId
+import models.*
 
 import java.time.{LocalDate, LocalDateTime, ZoneOffset}
 
@@ -65,6 +66,13 @@ object TestData {
 
   val localDateTime: LocalDateTime = LocalDateTime.of(year_2024, month_7, day_26, hour_12, ten, seconds_55)
   val localDate: LocalDate         = LocalDate.of(year_2024, month_7, day_29)
+
+  val amts: Amounts     = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
+  val tt: TaxType       = TaxType("VAT", amts)
+  val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amts, taxType = tt)
+
+  val dd: DueDate =
+    DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amts, taxTypeGroups = Seq(ttg))
 
   val encryptedValue     = "sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI="
   val nonceValue: String = "RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3" +

@@ -25,7 +25,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
-import utils.TestData.{balance, dayTwentyThree, dayTwentyTwo, eori, limit, someGan, year_2019}
+import utils.TestData.{balance, dayTwentyThree, dayTwentyTwo, dd, eori, limit, someGan, year_2019}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -147,17 +147,6 @@ class RequestedTransactionsControllerSpec extends SpecBase {
       eori,
       AccountStatusOpen,
       Some(GeneralGuaranteeBalance(BigDecimal(limit), BigDecimal(balance)))
-    )
-
-    val amts: Amounts     = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
-    val tt: TaxType       = TaxType("VAT", amts)
-    val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amts, taxType = tt)
-
-    val dd: DueDate = DueDate(
-      dueDate = "2020-07-28",
-      reasonForSecurity = Some("T24"),
-      amounts = amts,
-      taxTypeGroups = Seq(ttg)
     )
 
     val ganTransactions: Seq[GuaranteeTransaction] = List(
