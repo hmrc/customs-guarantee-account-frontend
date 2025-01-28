@@ -17,15 +17,15 @@
 package services
 
 import config.AppConfig
-import models._
-import org.scalatest.matchers.should.Matchers._
+import models.*
+import org.scalatest.matchers.should.Matchers.*
 import play.api.inject.bind
-import play.api.libs.json._
-import play.api.test.Helpers._
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector._
+import play.api.libs.json.*
+import play.api.test.Helpers.*
+import uk.gov.hmrc.play.audit.http.connector.*
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 import utils.SpecBase
+import utils.TestData.{eori, fromDate, toDate}
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -33,7 +33,7 @@ import org.mockito.Mockito.verify
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.Application
 
-import java.time._
+import java.time.*
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -53,7 +53,7 @@ class AuditingServiceSpec extends SpecBase {
         )
       )
 
-      running(app) {
+      running(application) {
         val result = await(testAuditingService.audit(auditModelWithDates))
 
         verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
@@ -72,7 +72,7 @@ class AuditingServiceSpec extends SpecBase {
         GuaranteeCsvAuditData(eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00", "CSV", None, None)
       )
 
-      running(app) {
+      running(application) {
         val result = await(testAuditingService.audit(auditModelWithoutDates))
 
         verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
@@ -94,7 +94,7 @@ class AuditingServiceSpec extends SpecBase {
       when(mockAuditConnector.sendExtendedEvent(any)(any, any))
         .thenReturn(Future.successful(AuditResult.Failure("Boom")))
 
-      running(app) {
+      running(application) {
         val result = await(testAuditingService.audit(auditModelWithoutDates))
 
         verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
@@ -121,7 +121,7 @@ class AuditingServiceSpec extends SpecBase {
         )
       )
 
-      running(app) {
+      running(application) {
         val result: Unit = await(
           testAuditingService.auditCsvDownload(
             eori,
@@ -147,7 +147,7 @@ class AuditingServiceSpec extends SpecBase {
         GuaranteeCsvAuditData(eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00Z", "CSV", None, None)
       )
 
-      running(app) {
+      running(application) {
         val result: Unit = await(
           testAuditingService
             .auditCsvDownload(eori, guaranteeAccountNumber, LocalDateTime.parse("2027-12-20T12:30:00"), None)
@@ -172,7 +172,7 @@ class AuditingServiceSpec extends SpecBase {
         GuaranteeCsvAuditData(eori, guaranteeAccountNumber, "open", "2027-12-20T12:30:00Z", "CSV", None, None)
       )
 
-      running(app) {
+      running(application) {
         val result: Unit = await(
           testAuditingService
             .auditCsvDownload(eori, guaranteeAccountNumber, LocalDateTime.parse("2027-12-20T12:30:00"), None)
@@ -193,7 +193,7 @@ class AuditingServiceSpec extends SpecBase {
       when(mockAuditConnector.sendExtendedEvent(any)(any, any))
         .thenReturn(Future.failed(new Exception("Failed connection")))
 
-      running(app) {
+      running(application) {
         intercept[Exception] {
           await(
             testAuditingService
@@ -205,12 +205,7 @@ class AuditingServiceSpec extends SpecBase {
   }
 
   trait Setup {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-
-    val eori                   = "GB744638982000"
     val guaranteeAccountNumber = "1234567"
-    val fromDate: LocalDate    = LocalDate.parse("2020-10-20")
-    val toDate: LocalDate      = LocalDate.parse("2020-12-22")
     val dataEventCaptor        = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
 
     val auditModelWithDates: AuditModel = AuditModel(
@@ -242,8 +237,10 @@ class AuditingServiceSpec extends SpecBase {
 
     when(mockAuditConnector.sendExtendedEvent(any)(any, any)).thenReturn(Future.successful(AuditResult.Success))
 
-    val app: Application                     = application.overrides(bind[AuditConnector].toInstance(mockAuditConnector)).build()
-    val testAuditingService: AuditingService = app.injector.instanceOf[AuditingService]
+    val application: Application = applicationBuilder
+      .overrides(bind[AuditConnector].toInstance(mockAuditConnector))
+      .build()
 
+    val testAuditingService: AuditingService = application.injector.instanceOf[AuditingService]
   }
 }

@@ -16,7 +16,7 @@
 
 package utils
 
-import Utils._
+import Utils.*
 
 class UtilsSpec extends SpecBase {
 

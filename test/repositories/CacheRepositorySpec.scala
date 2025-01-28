@@ -19,7 +19,7 @@ package repositories
 import models.EncryptedGuaranteeTransaction
 import play.api.libs.json.{JsSuccess, Json}
 import utils.SpecBase
-import utils.TestData.{ENCRYPTED_VALUE, ENCRYPTED_VALUE_OBJECT, LOCAL_DATE, LOCAL_DATE_TIME, NONCE_VALUE}
+import utils.TestData.{encryptedValue, encryptedValueObject, localDate, localDateTime, nonceValue}
 
 import java.time.{Instant, ZoneOffset}
 
@@ -50,22 +50,22 @@ class CacheRepositorySpec extends SpecBase {
 
   trait Setup {
     val encryptedTrans: EncryptedGuaranteeTransaction = EncryptedGuaranteeTransaction(
-      date = LOCAL_DATE,
-      movementReferenceNumber = ENCRYPTED_VALUE_OBJECT,
+      date = localDate,
+      movementReferenceNumber = encryptedValueObject,
       secureMovementReferenceNumber = None,
-      balance = ENCRYPTED_VALUE_OBJECT,
+      balance = encryptedValueObject,
       uniqueConsignmentReference = None,
-      declarantEori = ENCRYPTED_VALUE_OBJECT,
-      consigneeEori = ENCRYPTED_VALUE_OBJECT,
-      originalCharge = ENCRYPTED_VALUE_OBJECT,
-      dischargedAmount = ENCRYPTED_VALUE_OBJECT,
+      declarantEori = encryptedValueObject,
+      consigneeEori = encryptedValueObject,
+      originalCharge = encryptedValueObject,
+      dischargedAmount = encryptedValueObject,
       interestCharge = None,
       c18Reference = None,
       dueDates = Seq()
     )
 
     val encryptedTransactions: Seq[EncryptedGuaranteeTransaction] = Seq(encryptedTrans)
-    val lastUpdatedTime: Instant                                  = LOCAL_DATE_TIME.toInstant(ZoneOffset.UTC)
+    val lastUpdatedTime: Instant                                  = localDateTime.toInstant(ZoneOffset.UTC)
 
     val guaranteeAcc: GuaranteeAccountMongo = GuaranteeAccountMongo(encryptedTransactions, lastUpdatedTime)
 
@@ -75,18 +75,18 @@ class CacheRepositorySpec extends SpecBase {
       s"""{
          |"transactions":[
          |{"date":"2024-07-29",
-         |"movementReferenceNumber":{"value":"$ENCRYPTED_VALUE",
-         |"nonce":"$NONCE_VALUE"},
-         |"balance":{"value":"$ENCRYPTED_VALUE",
-         |"nonce":"$NONCE_VALUE"},
-         |"declarantEori":{"value":"$ENCRYPTED_VALUE",
-         |"nonce":"$NONCE_VALUE"},
-         |"consigneeEori":{"value":"$ENCRYPTED_VALUE",
-         |"nonce":"$NONCE_VALUE"},
-         |"originalCharge":{"value":"$ENCRYPTED_VALUE",
-         |"nonce":"$NONCE_VALUE"},
-         |"dischargedAmount":{"value":"$ENCRYPTED_VALUE",
-         |"nonce":"$NONCE_VALUE"},
+         |"movementReferenceNumber":{"value":"$encryptedValue",
+         |"nonce":"$nonceValue"},
+         |"balance":{"value":"$encryptedValue",
+         |"nonce":"$nonceValue"},
+         |"declarantEori":{"value":"$encryptedValue",
+         |"nonce":"$nonceValue"},
+         |"consigneeEori":{"value":"$encryptedValue",
+         |"nonce":"$nonceValue"},
+         |"originalCharge":{"value":"$encryptedValue",
+         |"nonce":"$nonceValue"},
+         |"dischargedAmount":{"value":"$encryptedValue",
+         |"nonce":"$nonceValue"},
          |"dueDates":[]}],
          |"lastUpdated":{$lastUpdatedDateString}}""".stripMargin
 
@@ -94,18 +94,18 @@ class CacheRepositorySpec extends SpecBase {
       s"""{
          |"transactions":[
          |{"date":"2024-07-29",
-         |"movementReferenceNumber":{"value":"$ENCRYPTED_VALUE",
-         |"nonce":"$NONCE_VALUE"},
-         |"balance":{"value":"$ENCRYPTED_VALUE",
-         |"nonce":"$NONCE_VALUE"},
-         |"declarantEori":{"value":"$ENCRYPTED_VALUE",
-         |"nonce":"$NONCE_VALUE"},
-         |"consigneeEori":{"value":"$ENCRYPTED_VALUE",
-         |"nonce":"$NONCE_VALUE"},
-         |"originalCharge":{"value":"$ENCRYPTED_VALUE",
-         |"nonce":"$NONCE_VALUE"},
-         |"dischargedAmount":{"value":"$ENCRYPTED_VALUE",
-         |"nonce":"$NONCE_VALUE"},
+         |"movementReferenceNumber":{"value":"$encryptedValue",
+         |"nonce":"$nonceValue"},
+         |"balance":{"value":"$encryptedValue",
+         |"nonce":"$nonceValue"},
+         |"declarantEori":{"value":"$encryptedValue",
+         |"nonce":"$nonceValue"},
+         |"consigneeEori":{"value":"$encryptedValue",
+         |"nonce":"$nonceValue"},
+         |"originalCharge":{"value":"$encryptedValue",
+         |"nonce":"$nonceValue"},
+         |"dischargedAmount":{"value":"$encryptedValue",
+         |"nonce":"$nonceValue"},
          |"dueDates":[]}],
          |"lastUpdated":{"date":"2024-07-29T16:16:03.120694"}}""".stripMargin
   }

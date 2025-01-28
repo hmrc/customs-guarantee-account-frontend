@@ -16,15 +16,14 @@
 
 package views.components
 
-import config.AppConfig
-import models._
+import models.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.Assertion
-import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
-import viewmodels._
+import utils.TestData.{dayOne, dd, month_7, year_2018, year_2024}
+import viewmodels.*
 import views.html.components.pager
 
 import java.time.{LocalDate, Month}
@@ -56,30 +55,9 @@ class PagerSpec extends SpecBase {
   }
 
   trait Setup {
-    val app: Application     = application.build()
-    val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-
-    implicit val msg: Messages = messages(app)
-
-    val year2024      = 2024
-    val year2018      = 2018
-    val monthOfYear   = 1
-    val dayOfTheMonth = 22
-
-    val totAmt   = "20.00"
-    val clearAmt = "30.00"
-    val openAmt  = "10.00"
-
-    val amt: Amounts      = Amounts(totAmt, Some(clearAmt), Some(openAmt), "2020-08-01")
-    val tt: TaxType       = TaxType("VAT", amt)
-    val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
-
-    val dd: DueDate =
-      DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
-
     val guaranTrans: GuaranteeTransaction =
       GuaranteeTransaction(
-        LocalDate.of(year2018, Month.JULY, dayOfTheMonth),
+        LocalDate.of(year_2018, Month.JULY, dayOne),
         "MRN-2",
         None,
         BigDecimal(12368.50),
@@ -98,7 +76,7 @@ class PagerSpec extends SpecBase {
 
     val guaranteeAccTransDate: GuaranteeAccountTransactionsByDate =
       GuaranteeAccountTransactionsByDate(
-        LocalDate.of(year2024, monthOfYear, dayOfTheMonth),
+        LocalDate.of(year_2024, month_7, dayOne),
         Seq(guaranteeAccountTrans)
       )
 
@@ -118,7 +96,7 @@ class PagerSpec extends SpecBase {
       override val urlForPage: Int => String = pageNumber => s"/page/$pageNumber"
     }
 
-    def view(model: Paginated): Document = Jsoup.parse(app.injector.instanceOf[pager].apply(model).body)
+    def view(model: Paginated): Document = Jsoup.parse(instanceOf[pager].apply(model).body)
   }
 
   private def shouldNotContainLinkToPreviousPage(view: Document)(implicit msg: Messages): Assertion = {

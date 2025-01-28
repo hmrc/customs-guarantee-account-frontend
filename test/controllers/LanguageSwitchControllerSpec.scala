@@ -19,7 +19,7 @@ package controllers
 import models.Language
 import play.api.Application
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import utils.SpecBase
 
 class LanguageSwitchControllerSpec extends SpecBase {
@@ -27,13 +27,12 @@ class LanguageSwitchControllerSpec extends SpecBase {
   "switching language when translation is enabled" should {
 
     "set the language to Cymraeg" in {
+      val application: Application = applicationBuilder.configure("features.welsh-translation" -> true).build()
 
-      val app: Application = application.configure("features.welsh-translation" -> true).build()
-
-      running(app) {
+      running(application) {
         val request = FakeRequest(GET, routes.LanguageSwitchController.switchToLanguage(Language.Cymraeg).url)
 
-        val result = route(app, request).value
+        val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         cookies(result).get("PLAY_LANG").value.value mustEqual "cy"
@@ -41,13 +40,12 @@ class LanguageSwitchControllerSpec extends SpecBase {
     }
 
     "should set the language to English" in {
+      val application: Application = applicationBuilder.configure("features.welsh-translation" -> true).build()
 
-      val app = application.configure("features.welsh-translation" -> true).build()
-
-      running(app) {
+      running(application) {
         val request = FakeRequest(GET, routes.LanguageSwitchController.switchToLanguage(Language.English).url)
 
-        val result = route(app, request).value
+        val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         cookies(result).get("PLAY_LANG").value.value mustEqual "en"

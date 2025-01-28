@@ -25,13 +25,19 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, BodyParsers}
 import play.api.test.CSRFTokenHelper.CSRFRequest
 import play.api.test.FakeRequest
 import repositories.{CacheRepository, RequestedTransactionsCache}
 import play.api.Application
+import config.AppConfig
 import play.api.i18n.{Messages, MessagesApi}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import utils.Utils.{emptyString, singleSpace}
+import utils.TestData.sessionId
+
+import scala.reflect.ClassTag
 
 class FakeMetrics extends MetricRegistry {
   val defaultRegistry: MetricRegistry = new MetricRegistry
@@ -49,7 +55,7 @@ trait SpecBase
   val mockCacheRepository: CacheRepository                       = mock[CacheRepository]
   val mockRequestedTransactionsCache: RequestedTransactionsCache = mock[RequestedTransactionsCache]
 
-  def application: GuiceApplicationBuilder = new GuiceApplicationBuilder()
+  lazy val applicationBuilder: GuiceApplicationBuilder = new GuiceApplicationBuilder()
     .overrides(
       bind[IdentifierAction].to[FakeIdentifierAction],
       bind[MetricRegistry].toInstance(new FakeMetrics),
@@ -62,6 +68,19 @@ trait SpecBase
   def fakeRequest(method: String = emptyString, path: String = emptyString): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(method, path).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  def messages(app: Application): Messages =
-    app.injector.instanceOf[MessagesApi].preferred(fakeRequest(emptyString, singleSpace))
+  implicit lazy val messages: Messages = instanceOf[MessagesApi].preferred(fakeRequest(emptyString, singleSpace))
+
+  lazy val application: Application = applicationBuilder.build()
+
+  lazy val appConfig: AppConfig = instanceOf[AppConfig]
+
+  lazy implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(sessionId))
+
+  lazy val bodyParsers = applicationBuilder.injector().instanceOf[BodyParsers.Default]
+
+  lazy val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+
+  lazy val requestBuilder: RequestBuilder = mock[RequestBuilder]
+
+  def instanceOf[T: ClassTag]: T = application.injector.instanceOf[T]
 }

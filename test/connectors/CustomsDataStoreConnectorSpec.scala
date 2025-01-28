@@ -19,12 +19,10 @@ package connectors
 import models.EmailUnverifiedResponse
 import play.api.Application
 import play.api.inject.bind
-import uk.gov.hmrc.http.SessionId
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads}
+import uk.gov.hmrc.http.HttpReads
 import utils.SpecBase
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.test.Helpers.running
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 
@@ -35,34 +33,26 @@ class CustomsDataStoreConnectorSpec extends SpecBase {
 
   "retrieveUnverifiedEmail" must {
 
-    "return unverified email" in new Setup {
+    "return unverified email" in {
       when(requestBuilder.execute(any[HttpReads[EmailUnverifiedResponse]], any[ExecutionContext]))
         .thenReturn(Future.successful(EmailUnverifiedResponse(Some("unverified@email.com"))))
 
       when(mockHttpClient.get(any())(any())).thenReturn(requestBuilder)
 
-      val app: Application = application
+      val app: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
         )
         .build()
 
-      val connector: CustomsDataStoreConnector = app.injector.instanceOf[CustomsDataStoreConnector]
+      val connector: CustomsDataStoreConnector = instanceOf[CustomsDataStoreConnector]
 
-      running(app) {
+      running(application) {
         connector.retrieveUnverifiedEmail(hc) map { res =>
           res mustBe Some("unverified@email.com")
         }
       }
     }
-  }
-
-  trait Setup {
-    val sessionId: SessionId       = SessionId("session_1234")
-    implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(sessionId))
-
-    val mockHttpClient: HttpClientV2   = mock[HttpClientV2]
-    val requestBuilder: RequestBuilder = mock[RequestBuilder]
   }
 }

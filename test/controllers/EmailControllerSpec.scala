@@ -18,11 +18,11 @@ package controllers
 
 import connectors.CustomsDataStoreConnector
 import models.EmailUnverifiedResponse
-import play.api.inject._
+import play.api.inject.*
 import services.MetricsReporterService
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads}
+import uk.gov.hmrc.http.HttpReads
 import utils.SpecBase
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.matchers.should.Matchers.shouldBe
@@ -37,8 +37,8 @@ class EmailControllerSpec extends SpecBase {
 
   "EmailController" must {
     "return unverified email" in new Setup {
-      running(app) {
-        val connector = app.injector.instanceOf[CustomsDataStoreConnector]
+      running(application) {
+        val connector = application.injector.instanceOf[CustomsDataStoreConnector]
 
         val result: Future[Option[String]] = connector.retrieveUnverifiedEmail(hc)
 
@@ -47,10 +47,10 @@ class EmailControllerSpec extends SpecBase {
     }
 
     "return unverified email response" in new Setup {
-      running(app) {
+      running(application) {
         val request = fakeRequest(GET, routes.EmailController.showUnverified().url)
 
-        val result = route(app, request).value
+        val result = route(application, request).value
 
         status(result) shouldBe OK
       }
@@ -58,12 +58,8 @@ class EmailControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val expectedResult: Option[String] = Some("unverifiedEmail")
-    implicit val hc: HeaderCarrier     = HeaderCarrier()
-
-    private val mockHttpClient                             = mock[HttpClientV2]
+    val expectedResult: Option[String]                     = Some("unverifiedEmail")
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
-    val requestBuilder: RequestBuilder                     = mock[RequestBuilder]
 
     val response: EmailUnverifiedResponse = EmailUnverifiedResponse(Some("unverifiedEmail"))
 
@@ -74,7 +70,7 @@ class EmailControllerSpec extends SpecBase {
 
     when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
-    val app: Application = application
+    val application: Application = applicationBuilder
       .overrides(
         bind[MetricsReporterService].toInstance(mockMetricsReporterService),
         bind[HttpClientV2].toInstance(mockHttpClient),

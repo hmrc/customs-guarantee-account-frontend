@@ -16,9 +16,10 @@
 
 package models
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import utils.SpecBase
-import java.time.{LocalDateTime, ZoneOffset}
+import utils.TestData.{dateInMilliSeconds, dateTime, dollar}
+import java.time.ZoneOffset
 
 class MongoDateTimeFormatsSpec extends SpecBase {
 
@@ -34,16 +35,13 @@ class MongoDateTimeFormatsSpec extends SpecBase {
     }
 
     "write DateTime" in new Setup {
-      val res = MongoDateTimeFormats.localDateTimeWrite.writes(date)
+      val res = MongoDateTimeFormats.localDateTimeWrite.writes(dateTime)
 
       res mustBe testWrites
     }
   }
 
   trait Setup {
-    val date                = LocalDateTime.now()
-    val dateInMilliSeconds  = date.atZone(ZoneOffset.UTC).toInstant.toEpochMilli
     val testWrites: JsValue = Json.obj("$" + "date" -> dateInMilliSeconds)
-    val dollar              = "$"
   }
 }

@@ -3,7 +3,7 @@ import uk.gov.hmrc.DefaultBuildSettings.itSettings
 
 val appName          = "customs-guarantee-account-frontend"
 val silencerVersion  = "1.7.14"
-val bootstrapVersion = "9.5.0"
+val bootstrapVersion = "9.7.0"
 val scala3_3_4       = "3.3.4"
 val testDirectory    = "test"
 

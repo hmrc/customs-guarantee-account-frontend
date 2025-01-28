@@ -22,11 +22,12 @@ import org.joda.time.DateTime
 import org.mockito.invocation.InvocationOnMock
 import play.api.{Application, inject}
 import play.api.libs.json.Json
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.auth.core.retrieve.Email
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, ServiceUnavailableException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HttpReads, ServiceUnavailableException, UpstreamErrorResponse}
 import utils.SpecBase
 import utils.Utils.emptyString
+import utils.TestData.eori
 import play.api.http.Status.NOT_FOUND
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -50,7 +51,7 @@ class DataStoreServiceSpec extends SpecBase {
 
       when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
-      running(app) {
+      running(application) {
         val response = service.getEmail(eori)
         val result   = await(response)
 
@@ -92,7 +93,7 @@ class DataStoreServiceSpec extends SpecBase {
 
       when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
-      running(app) {
+      running(application) {
         val response = service.getEmail(eori)
         val result   = await(response)
 
@@ -108,7 +109,7 @@ class DataStoreServiceSpec extends SpecBase {
 
       when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
-      running(app) {
+      running(application) {
         val response = service.getEmail(eori)
 
         await(response) mustBe Left(UnverifiedEmail)
@@ -116,8 +117,8 @@ class DataStoreServiceSpec extends SpecBase {
     }
 
     "throw service unavailable" in new Setup {
-      running(app) {
-        val eori = "ETMP500ERROR"
+      running(application) {
+        val ETMPEori = "ETMP500ERROR"
 
         when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
 
@@ -126,20 +127,15 @@ class DataStoreServiceSpec extends SpecBase {
 
         when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
-        assertThrows[ServiceUnavailableException](await(service.getEmail(eori)))
+        assertThrows[ServiceUnavailableException](await(service.getEmail(ETMPEori)))
       }
     }
   }
 
   trait Setup {
-    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
-    implicit val hc: HeaderCarrier   = HeaderCarrier()
-    val eori                         = "GB11111"
-
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
-    val requestBuilder: RequestBuilder                     = mock[RequestBuilder]
 
-    val app: Application = application
+    val application: Application = applicationBuilder
       .overrides(
         inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
         inject.bind[HttpClientV2].toInstance(mockHttpClient),
@@ -147,7 +143,7 @@ class DataStoreServiceSpec extends SpecBase {
       )
       .build()
 
-    val service: DataStoreService = app.injector.instanceOf[DataStoreService]
+    val service: DataStoreService = application.injector.instanceOf[DataStoreService]
 
     when(mockMetricsReporterService.withResponseTimeLogging[Email](any)(any)(any))
       .thenAnswer { (i: InvocationOnMock) =>

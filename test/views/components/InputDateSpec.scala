@@ -19,8 +19,7 @@ package views.components
 import forms.GuaranteeTransactionsRequestPageFormProvider
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.Application
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.twirl.api.HtmlFormat
 import utils.SpecBase
 import java.time.Clock
@@ -33,10 +32,10 @@ class InputDateSpec extends SpecBase {
       val formWithValues =
         form.bind(Map("start.month" -> "01", "start.year" -> "2021", "end.month" -> "10", "end.year" -> "2021"))
 
-      running(app) {
-        val inputDateView                 = app.injector.instanceOf[views.html.components.inputDate]
+      running(application) {
+        val inputDateView                 = instanceOf[views.html.components.inputDate]
         val output: HtmlFormat.Appendable =
-          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages(app))
+          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages)
         val html: Document                = Jsoup.parse(output.toString)
 
         html.getElementsByTag("h1").text()               must include("Date of Birth")
@@ -52,10 +51,10 @@ class InputDateSpec extends SpecBase {
       val formWithValues =
         form.bind(Map("start.month" -> emptyString, "start.year" -> "2021", "end.month" -> "10", "end.year" -> "2021"))
 
-      running(app) {
-        val inputDateView                 = app.injector.instanceOf[views.html.components.inputDate]
+      running(application) {
+        val inputDateView                 = instanceOf[views.html.components.inputDate]
         val output: HtmlFormat.Appendable =
-          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages(app))
+          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages)
         val html: Document                = Jsoup.parse(output.toString)
 
         html.getElementsByTag("h1").text()              must include("Date of Birth")
@@ -71,10 +70,10 @@ class InputDateSpec extends SpecBase {
       val formWithValues =
         form.bind(Map("start.month" -> "01", "start.year" -> emptyString, "end.month" -> "10", "end.year" -> "2021"))
 
-      running(app) {
-        val inputDateView                 = app.injector.instanceOf[views.html.components.inputDate]
+      running(application) {
+        val inputDateView                 = instanceOf[views.html.components.inputDate]
         val output: HtmlFormat.Appendable =
-          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages(app))
+          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages)
         val html: Document                = Jsoup.parse(output.toString)
 
         html.getElementsByTag("h1").text()               must include("Date of Birth")
@@ -91,11 +90,11 @@ class InputDateSpec extends SpecBase {
         Map("start.month" -> emptyString, "start.year" -> emptyString, "end.month" -> "10", "end.year" -> "2021")
       )
 
-      running(app) {
-        val inputDateView = app.injector.instanceOf[views.html.components.inputDate]
+      running(application) {
+        val inputDateView = instanceOf[views.html.components.inputDate]
 
         val output: HtmlFormat.Appendable =
-          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages(app))
+          inputDateView(formWithValues, "Date of Birth", id = "start", legendHiddenContent = None)(messages)
 
         val html: Document = Jsoup.parse(output.toString)
 
@@ -111,6 +110,5 @@ class InputDateSpec extends SpecBase {
   trait Setup {
     implicit val clk: Clock = Clock.systemUTC()
     val form                = new GuaranteeTransactionsRequestPageFormProvider().apply()
-    val app: Application    = application.build()
   }
 }

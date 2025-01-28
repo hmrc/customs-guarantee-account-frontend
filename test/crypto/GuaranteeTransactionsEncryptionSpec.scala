@@ -16,28 +16,24 @@
 
 package crypto
 
-import models._
+import models.*
 import play.api.Configuration
 import play.api.test.Helpers.running
 import utils.SpecBase
+import utils.TestData.{dayTwentyTwo, year_2019}
 
 import java.time.{LocalDate, Month}
 
 class GuaranteeTransactionsEncryptionSpec extends SpecBase {
 
   "Encrypt and decrypt a guarantee account" in {
-    val app = application.build()
-
     val amt = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
     val tt  = TaxType("VAT", amt)
     val ttg = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
     val dd  = DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
 
-    val year = 2018
-    val day  = 22
-
     val transaction = GuaranteeTransaction(
-      LocalDate.of(year, Month.JULY, day),
+      LocalDate.of(year_2019, Month.JULY, dayTwentyTwo),
       "MRN-1",
       None,
       BigDecimal(12369.50),
@@ -51,11 +47,12 @@ class GuaranteeTransactionsEncryptionSpec extends SpecBase {
       dueDates = Seq(dd)
     )
 
-    val encryptor = app.injector.instanceOf[GuaranteeTransactionsEncryptor]
-    val decryptor = app.injector.instanceOf[GuaranteeTransactionsDecryptor]
-    val config    = app.injector.instanceOf[Configuration]
+    val encryptor = instanceOf[GuaranteeTransactionsEncryptor]
+    val decryptor = instanceOf[GuaranteeTransactionsDecryptor]
+    val config    = instanceOf[Configuration]
     val key       = config.get[String]("mongodb.encryptionKey")
-    running(app) {
+
+    running(application) {
       val encrypted = encryptor.encryptGuaranteeTransactions(Seq(transaction), key)
       decryptor.decryptGuaranteeTransactions(encrypted, key) mustBe Seq(transaction)
     }

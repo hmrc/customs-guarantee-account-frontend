@@ -16,15 +16,14 @@
 
 package connectors
 
-import models._
+import models.*
 import models.request.IdentifierRequest
 import play.api.http.Status
 import play.api.inject.bind
 import play.api.libs.json.{JsResult, JsString, JsSuccess, JsValue}
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.MetricsReporterService
-import uk.gov.hmrc.http.SessionId
-import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
@@ -37,6 +36,7 @@ import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import java.time.{LocalDate, Month}
 import scala.concurrent.{ExecutionContext, Future}
 import utils.Utils.emptyString
+import utils.TestData.{accountNumber, dayTwentyThree, dayTwentyTwo, dd, eori, year_2019}
 
 import java.net.URL
 
@@ -52,19 +52,19 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockHttpClient.post(any[URL]())(any)).thenReturn(requestBuilder)
 
-      val app: Application = application
+      val application: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
         )
         .build()
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = application.injector.instanceOf[CustomsFinancialsApiConnector]
 
-      running(app) {
+      running(application) {
         val result = await(
           connector
-            .getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "12345678"))
+            .getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "GB001"))
         )
 
         result.value mustEqual guaranteeAccount
@@ -85,7 +85,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
       when[Future[Seq[GuaranteeAccount]]](mockMetricsReporterService.withResponseTimeLogging(any)(any)(any))
         .thenReturn(Future.successful(Seq(guaranteeAccount)))
 
-      val app: Application = application
+      val application: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder),
@@ -93,12 +93,12 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         )
         .build()
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = application.injector.instanceOf[CustomsFinancialsApiConnector]
 
-      running(app) {
+      running(application) {
         val result = await(
           connector
-            .getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "12345678"))
+            .getGuaranteeAccount(eori)(implicitly, IdentifierRequest(fakeRequest(), "GB001"))
         )
 
         result.value mustEqual guaranteeAccount
@@ -173,16 +173,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockCacheRepository.set(any, any)).thenReturn(Future.successful(true))
 
-      val app: Application = application
+      val application: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
         )
         .build()
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = application.injector.instanceOf[CustomsFinancialsApiConnector]
 
-      running(app) {
+      running(application) {
         val result = await(connector.retrieveOpenGuaranteeTransactionsDetail("gan")(implicitly))
 
         result.isRight mustBe true
@@ -202,16 +202,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockCacheRepository.set(any, any)).thenReturn(Future.successful(false))
 
-      val app: Application = application
+      val application: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
         )
         .build()
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = application.injector.instanceOf[CustomsFinancialsApiConnector]
 
-      running(app) {
+      running(application) {
         val result = await(connector.retrieveOpenGuaranteeTransactionsDetail("gan")(implicitly))
 
         result.isRight mustBe true
@@ -222,11 +222,9 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockCacheRepository.get(any)).thenReturn(Future.successful(Some(ganTransactions)))
 
-      val app: Application = application.build()
+      val connector: CustomsFinancialsApiConnector = application.injector.instanceOf[CustomsFinancialsApiConnector]
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
-
-      running(app) {
+      running(application) {
         val result = await(connector.retrieveOpenGuaranteeTransactionsDetail("gan")(implicitly))
 
         result mustBe Right(ganTransactions)
@@ -249,16 +247,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockCacheRepository.get(any)).thenReturn(Future.successful(None))
 
-      val app: Application = application
+      val application: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
         )
         .build()
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = application.injector.instanceOf[CustomsFinancialsApiConnector]
 
-      running(app) {
+      running(application) {
         val result = await(connector.retrieveOpenGuaranteeTransactionsDetail("gan")(implicitly))
 
         result mustBe Left(TooManyTransactionsRequested)
@@ -278,16 +276,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockCacheRepository.get(any)).thenReturn(Future.successful(None))
 
-      val app: Application = application
+      val application: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
         )
         .build()
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = application.injector.instanceOf[CustomsFinancialsApiConnector]
 
-      running(app) {
+      running(application) {
         val result = await(connector.retrieveOpenGuaranteeTransactionsDetail("gan")(implicitly))
 
         result mustBe Left(NoTransactionsAvailable)
@@ -304,16 +302,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockCacheRepository.get(any)).thenReturn(Future.successful(None))
 
-      val app: Application = application
+      val application: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
         )
         .build()
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = application.injector.instanceOf[CustomsFinancialsApiConnector]
 
-      running(app) {
+      running(application) {
         val result = await(connector.retrieveOpenGuaranteeTransactionsDetail("gan")(implicitly))
 
         result mustBe Left(UnknownException)
@@ -331,16 +329,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockHttpClient.post(any[URL]())(any)).thenReturn(requestBuilder)
 
-      val app: Application = application
+      val application: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
         )
         .build()
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = application.injector.instanceOf[CustomsFinancialsApiConnector]
 
-      running(app) {
+      running(application) {
         val result = await(
           connector
             .retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly)
@@ -364,13 +362,13 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockHttpClient.post(any[URL]())(any)).thenReturn(requestBuilder)
 
-      val app: Application = application
+      val application: Application = applicationBuilder
         .overrides(bind[HttpClientV2].toInstance(mockHttpClient), bind[RequestBuilder].toInstance(requestBuilder))
         .build()
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = application.injector.instanceOf[CustomsFinancialsApiConnector]
 
-      running(app) {
+      running(application) {
         val result = await(
           connector
             .retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly)
@@ -391,16 +389,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockHttpClient.post(any[URL]())(any)).thenReturn(requestBuilder)
 
-      val app: Application = application
+      val application: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
         )
         .build()
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = application.injector.instanceOf[CustomsFinancialsApiConnector]
 
-      running(app) {
+      running(application) {
         val result = await(
           connector
             .retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly)
@@ -418,16 +416,16 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
 
       when(mockHttpClient.post(any[URL]())(any)).thenReturn(requestBuilder)
 
-      val app: Application = application
+      val application: Application = applicationBuilder
         .overrides(
           bind[HttpClientV2].toInstance(mockHttpClient),
           bind[RequestBuilder].toInstance(requestBuilder)
         )
         .build()
 
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = application.injector.instanceOf[CustomsFinancialsApiConnector]
 
-      running(app) {
+      running(application) {
         val result = await(
           connector
             .retrieveRequestedGuaranteeTransactionsDetail("gan", true, fromDate, toDate)(implicitly)
@@ -439,28 +437,9 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
   }
 
   trait Setup {
-    private val traderEori         = "12345678"
-    private val accountNumber      = "987654"
-    val sessionId: SessionId       = SessionId("session_1234")
-    implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(sessionId))
-
-    val mockHttpClient: HttpClientV2   = mock[HttpClientV2]
-    val requestBuilder: RequestBuilder = mock[RequestBuilder]
-
-    val amt: Amounts      = Amounts("20.00", Some("30.00"), Some("10.00"), "2020-08-01")
-    val tt: TaxType       = TaxType("VAT", amt)
-    val ttg: TaxTypeGroup = TaxTypeGroup(taxTypeGroup = "VAT", amounts = amt, taxType = tt)
-
-    val dd: DueDate =
-      DueDate(dueDate = "2020-07-28", reasonForSecurity = Some("T24"), amounts = amt, taxTypeGroups = Seq(ttg))
-
-    val year           = 2019
-    val dayTwentyThree = 23
-    val dayTwentyTwo   = 22
-
     val ganTransactions: Seq[GuaranteeTransaction] = List(
       GuaranteeTransaction(
-        LocalDate.of(year, Month.OCTOBER, dayTwentyThree),
+        LocalDate.of(year_2019, Month.OCTOBER, dayTwentyThree),
         "19GB000056HG5w746",
         None,
         BigDecimal(45367.12),
@@ -474,7 +453,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(year_2019, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12367.50),
@@ -488,7 +467,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(year_2019, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12368.50),
@@ -502,7 +481,7 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
         dueDates = Seq(dd)
       ),
       GuaranteeTransaction(
-        LocalDate.of(year, Month.OCTOBER, dayTwentyTwo),
+        LocalDate.of(year_2019, Month.OCTOBER, dayTwentyTwo),
         "18GB011056HG5w747",
         None,
         BigDecimal(12369.50),
@@ -518,14 +497,13 @@ class CustomsFinancialsApiConnectorSpec extends SpecBase {
     )
 
     val generalGuaranteeAccount: GeneralGuaranteeAccount =
-      GeneralGuaranteeAccount(Account(accountNumber, "123456789", traderEori), Some("999.99"), None)
+      GeneralGuaranteeAccount(Account(accountNumber, "123456789", eori), Some("999.99"), None)
 
     val guaranteeAccount: GuaranteeAccount = generalGuaranteeAccount.toDomain()
 
     val fromDate: LocalDate = LocalDate.parse("2019-10-08")
     val toDate: LocalDate   = LocalDate.parse("2020-04-08")
 
-    val eori                                                 = "123456789"
     val traderAccounts: AccountsAndBalancesResponseContainer = AccountsAndBalancesResponseContainer(
       AccountsAndBalancesResponse(
         Some(AccountResponseCommon(emptyString, Some(emptyString), emptyString, None)),

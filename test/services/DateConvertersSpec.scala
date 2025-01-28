@@ -18,13 +18,14 @@ package services
 
 import utils.SpecBase
 import org.joda.time
-import java.time._
+import java.time.*
 import java.util.Date
+import utils.TestData.date
 
 class DateConvertersSpec extends SpecBase {
 
   "toLocalDate" should {
-    "convert date to localdate" in new Setup {
+    "convert date to localdate" in {
       val testDate: Date     = new Date
       val res                = DateConverters.toLocalDate(testDate)
       val compare: LocalDate = testDate.toInstant.atZone(ZoneId.systemDefault()).toLocalDate
@@ -34,13 +35,13 @@ class DateConvertersSpec extends SpecBase {
   }
 
   "OrderedLocalDate Compare" should {
-    "Comparing the same date returns 0" in new Setup {
+    "Comparing the same date returns 0" in {
       val compare = DateConverters.OrderedLocalDate(date).compare(date)
 
       compare mustBe 0
     }
 
-    "Comparing different dates returns difference between" in new Setup {
+    "Comparing different dates returns difference between" in {
       val result  = -1999999998
       val minDate = LocalDate.MIN
       val maxDate = LocalDate.MAX
@@ -51,15 +52,11 @@ class DateConvertersSpec extends SpecBase {
   }
 
   "toJodaTime" should {
-    "successfully convert to a joda date time" in new Setup {
+    "successfully convert to a joda date time" in {
       val res     = DateConverters.toJodaTime(date)
       val compare = new time.LocalDate(java.util.Date.from(date.atStartOfDay().toInstant(ZoneOffset.UTC)))
 
       compare mustBe res
     }
-  }
-
-  trait Setup {
-    val date = LocalDate.now()
   }
 }
