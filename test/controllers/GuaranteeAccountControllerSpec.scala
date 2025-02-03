@@ -55,7 +55,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
 
-      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+      when(mockDataStoreService.getEmail(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
       val application: Application = applicationBuilder
@@ -85,7 +85,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
       when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
         .thenReturn(Future.successful(Left(UnknownException)))
 
-      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+      when(mockDataStoreService.getEmail(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
       val application: Application = applicationBuilder
@@ -117,7 +117,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
 
-      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+      when(mockDataStoreService.getEmail(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
       val application: Application = applicationBuilder
@@ -165,7 +165,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
 
-      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+      when(mockDataStoreService.getEmail(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
       val application: Application = applicationBuilder
@@ -194,7 +194,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
 
-      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+      when(mockDataStoreService.getEmail(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
       val application: Application = applicationBuilder
@@ -222,7 +222,7 @@ class GuaranteeAccountControllerSpec extends SpecBase {
 
       when(mockDateTimeService.localDateTime()).thenReturn(LocalDateTime.parse("2020-04-08T12:30:59"))
 
-      when(mockDataStoreService.getEmail(eqTo(eori))(any))
+      when(mockDataStoreService.getEmail(any))
         .thenReturn(Future.successful(Right(Email("abc@test.com"))))
 
       val application: Application = applicationBuilder

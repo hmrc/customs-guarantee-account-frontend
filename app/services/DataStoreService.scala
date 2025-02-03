@@ -39,8 +39,8 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
 
   val log: Logger = Logger(this.getClass)
 
-  def getEmail(eori: EORI)(implicit hc: HeaderCarrier): Future[Either[EmailResponses, Email]] = {
-    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/verified-email"
+  def getEmail(implicit hc: HeaderCarrier): Future[Either[EmailResponses, Email]] = {
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/verified-email"
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.email") {
       httpClient

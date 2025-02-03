@@ -27,7 +27,6 @@ import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HttpReads, ServiceUnavailableException, UpstreamErrorResponse}
 import utils.SpecBase
 import utils.Utils.emptyString
-import utils.TestData.eori
 import play.api.http.Status.NOT_FOUND
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -52,7 +51,7 @@ class DataStoreServiceSpec extends SpecBase {
       when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
       running(application) {
-        val response = service.getEmail(eori)
+        val response = service.getEmail
         val result   = await(response)
 
         result mustBe Right(Email("someemail@mail.com"))
@@ -94,7 +93,7 @@ class DataStoreServiceSpec extends SpecBase {
       when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
       running(application) {
-        val response = service.getEmail(eori)
+        val response = service.getEmail
         val result   = await(response)
 
         result mustBe Left(UnverifiedEmail)
@@ -110,7 +109,7 @@ class DataStoreServiceSpec extends SpecBase {
       when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
       running(application) {
-        val response = service.getEmail(eori)
+        val response = service.getEmail
 
         await(response) mustBe Left(UnverifiedEmail)
       }
@@ -118,7 +117,6 @@ class DataStoreServiceSpec extends SpecBase {
 
     "throw service unavailable" in new Setup {
       running(application) {
-        val ETMPEori = "ETMP500ERROR"
 
         when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
 
@@ -127,7 +125,7 @@ class DataStoreServiceSpec extends SpecBase {
 
         when(mockHttpClient.get(any[URL]())(any)).thenReturn(requestBuilder)
 
-        assertThrows[ServiceUnavailableException](await(service.getEmail(ETMPEori)))
+        assertThrows[ServiceUnavailableException](await(service.getEmail))
       }
     }
   }
