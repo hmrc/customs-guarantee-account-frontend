@@ -16,10 +16,12 @@
 
 package repositories
 
+import crypto.EncryptedValue
 import models.EncryptedGuaranteeTransaction
 import play.api.libs.json.{JsSuccess, Json}
+import uk.gov.hmrc.crypto.Crypted
 import utils.SpecBase
-import utils.TestData.{encryptedValue, encryptedValueObject, localDate, localDateTime, nonceValue}
+import utils.TestData.{encryptedValue, localDate, localDateTime, nonceValue}
 
 import java.time.{Instant, ZoneOffset}
 
@@ -30,26 +32,34 @@ class CacheRepositorySpec extends SpecBase {
     "Read the incoming JsValue correctly" when {
       import GuaranteeAccountMongo.format
 
-      "JsValue is correct Instant representation" in new Setup {
-        Json.fromJson(Json.parse(guaranteeAccJsonString)) mustBe JsSuccess(guaranteeAcc)
+      "JsValue is correct Instant representation when reading legacy value" in new Setup {
+        Json.fromJson(Json.parse(legacyGuaranteeAccJsonString)) mustBe JsSuccess(legacyGuaranteeAcc)
+      }
+
+      "JsValue is correct Instant representation when reading crypted value" in new Setup {
+        Json.fromJson(Json.parse(newGuaranteeAccJsonString)) mustBe JsSuccess(newGuaranteeAcc)
       }
 
       "JsValue is not correct Instant representation" in new Setup {
         val actualGuaranteeAccOb: GuaranteeAccountMongo =
           Json.fromJson(Json.parse(guaranteeAccJsonStringWithIncorrectDateFormat)).get
 
-        actualGuaranteeAccOb.transactions mustBe encryptedTransactions
+        actualGuaranteeAccOb.transactions mustBe newEncryptedTransactions
         actualGuaranteeAccOb.lastUpdated.isInstanceOf[Instant] mustBe true
       }
     }
 
     "Write the object correctly" in new Setup {
-      Json.toJson(guaranteeAcc) mustBe Json.parse(guaranteeAccJsonString)
+      intercept[IllegalStateException](Json.toJson(legacyGuaranteeAcc) mustBe Json.parse(newGuaranteeAccJsonString))
+      Json.toJson(newGuaranteeAcc) mustBe Json.parse(newGuaranteeAccJsonString)
     }
   }
 
   trait Setup {
-    val encryptedTrans: EncryptedGuaranteeTransaction = EncryptedGuaranteeTransaction(
+    val newEncryptedValueObject: Either[EncryptedValue, Crypted] = Right(Crypted(encryptedValue))
+    val encryptedValueObject: Either[EncryptedValue, Crypted]    = Left(EncryptedValue(encryptedValue, nonceValue))
+
+    val legacyEncryptedTrans: EncryptedGuaranteeTransaction = EncryptedGuaranteeTransaction(
       date = localDate,
       movementReferenceNumber = encryptedValueObject,
       secureMovementReferenceNumber = None,
@@ -64,14 +74,31 @@ class CacheRepositorySpec extends SpecBase {
       dueDates = Seq()
     )
 
-    val encryptedTransactions: Seq[EncryptedGuaranteeTransaction] = Seq(encryptedTrans)
-    val lastUpdatedTime: Instant                                  = localDateTime.toInstant(ZoneOffset.UTC)
+    val newEncryptedTrans: EncryptedGuaranteeTransaction = EncryptedGuaranteeTransaction(
+      date = localDate,
+      movementReferenceNumber = newEncryptedValueObject,
+      secureMovementReferenceNumber = None,
+      balance = newEncryptedValueObject,
+      uniqueConsignmentReference = None,
+      declarantEori = newEncryptedValueObject,
+      consigneeEori = newEncryptedValueObject,
+      originalCharge = newEncryptedValueObject,
+      dischargedAmount = newEncryptedValueObject,
+      interestCharge = None,
+      c18Reference = None,
+      dueDates = Seq()
+    )
 
-    val guaranteeAcc: GuaranteeAccountMongo = GuaranteeAccountMongo(encryptedTransactions, lastUpdatedTime)
+    val legacyEncryptedTransactions: Seq[EncryptedGuaranteeTransaction] = Seq(legacyEncryptedTrans)
+    val newEncryptedTransactions: Seq[EncryptedGuaranteeTransaction]    = Seq(newEncryptedTrans)
+    val lastUpdatedTime: Instant                                        = localDateTime.toInstant(ZoneOffset.UTC)
+
+    val legacyGuaranteeAcc: GuaranteeAccountMongo = GuaranteeAccountMongo(legacyEncryptedTransactions, lastUpdatedTime)
+    val newGuaranteeAcc: GuaranteeAccountMongo    = GuaranteeAccountMongo(newEncryptedTransactions, lastUpdatedTime)
 
     val lastUpdatedDateString = """"$date":{"$numberLong":"1721995855000"}"""
 
-    val guaranteeAccJsonString: String =
+    val legacyGuaranteeAccJsonString: String =
       s"""{
          |"transactions":[
          |{"date":"2024-07-29",
@@ -90,22 +117,29 @@ class CacheRepositorySpec extends SpecBase {
          |"dueDates":[]}],
          |"lastUpdated":{$lastUpdatedDateString}}""".stripMargin
 
+    val newGuaranteeAccJsonString: String =
+      s"""{
+         |"transactions":[
+         |{"date":"2024-07-29",
+         |"movementReferenceNumber":{"value":"$encryptedValue"},
+         |"balance":{"value":"$encryptedValue"},
+         |"declarantEori":{"value":"$encryptedValue"},
+         |"consigneeEori":{"value":"$encryptedValue"},
+         |"originalCharge":{"value":"$encryptedValue"},
+         |"dischargedAmount":{"value":"$encryptedValue"},
+         |"dueDates":[]}],
+         |"lastUpdated":{$lastUpdatedDateString}}""".stripMargin
+
     val guaranteeAccJsonStringWithIncorrectDateFormat: String =
       s"""{
          |"transactions":[
          |{"date":"2024-07-29",
-         |"movementReferenceNumber":{"value":"$encryptedValue",
-         |"nonce":"$nonceValue"},
-         |"balance":{"value":"$encryptedValue",
-         |"nonce":"$nonceValue"},
-         |"declarantEori":{"value":"$encryptedValue",
-         |"nonce":"$nonceValue"},
-         |"consigneeEori":{"value":"$encryptedValue",
-         |"nonce":"$nonceValue"},
-         |"originalCharge":{"value":"$encryptedValue",
-         |"nonce":"$nonceValue"},
-         |"dischargedAmount":{"value":"$encryptedValue",
-         |"nonce":"$nonceValue"},
+         |"movementReferenceNumber":{"value":"$encryptedValue"},
+         |"balance":{"value":"$encryptedValue"},
+         |"declarantEori":{"value":"$encryptedValue"},
+         |"consigneeEori":{"value":"$encryptedValue"},
+         |"originalCharge":{"value":"$encryptedValue"},
+         |"dischargedAmount":{"value":"$encryptedValue"},
          |"dueDates":[]}],
          |"lastUpdated":{"date":"2024-07-29T16:16:03.120694"}}""".stripMargin
   }

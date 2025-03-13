@@ -57,19 +57,17 @@ class DefaultCacheRepository @Inject() (
     )
     with CacheRepository {
 
-  private val encryptionKey = config.get[String]("mongodb.encryptionKey")
-
   def get(id: String): Future[Option[Seq[GuaranteeTransaction]]] =
     for {
       result <- collection.find(equal("_id", id)).toSingle().toFutureOption()
       account = result.map(mongoAccount =>
-                  guaranteeTransactionsDecryptor.decryptGuaranteeTransactions(mongoAccount.transactions, encryptionKey)
+                  guaranteeTransactionsDecryptor.decryptGuaranteeTransactions(mongoAccount.transactions)
                 )
     } yield account
 
   def set(id: String, transactions: Seq[GuaranteeTransaction]): Future[Boolean] = {
     val record = GuaranteeAccountMongo(
-      guaranteeTransactionsEncryptor.encryptGuaranteeTransactions(transactions, encryptionKey),
+      guaranteeTransactionsEncryptor.encryptGuaranteeTransactions(transactions),
       Instant.now()
     )
 

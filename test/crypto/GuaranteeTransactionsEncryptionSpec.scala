@@ -17,7 +17,6 @@
 package crypto
 
 import models.*
-import play.api.Configuration
 import play.api.test.Helpers.running
 import utils.SpecBase
 import utils.TestData.{dayTwentyTwo, year_2019}
@@ -49,12 +48,10 @@ class GuaranteeTransactionsEncryptionSpec extends SpecBase {
 
     val encryptor = instanceOf[GuaranteeTransactionsEncryptor]
     val decryptor = instanceOf[GuaranteeTransactionsDecryptor]
-    val config    = instanceOf[Configuration]
-    val key       = config.get[String]("mongodb.encryptionKey")
 
     running(application) {
-      val encrypted = encryptor.encryptGuaranteeTransactions(Seq(transaction), key)
-      decryptor.decryptGuaranteeTransactions(encrypted, key) mustBe Seq(transaction)
+      val encrypted = encryptor.encryptGuaranteeTransactions(Seq(transaction))
+      decryptor.decryptGuaranteeTransactions(encrypted) mustBe Seq(transaction)
     }
   }
 }

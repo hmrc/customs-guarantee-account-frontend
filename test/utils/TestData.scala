@@ -16,9 +16,8 @@
 
 package utils
 
-import crypto.EncryptedValue
-import uk.gov.hmrc.http.SessionId
 import models.*
+import uk.gov.hmrc.http.SessionId
 
 import java.time.{LocalDate, LocalDateTime, ZoneOffset}
 
@@ -77,6 +76,4 @@ object TestData {
   val encryptedValue     = "sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI="
   val nonceValue: String = "RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3" +
     "fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"
-
-  val encryptedValueObject: EncryptedValue = EncryptedValue(encryptedValue, nonceValue)
 }

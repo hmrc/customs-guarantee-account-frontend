@@ -16,16 +16,16 @@
 
 package crypto
 
-import models._
+import models.*
+import uk.gov.hmrc.crypto.Crypted
 
 import javax.inject.Inject
 
-class GuaranteeTransactionsDecryptor @Inject() (crypto: AesGCMCrypto) {
+class GuaranteeTransactionsDecryptor @Inject() (crypto: CryptoAdapter) {
   def decryptGuaranteeTransactions(
-    guaranteeTransactions: Seq[EncryptedGuaranteeTransaction],
-    key: String
+    guaranteeTransactions: Seq[EncryptedGuaranteeTransaction]
   ): Seq[GuaranteeTransaction] = {
-    def d(field: EncryptedValue): String = crypto.decrypt(field, key)
+    def d(field: Either[EncryptedValue, Crypted]): String = crypto.decrypt(field)
 
     guaranteeTransactions.map { transaction =>
       GuaranteeTransaction(
@@ -40,26 +40,26 @@ class GuaranteeTransactionsDecryptor @Inject() (crypto: AesGCMCrypto) {
         dischargedAmount = BigDecimal(d(transaction.dischargedAmount)),
         interestCharge = transaction.interestCharge.map(d),
         c18Reference = transaction.c18Reference.map(d),
-        dueDates = decryptDueDates(transaction.dueDates, key)
+        dueDates = decryptDueDates(transaction.dueDates)
       )
     }
   }
 
-  private def decryptDueDates(dueDates: Seq[EncryptedDueDate], key: String): Seq[DueDate] = {
-    def d(field: EncryptedValue): String = crypto.decrypt(field, key)
+  private def decryptDueDates(dueDates: Seq[EncryptedDueDate]): Seq[DueDate] = {
+    def d(field: Either[EncryptedValue, Crypted]): String = crypto.decrypt(field)
 
     dueDates.map { dueDate =>
       DueDate(
         dueDate = d(dueDate.dueDate),
         reasonForSecurity = dueDate.reasonForSecurity.map(d),
-        amounts = decryptAmounts(dueDate.amounts, key),
-        taxTypeGroups = dueDate.taxTypeGroups.map(group => decryptTaxTypeGroups(group, key))
+        amounts = decryptAmounts(dueDate.amounts),
+        taxTypeGroups = dueDate.taxTypeGroups.map(group => decryptTaxTypeGroups(group))
       )
     }
   }
 
-  private def decryptAmounts(amounts: EncryptedAmounts, key: String): Amounts = {
-    def d(field: EncryptedValue): String = crypto.decrypt(field, key)
+  private def decryptAmounts(amounts: EncryptedAmounts): Amounts = {
+    def d(field: Either[EncryptedValue, Crypted]): String = crypto.decrypt(field)
 
     Amounts(
       totalAmount = d(amounts.totalAmount),
@@ -69,22 +69,22 @@ class GuaranteeTransactionsDecryptor @Inject() (crypto: AesGCMCrypto) {
     )
   }
 
-  private def decryptTaxTypeGroups(taxTypeGroup: EncryptedTaxTypeGroup, key: String): TaxTypeGroup = {
-    def d(field: EncryptedValue): String = crypto.decrypt(field, key)
+  private def decryptTaxTypeGroups(taxTypeGroup: EncryptedTaxTypeGroup): TaxTypeGroup = {
+    def d(field: Either[EncryptedValue, Crypted]): String = crypto.decrypt(field)
 
     TaxTypeGroup(
       taxTypeGroup = d(taxTypeGroup.taxTypeGroup),
-      amounts = decryptAmounts(taxTypeGroup.amounts, key),
-      taxType = decryptTaxType(taxTypeGroup.taxType, key)
+      amounts = decryptAmounts(taxTypeGroup.amounts),
+      taxType = decryptTaxType(taxTypeGroup.taxType)
     )
   }
 
-  private def decryptTaxType(taxType: EncryptedTaxType, key: String): TaxType = {
-    def d(field: EncryptedValue): String = crypto.decrypt(field, key)
+  private def decryptTaxType(taxType: EncryptedTaxType): TaxType = {
+    def d(field: Either[EncryptedValue, Crypted]): String = crypto.decrypt(field)
 
     TaxType(
       taxType = d(taxType.taxType),
-      amounts = decryptAmounts(taxType.amounts, key)
+      amounts = decryptAmounts(taxType.amounts)
     )
   }
 }
