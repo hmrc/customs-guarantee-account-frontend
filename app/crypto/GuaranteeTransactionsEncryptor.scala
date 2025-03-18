@@ -16,17 +16,17 @@
 
 package crypto
 
-import models._
+import models.*
+import uk.gov.hmrc.crypto.Crypted
 
 import javax.inject.Inject
 
-class GuaranteeTransactionsEncryptor @Inject() (crypto: AesGCMCrypto) {
+class GuaranteeTransactionsEncryptor @Inject() (crypto: CryptoAdapter) {
 
   def encryptGuaranteeTransactions(
-    guaranteeTransactions: Seq[GuaranteeTransaction],
-    key: String
+    guaranteeTransactions: Seq[GuaranteeTransaction]
   ): Seq[EncryptedGuaranteeTransaction] = {
-    def e(field: String): EncryptedValue = crypto.encrypt(field, key)
+    def e(field: String): Either[EncryptedValue, Crypted] = crypto.encrypt(field)
 
     guaranteeTransactions.map { transaction =>
       EncryptedGuaranteeTransaction(
@@ -41,26 +41,26 @@ class GuaranteeTransactionsEncryptor @Inject() (crypto: AesGCMCrypto) {
         dischargedAmount = e(transaction.dischargedAmount.toString),
         interestCharge = transaction.interestCharge.map(e),
         c18Reference = transaction.c18Reference.map(e),
-        dueDates = encryptDueDates(transaction.dueDates, key)
+        dueDates = encryptDueDates(transaction.dueDates)
       )
     }
   }
 
-  private def encryptDueDates(dueDates: Seq[DueDate], key: String): Seq[EncryptedDueDate] = {
-    def e(field: String): EncryptedValue = crypto.encrypt(field, key)
+  private def encryptDueDates(dueDates: Seq[DueDate]): Seq[EncryptedDueDate] = {
+    def e(field: String): Either[EncryptedValue, Crypted] = crypto.encrypt(field)
 
     dueDates.map { dueDate =>
       EncryptedDueDate(
         dueDate = e(dueDate.dueDate),
         reasonForSecurity = dueDate.reasonForSecurity.map(e),
-        amounts = encryptAmounts(dueDate.amounts, key),
-        taxTypeGroups = dueDate.taxTypeGroups.map(group => encryptTaxTypeGroups(group, key))
+        amounts = encryptAmounts(dueDate.amounts),
+        taxTypeGroups = dueDate.taxTypeGroups.map(group => encryptTaxTypeGroups(group))
       )
     }
   }
 
-  private def encryptAmounts(amounts: Amounts, key: String): EncryptedAmounts = {
-    def e(field: String): EncryptedValue = crypto.encrypt(field, key)
+  private def encryptAmounts(amounts: Amounts): EncryptedAmounts = {
+    def e(field: String): Either[EncryptedValue, Crypted] = crypto.encrypt(field)
 
     EncryptedAmounts(
       totalAmount = e(amounts.totalAmount),
@@ -70,22 +70,22 @@ class GuaranteeTransactionsEncryptor @Inject() (crypto: AesGCMCrypto) {
     )
   }
 
-  private def encryptTaxTypeGroups(taxTypeGroup: TaxTypeGroup, key: String): EncryptedTaxTypeGroup = {
-    def e(field: String): EncryptedValue = crypto.encrypt(field, key)
+  private def encryptTaxTypeGroups(taxTypeGroup: TaxTypeGroup): EncryptedTaxTypeGroup = {
+    def e(field: String): Either[EncryptedValue, Crypted] = crypto.encrypt(field)
 
     EncryptedTaxTypeGroup(
       taxTypeGroup = e(taxTypeGroup.taxTypeGroup),
-      amounts = encryptAmounts(taxTypeGroup.amounts, key),
-      taxType = encryptTaxType(taxTypeGroup.taxType, key)
+      amounts = encryptAmounts(taxTypeGroup.amounts),
+      taxType = encryptTaxType(taxTypeGroup.taxType)
     )
   }
 
-  private def encryptTaxType(taxType: TaxType, key: String): EncryptedTaxType = {
-    def e(field: String): EncryptedValue = crypto.encrypt(field, key)
+  private def encryptTaxType(taxType: TaxType): EncryptedTaxType = {
+    def e(field: String): Either[EncryptedValue, Crypted] = crypto.encrypt(field)
 
     EncryptedTaxType(
       taxType = e(taxType.taxType),
-      amounts = encryptAmounts(taxType.amounts, key)
+      amounts = encryptAmounts(taxType.amounts)
     )
   }
 }
