@@ -36,6 +36,7 @@ class DefaultRequestedTransactionsCache @Inject() (mongoComponent: MongoComponen
       collectionName = "requested-transactions-cache",
       mongoComponent = mongoComponent,
       domainFormat = GuaranteeTransactionDates.format,
+      replaceIndexes = true,
       indexes = Seq(
         IndexModel(
           ascending("lastUpdated"),
