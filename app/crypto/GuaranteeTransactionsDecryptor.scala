@@ -21,11 +21,11 @@ import uk.gov.hmrc.crypto.Crypted
 
 import javax.inject.Inject
 
-class GuaranteeTransactionsDecryptor @Inject() (crypto: CryptoAdapter) {
+class GuaranteeTransactionsDecryptor @Inject() (crypto: Crypto) {
   def decryptGuaranteeTransactions(
     guaranteeTransactions: Seq[EncryptedGuaranteeTransaction]
   ): Seq[GuaranteeTransaction] = {
-    def d(field: Either[EncryptedValue, Crypted]): String = crypto.decrypt(field)
+    def d(field: Crypted): String = crypto.decrypt(field)
 
     guaranteeTransactions.map { transaction =>
       GuaranteeTransaction(
@@ -46,7 +46,7 @@ class GuaranteeTransactionsDecryptor @Inject() (crypto: CryptoAdapter) {
   }
 
   private def decryptDueDates(dueDates: Seq[EncryptedDueDate]): Seq[DueDate] = {
-    def d(field: Either[EncryptedValue, Crypted]): String = crypto.decrypt(field)
+    def d(field: Crypted): String = crypto.decrypt(field)
 
     dueDates.map { dueDate =>
       DueDate(
@@ -59,7 +59,7 @@ class GuaranteeTransactionsDecryptor @Inject() (crypto: CryptoAdapter) {
   }
 
   private def decryptAmounts(amounts: EncryptedAmounts): Amounts = {
-    def d(field: Either[EncryptedValue, Crypted]): String = crypto.decrypt(field)
+    def d(field: Crypted): String = crypto.decrypt(field)
 
     Amounts(
       totalAmount = d(amounts.totalAmount),
@@ -70,7 +70,7 @@ class GuaranteeTransactionsDecryptor @Inject() (crypto: CryptoAdapter) {
   }
 
   private def decryptTaxTypeGroups(taxTypeGroup: EncryptedTaxTypeGroup): TaxTypeGroup = {
-    def d(field: Either[EncryptedValue, Crypted]): String = crypto.decrypt(field)
+    def d(field: Crypted): String = crypto.decrypt(field)
 
     TaxTypeGroup(
       taxTypeGroup = d(taxTypeGroup.taxTypeGroup),
@@ -80,7 +80,7 @@ class GuaranteeTransactionsDecryptor @Inject() (crypto: CryptoAdapter) {
   }
 
   private def decryptTaxType(taxType: EncryptedTaxType): TaxType = {
-    def d(field: Either[EncryptedValue, Crypted]): String = crypto.decrypt(field)
+    def d(field: Crypted): String = crypto.decrypt(field)
 
     TaxType(
       taxType = d(taxType.taxType),

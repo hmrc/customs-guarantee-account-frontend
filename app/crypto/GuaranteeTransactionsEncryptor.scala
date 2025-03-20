@@ -21,12 +21,12 @@ import uk.gov.hmrc.crypto.Crypted
 
 import javax.inject.Inject
 
-class GuaranteeTransactionsEncryptor @Inject() (crypto: CryptoAdapter) {
+class GuaranteeTransactionsEncryptor @Inject() (crypto: Crypto) {
 
   def encryptGuaranteeTransactions(
     guaranteeTransactions: Seq[GuaranteeTransaction]
   ): Seq[EncryptedGuaranteeTransaction] = {
-    def e(field: String): Either[EncryptedValue, Crypted] = crypto.encrypt(field)
+    def e(field: String): Crypted = crypto.encrypt(field)
 
     guaranteeTransactions.map { transaction =>
       EncryptedGuaranteeTransaction(
@@ -47,7 +47,7 @@ class GuaranteeTransactionsEncryptor @Inject() (crypto: CryptoAdapter) {
   }
 
   private def encryptDueDates(dueDates: Seq[DueDate]): Seq[EncryptedDueDate] = {
-    def e(field: String): Either[EncryptedValue, Crypted] = crypto.encrypt(field)
+    def e(field: String): Crypted = crypto.encrypt(field)
 
     dueDates.map { dueDate =>
       EncryptedDueDate(
@@ -60,7 +60,7 @@ class GuaranteeTransactionsEncryptor @Inject() (crypto: CryptoAdapter) {
   }
 
   private def encryptAmounts(amounts: Amounts): EncryptedAmounts = {
-    def e(field: String): Either[EncryptedValue, Crypted] = crypto.encrypt(field)
+    def e(field: String): Crypted = crypto.encrypt(field)
 
     EncryptedAmounts(
       totalAmount = e(amounts.totalAmount),
@@ -71,7 +71,7 @@ class GuaranteeTransactionsEncryptor @Inject() (crypto: CryptoAdapter) {
   }
 
   private def encryptTaxTypeGroups(taxTypeGroup: TaxTypeGroup): EncryptedTaxTypeGroup = {
-    def e(field: String): Either[EncryptedValue, Crypted] = crypto.encrypt(field)
+    def e(field: String): Crypted = crypto.encrypt(field)
 
     EncryptedTaxTypeGroup(
       taxTypeGroup = e(taxTypeGroup.taxTypeGroup),
@@ -81,7 +81,7 @@ class GuaranteeTransactionsEncryptor @Inject() (crypto: CryptoAdapter) {
   }
 
   private def encryptTaxType(taxType: TaxType): EncryptedTaxType = {
-    def e(field: String): Either[EncryptedValue, Crypted] = crypto.encrypt(field)
+    def e(field: String): Crypted = crypto.encrypt(field)
 
     EncryptedTaxType(
       taxType = e(taxType.taxType),

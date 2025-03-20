@@ -16,12 +16,11 @@
 
 package repositories
 
-import crypto.EncryptedValue
 import models.EncryptedGuaranteeTransaction
 import play.api.libs.json.{JsSuccess, Json}
 import uk.gov.hmrc.crypto.Crypted
 import utils.SpecBase
-import utils.TestData.{encryptedValue, localDate, localDateTime, nonceValue}
+import utils.TestData.{encryptedValue, localDate, localDateTime}
 
 import java.time.{Instant, ZoneOffset}
 
@@ -56,8 +55,8 @@ class CacheRepositorySpec extends SpecBase {
   }
 
   trait Setup {
-    val newEncryptedValueObject: Either[EncryptedValue, Crypted] = Right(Crypted(encryptedValue))
-    val encryptedValueObject: Either[EncryptedValue, Crypted]    = Left(EncryptedValue(encryptedValue, nonceValue))
+    val newEncryptedValueObject: Crypted = Crypted(encryptedValue)
+    val encryptedValueObject: Crypted = Crypted(encryptedValue)
 
     val legacyEncryptedTrans: EncryptedGuaranteeTransaction = EncryptedGuaranteeTransaction(
       date = localDate,
@@ -96,24 +95,18 @@ class CacheRepositorySpec extends SpecBase {
     val legacyGuaranteeAcc: GuaranteeAccountMongo = GuaranteeAccountMongo(legacyEncryptedTransactions, lastUpdatedTime)
     val newGuaranteeAcc: GuaranteeAccountMongo    = GuaranteeAccountMongo(newEncryptedTransactions, lastUpdatedTime)
 
-    val lastUpdatedDateString = """"$date":{"$numberLong":"1721995855000"}"""
+    val lastUpdatedDateString = """"$date":{"$numberLong":"1721995855000"}""""
 
     val legacyGuaranteeAccJsonString: String =
       s"""{
          |"transactions":[
          |{"date":"2024-07-29",
-         |"movementReferenceNumber":{"value":"$encryptedValue",
-         |"nonce":"$nonceValue"},
-         |"balance":{"value":"$encryptedValue",
-         |"nonce":"$nonceValue"},
-         |"declarantEori":{"value":"$encryptedValue",
-         |"nonce":"$nonceValue"},
-         |"consigneeEori":{"value":"$encryptedValue",
-         |"nonce":"$nonceValue"},
-         |"originalCharge":{"value":"$encryptedValue",
-         |"nonce":"$nonceValue"},
-         |"dischargedAmount":{"value":"$encryptedValue",
-         |"nonce":"$nonceValue"},
+         |"movementReferenceNumber":{"value":"$encryptedValue"},
+         |"balance":{"value":"$encryptedValue"},
+         |"declarantEori":{"value":"$encryptedValue"},
+         |"consigneeEori":{"value":"$encryptedValue"},
+         |"originalCharge":{"value":"$encryptedValue"},
+         |"dischargedAmount":{"value":"$encryptedValue"},
          |"dueDates":[]}],
          |"lastUpdated":{$lastUpdatedDateString}}""".stripMargin
 
