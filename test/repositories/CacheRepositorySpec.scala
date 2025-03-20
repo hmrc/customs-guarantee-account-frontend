@@ -68,8 +68,8 @@ class CacheRepositorySpec extends SpecBase {
     )
 
     val newEncryptedTransactions: Seq[EncryptedGuaranteeTransaction] = Seq(newEncryptedTrans)
-    val lastUpdatedTime: Instant = localDateTime.toInstant(ZoneOffset.UTC)
-    val newGuaranteeAcc: GuaranteeAccountMongo = GuaranteeAccountMongo(newEncryptedTransactions, lastUpdatedTime)
+    val lastUpdatedTime: Instant                                     = localDateTime.toInstant(ZoneOffset.UTC)
+    val newGuaranteeAcc: GuaranteeAccountMongo                       = GuaranteeAccountMongo(newEncryptedTransactions, lastUpdatedTime)
 
     val lastUpdatedDateString = """"$date":{"$numberLong":"1721995855000"}"""
 
