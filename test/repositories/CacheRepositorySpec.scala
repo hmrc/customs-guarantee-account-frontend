@@ -31,10 +31,6 @@ class CacheRepositorySpec extends SpecBase {
     "Read the incoming JsValue correctly" when {
       import GuaranteeAccountMongo.format
 
-      "JsValue is correct Instant representation when reading legacy value" in new Setup {
-        Json.fromJson(Json.parse(legacyGuaranteeAccJsonString)) mustBe JsSuccess(legacyGuaranteeAcc)
-      }
-
       "JsValue is correct Instant representation when reading crypted value" in new Setup {
         Json.fromJson(Json.parse(newGuaranteeAccJsonString)) mustBe JsSuccess(newGuaranteeAcc)
       }
@@ -49,16 +45,14 @@ class CacheRepositorySpec extends SpecBase {
     }
 
     "Write the object correctly" in new Setup {
-      intercept[IllegalStateException](Json.toJson(legacyGuaranteeAcc) mustBe Json.parse(newGuaranteeAccJsonString))
       Json.toJson(newGuaranteeAcc) mustBe Json.parse(newGuaranteeAccJsonString)
     }
   }
 
   trait Setup {
-    val newEncryptedValueObject: Crypted = Crypted(encryptedValue)
     val encryptedValueObject: Crypted = Crypted(encryptedValue)
 
-    val legacyEncryptedTrans: EncryptedGuaranteeTransaction = EncryptedGuaranteeTransaction(
+    val newEncryptedTrans: EncryptedGuaranteeTransaction = EncryptedGuaranteeTransaction(
       date = localDate,
       movementReferenceNumber = encryptedValueObject,
       secureMovementReferenceNumber = None,
@@ -73,42 +67,11 @@ class CacheRepositorySpec extends SpecBase {
       dueDates = Seq()
     )
 
-    val newEncryptedTrans: EncryptedGuaranteeTransaction = EncryptedGuaranteeTransaction(
-      date = localDate,
-      movementReferenceNumber = newEncryptedValueObject,
-      secureMovementReferenceNumber = None,
-      balance = newEncryptedValueObject,
-      uniqueConsignmentReference = None,
-      declarantEori = newEncryptedValueObject,
-      consigneeEori = newEncryptedValueObject,
-      originalCharge = newEncryptedValueObject,
-      dischargedAmount = newEncryptedValueObject,
-      interestCharge = None,
-      c18Reference = None,
-      dueDates = Seq()
-    )
+    val newEncryptedTransactions: Seq[EncryptedGuaranteeTransaction] = Seq(newEncryptedTrans)
+    val lastUpdatedTime: Instant = localDateTime.toInstant(ZoneOffset.UTC)
+    val newGuaranteeAcc: GuaranteeAccountMongo = GuaranteeAccountMongo(newEncryptedTransactions, lastUpdatedTime)
 
-    val legacyEncryptedTransactions: Seq[EncryptedGuaranteeTransaction] = Seq(legacyEncryptedTrans)
-    val newEncryptedTransactions: Seq[EncryptedGuaranteeTransaction]    = Seq(newEncryptedTrans)
-    val lastUpdatedTime: Instant                                        = localDateTime.toInstant(ZoneOffset.UTC)
-
-    val legacyGuaranteeAcc: GuaranteeAccountMongo = GuaranteeAccountMongo(legacyEncryptedTransactions, lastUpdatedTime)
-    val newGuaranteeAcc: GuaranteeAccountMongo    = GuaranteeAccountMongo(newEncryptedTransactions, lastUpdatedTime)
-
-    val lastUpdatedDateString = """"$date":{"$numberLong":"1721995855000"}""""
-
-    val legacyGuaranteeAccJsonString: String =
-      s"""{
-         |"transactions":[
-         |{"date":"2024-07-29",
-         |"movementReferenceNumber":{"value":"$encryptedValue"},
-         |"balance":{"value":"$encryptedValue"},
-         |"declarantEori":{"value":"$encryptedValue"},
-         |"consigneeEori":{"value":"$encryptedValue"},
-         |"originalCharge":{"value":"$encryptedValue"},
-         |"dischargedAmount":{"value":"$encryptedValue"},
-         |"dueDates":[]}],
-         |"lastUpdated":{$lastUpdatedDateString}}""".stripMargin
+    val lastUpdatedDateString = """"$date":{"$numberLong":"1721995855000"}"""
 
     val newGuaranteeAccJsonString: String =
       s"""{
