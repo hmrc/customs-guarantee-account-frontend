@@ -33,11 +33,15 @@ class CryptoSpec extends SpecBase {
   }
 
   trait Setup {
-    private val encryptionKeyBytes: Array[Byte] = Array.fill(32)(1.toByte)
+    private val KeyLength: Int        = 32
+    private val FillByte: Byte        = 1.toByte
+    private val TestPlainText: String = "test-string"
+
+    private val encryptionKeyBytes: Array[Byte] = Array.fill(KeyLength)(FillByte)
     private val encryptionKey: String           = Base64.getEncoder.encodeToString(encryptionKeyBytes)
 
     val config: Configuration = Configuration.from(Map("mongodb.encryptionKey" -> encryptionKey))
     val crypto: Crypto        = new Crypto(config)
-    val plainText: String     = "test-string"
+    val plainText: String     = TestPlainText
   }
 }
