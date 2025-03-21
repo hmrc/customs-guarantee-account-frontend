@@ -16,51 +16,50 @@
 
 package models
 
-import crypto.EncryptedValue
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.crypto.Crypted
 
 import java.time.LocalDate
 
 case class EncryptedAmounts(
-  totalAmount: Either[EncryptedValue, Crypted],
-  clearedAmount: Option[Either[EncryptedValue, Crypted]],
-  openAmount: Option[Either[EncryptedValue, Crypted]],
-  updateDate: Either[EncryptedValue, Crypted]
+  totalAmount: Crypted,
+  clearedAmount: Option[Crypted],
+  openAmount: Option[Crypted],
+  updateDate: Crypted
 )
 
 case class EncryptedDueDate(
-  dueDate: Either[EncryptedValue, Crypted],
-  reasonForSecurity: Option[Either[EncryptedValue, Crypted]],
+  dueDate: Crypted,
+  reasonForSecurity: Option[Crypted],
   amounts: EncryptedAmounts,
   taxTypeGroups: Seq[EncryptedTaxTypeGroup]
 )
 
 case class EncryptedTaxTypeGroup(
-  taxTypeGroup: Either[EncryptedValue, Crypted],
+  taxTypeGroup: Crypted,
   amounts: EncryptedAmounts,
   taxType: EncryptedTaxType
 )
 
-case class EncryptedTaxType(taxType: Either[EncryptedValue, Crypted], amounts: EncryptedAmounts)
+case class EncryptedTaxType(taxType: Crypted, amounts: EncryptedAmounts)
 
 case class EncryptedGuaranteeTransaction(
   date: LocalDate,
-  movementReferenceNumber: Either[EncryptedValue, Crypted],
+  movementReferenceNumber: Crypted,
   secureMovementReferenceNumber: Option[String],
-  balance: Either[EncryptedValue, Crypted],
-  uniqueConsignmentReference: Option[Either[EncryptedValue, Crypted]],
-  declarantEori: Either[EncryptedValue, Crypted],
-  consigneeEori: Either[EncryptedValue, Crypted],
-  originalCharge: Either[EncryptedValue, Crypted],
-  dischargedAmount: Either[EncryptedValue, Crypted],
-  interestCharge: Option[Either[EncryptedValue, Crypted]],
-  c18Reference: Option[Either[EncryptedValue, Crypted]],
+  balance: Crypted,
+  uniqueConsignmentReference: Option[Crypted],
+  declarantEori: Crypted,
+  consigneeEori: Crypted,
+  originalCharge: Crypted,
+  dischargedAmount: Crypted,
+  interestCharge: Option[Crypted],
+  c18Reference: Option[Crypted],
   dueDates: Seq[EncryptedDueDate]
 )
 
 object EncryptedGuaranteeTransaction {
-  import crypto.CryptoAdapterFormats.eitherFormat
+  import crypto.Crypted.format
 
   implicit val amountFormat: OFormat[EncryptedAmounts]            = Json.format[EncryptedAmounts]
   implicit val taxTypeFormat: OFormat[EncryptedTaxType]           = Json.format[EncryptedTaxType]
