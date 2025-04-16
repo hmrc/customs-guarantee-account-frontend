@@ -162,7 +162,6 @@ class RequestedTransactionsControllerSpec extends SpecBase {
     }
   }
 
-
   trait Setup {
     val mockCustomsFinancialsApiConnector: CustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
 
