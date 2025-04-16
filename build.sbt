@@ -1,14 +1,14 @@
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.DefaultBuildSettings.itSettings
+import AppDependencies.bootstrapVersion
 
 val appName          = "customs-guarantee-account-frontend"
 val silencerVersion  = "1.7.14"
-val bootstrapVersion = "9.7.0"
-val scala3_3_4       = "3.3.4"
+val scala3_3_5       = "3.3.5"
 val testDirectory    = "test"
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := scala3_3_4
+ThisBuild / scalaVersion := scala3_3_5
 
 lazy val scalastyleSettings = Seq(
   scalastyleConfig := baseDirectory.value / "scalastyle-config.xml",
