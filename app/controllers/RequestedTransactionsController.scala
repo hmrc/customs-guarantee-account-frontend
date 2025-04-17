@@ -95,7 +95,7 @@ class RequestedTransactionsController @Inject() (
         Ok(
           resultView(
             new ResultsPageSummary(from, to),
-            controllers.routes.GuaranteeAccountController.showAccountDetails(None).url
+            appConfig.customsFinancialsFrontendHomepage
           )
         )
     }

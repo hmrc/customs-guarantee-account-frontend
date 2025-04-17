@@ -139,6 +139,29 @@ class RequestedTransactionsControllerSpec extends SpecBase {
     }
   }
 
+  "return transactions view with correct homepage URL when transactions are returned" in new Setup {
+    when(mockRequestedTransactionsCache.get(any))
+      .thenReturn(Future.successful(Some(GuaranteeTransactionDates(LocalDate.now(), LocalDate.now()))))
+
+    when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
+      .thenReturn(Future.successful(Some(guaranteeAccount)))
+
+    when(
+      mockCustomsFinancialsApiConnector.retrieveRequestedGuaranteeTransactionsDetail(eqTo(someGan), any, any, any)(any)
+    ).thenReturn(Future.successful(Right(ganTransactions)))
+
+    val request: FakeRequest[AnyContentAsEmpty.type] =
+      fakeRequest(GET, routes.RequestedTransactionsController.onPageLoad().url)
+
+    running(application) {
+      val result = route(application, request).value
+
+      status(result) mustBe OK
+
+      contentAsString(result) must include(appConfig.customsFinancialsFrontendHomepage)
+    }
+  }
+
   trait Setup {
     val mockCustomsFinancialsApiConnector: CustomsFinancialsApiConnector = mock[CustomsFinancialsApiConnector]
 

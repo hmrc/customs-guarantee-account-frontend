@@ -17,19 +17,23 @@
 @import viewmodels.ResultsPageSummary
 
 @this(
-        main_template: Layout,
-        h1: components.h1,
-        p: components.p,
-        link: components.link,
-        summaryList: components.summaryList
+  main_template: Layout,
+  h1: components.h1,
+  p: components.p,
+  link: components.link,
+  summaryList: components.summaryList
 )
 
 @(summary: ResultsPageSummary, returnLink: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")),
-    backLink = Some(controllers.routes.RequestTransactionsController.onPageLoad().url)) {
-        @h1("cf.guarantee-account.transactions.result.transaction")
-        @p("cf.guarantee-account.transactions.result.download.transactions")
-        @summaryList(summary)
-        @link("cf.guarantee-account.transactions.request.link.label", returnLink)
+  backLink = Some(controllers.routes.RequestTransactionsController.onPageLoad().url)) {
+    @h1("cf.guarantee-account.transactions.result.transaction")
+    @p("cf.guarantee-account.transactions.result.download.transactions")
+    @summaryList(summary)
+    @link(
+      "cf.guarantee-account.transactions.request.link.label", 
+      returnLink,
+      pClass = "govuk-body govuk-!-margin-bottom-9"
+    )
 }
