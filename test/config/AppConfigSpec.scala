@@ -27,5 +27,10 @@ class AppConfigSpec extends SpecBase {
         appConfig.appName mustBe "customs-guarantee-account-frontend"
       }
     }
+
+    "contain the correct GOV survey banner URL" in {
+      appConfig.helpMakeGovUkBetterUrl mustBe
+        "https://survey.take-part-in-research.service.gov.uk/jfe/form/SV_74GjifgnGv6GsMC?Source=BannerList_HMRC_CDS_MIDVA"
+    }
   }
 }
