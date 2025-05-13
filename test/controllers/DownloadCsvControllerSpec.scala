@@ -16,26 +16,22 @@
 
 package controllers
 
-import connectors.{
-  AccountStatusOpen, CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested,
-  UnknownException
-}
+import connectors.*
 import models.*
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{verify, when}
+import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.Application
 import play.api.http.Status
 import play.api.inject.bind
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import services.AuditingService
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.SpecBase
-import utils.TestData.{balance, dayTwentyThree, dayTwentyTwo, dd, eori, fromDate, limit, someGan, toDate, year_2018}
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.when
-import org.mockito.Mockito.verify
-import org.scalatestplus.mockito.MockitoSugar.mock
-import play.api.Application
-import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
+import utils.TestData.*
 
 import java.time.{LocalDate, LocalDateTime, Month}
 import scala.concurrent.Future
@@ -271,6 +267,8 @@ class DownloadCsvControllerSpec extends SpecBase {
         val result = route(appRequested, request).value
 
         status(result) mustEqual OK
+
+        verify(mockRequestedTransactionsCache).clear(eqTo(eori))
       }
     }
 
@@ -310,6 +308,8 @@ class DownloadCsvControllerSpec extends SpecBase {
         status(result) mustBe OK
 
         contentAsString(result) must include regex "No guarantee account securities"
+
+        verify(mockRequestedTransactionsCache).clear(eqTo(eori))
       }
     }
 
@@ -330,6 +330,8 @@ class DownloadCsvControllerSpec extends SpecBase {
         val result = route(appRequested, request).value
 
         contentAsString(result) must include regex "Your search returned too many results"
+
+        verify(mockRequestedTransactionsCache).clear(eqTo(eori))
       }
     }
 
@@ -350,6 +352,8 @@ class DownloadCsvControllerSpec extends SpecBase {
         val result = route(appRequested, request).value
 
         status(result) mustBe SEE_OTHER
+
+        verify(mockRequestedTransactionsCache).clear(eqTo(eori))
       }
     }
 
@@ -370,6 +374,8 @@ class DownloadCsvControllerSpec extends SpecBase {
         val result = route(appRequested, request).value
 
         status(result) mustBe SEE_OTHER
+
+        verify(mockRequestedTransactionsCache).clear(eqTo(eori))
       }
     }
 
@@ -392,6 +398,8 @@ class DownloadCsvControllerSpec extends SpecBase {
         val result = route(app, request).value
 
         status(result) mustBe SEE_OTHER
+
+        verify(mockRequestedTransactionsCache).clear(eqTo(eori))
       }
     }
 
@@ -414,6 +422,8 @@ class DownloadCsvControllerSpec extends SpecBase {
         val result = route(app, request).value
 
         redirectLocation(result).value mustEqual routes.DownloadCsvController.showUnableToDownloadCSV(None).url
+
+        verify(mockRequestedTransactionsCache).clear(eqTo(eori))
       }
     }
 

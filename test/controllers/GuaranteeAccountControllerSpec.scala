@@ -16,12 +16,13 @@
 
 package controllers
 
-import connectors.{
-  AccountStatusOpen, CustomsFinancialsApiConnector, NoTransactionsAvailable, TooManyTransactionsRequested,
-  UnknownException
-}
+import connectors.*
 import models.*
 import org.jsoup.Jsoup.parseBodyFragment
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{verify, when}
+import org.scalatestplus.mockito.MockitoSugar.mock
+import play.api.Application
 import play.api.http.Status
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -30,17 +31,11 @@ import services.{AuditingService, DataStoreService, DateTimeService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import utils.SpecBase
-import utils.TestData.{
-  balance, dayTwenty, dayTwentyOne, dayTwentyThree, dayTwentyTwo, dd, eori, limit, someGan, ten, year_2019, zero
-}
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar.mock
-import play.api.Application
+import utils.TestData.*
 
 import java.time.{LocalDate, LocalDateTime, Month}
-import scala.jdk.CollectionConverters.*
 import scala.concurrent.Future
+import scala.jdk.CollectionConverters.*
 import scala.util.Random
 
 class GuaranteeAccountControllerSpec extends SpecBase {
@@ -75,6 +70,8 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         val result  = route(application, request).value
 
         status(result) mustEqual OK
+
+        verify(mockRequestedTransactionsCache).clear(eqTo(eori))
       }
     }
 
@@ -105,6 +102,8 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         val result  = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
+
+        verify(mockRequestedTransactionsCache).clear(eqTo(eori))
       }
     }
 
@@ -137,6 +136,8 @@ class GuaranteeAccountControllerSpec extends SpecBase {
         val result  = route(application, request).value
 
         status(result) mustEqual OK
+
+        verify(mockRequestedTransactionsCache).clear(eqTo(eori))
       }
     }
 

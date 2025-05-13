@@ -16,21 +16,22 @@
 
 package controllers
 
-import cats.data.EitherT._
-import cats.instances.future._
+import cats.data.EitherT.*
+import cats.instances.future.*
 import config.AppConfig
-import connectors._
+import connectors.*
 import controllers.actions.{EmailAction, IdentifierAction}
 import helpers.DateFormatters
-import models._
+import models.*
 import models.request.IdentifierRequest
 import play.api.Logger
 import play.api.i18n.I18nSupport
-import play.api.mvc.{AnyContent, _}
+import play.api.mvc.{AnyContent, *}
+import repositories.RequestedTransactionsCache
 import services.DateTimeService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import viewmodels._
-import views.html._
+import viewmodels.*
+import views.html.*
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,6 +42,7 @@ class GuaranteeAccountController @Inject() (
   checkEmailIsVerified: EmailAction,
   apiConnector: CustomsFinancialsApiConnector,
   dateTimeService: DateTimeService,
+  cache: RequestedTransactionsCache,
   guaranteeAccount: guarantee_account,
   guaranteeAccountNotAvailable: guarantee_account_not_available,
   tooManyResults: guarantee_account_exceed_threshold,
@@ -55,6 +57,8 @@ class GuaranteeAccountController @Inject() (
 
   def showAccountDetails(page: Option[Int]): Action[AnyContent] = (identify andThen checkEmailIsVerified).async {
     implicit request =>
+
+      cache.clear(request.eori)
 
       val result = for {
         account <- fromOptionF[Future, Result, GuaranteeAccount](

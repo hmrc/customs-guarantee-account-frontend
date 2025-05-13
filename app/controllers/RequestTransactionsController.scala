@@ -47,9 +47,10 @@ class RequestTransactionsController @Inject() (
   def form: Form[GuaranteeTransactionDates] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
-    for {
-      _ <- cache.clear(request.eori)
-    } yield Ok(view(form))
+    cache.get(request.eori).recover { case _ => None }.map {
+      case Some(cachedData) => Ok(view(form.fill(cachedData)))
+      case None             => Ok(view(form))
+    }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>

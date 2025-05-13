@@ -28,6 +28,7 @@ import play.api.Logger
 import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import services.{AuditingService, DateTimeService}
+import repositories.RequestedTransactionsCache
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import viewmodels.GuaranteeTransactionCsvRow.GuaranteeTransactionCsvRowViewModel
 import viewmodels.{CSVWriter, ResultsPageSummary}
@@ -49,6 +50,7 @@ class DownloadCsvController @Inject() (
   tooManyResults: guarantee_transactions_too_many_results,
   noResults: guarantee_transactions_no_result,
   auditingService: AuditingService,
+  cache: RequestedTransactionsCache,
   unableToDownloadCSV: guarantee_account_unable_download_csv,
   notFound: not_found
 )(implicit
@@ -143,6 +145,8 @@ class DownloadCsvController @Inject() (
     accountNumber: String,
     eori: String
   )(implicit request: Request[_]): Result =
+    cache.clear(eori)
+
     transactions match {
       case Left(error) =>
         error match {
