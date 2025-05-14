@@ -47,10 +47,16 @@ class RequestTransactionsController @Inject() (
   def form: Form[GuaranteeTransactionDates] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen checkEmailIsVerified).async { implicit request =>
-    cache.get(request.eori).recover { case _ => None }.map {
-      case Some(cachedData) => Ok(view(form.fill(cachedData)))
-      case None             => Ok(view(form))
-    }
+    cache
+      .get(request.eori)
+      .recover { case _ =>
+        log.warn("Failed retrieval of requested transactions dates from cache")
+        None
+      }
+      .map {
+        case Some(cachedData) => Ok(view(form.fill(cachedData)))
+        case None             => Ok(view(form))
+      }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>

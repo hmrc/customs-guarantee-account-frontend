@@ -18,7 +18,7 @@ package controllers
 
 import connectors.*
 import models.*
-import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{verify, when}
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.Application

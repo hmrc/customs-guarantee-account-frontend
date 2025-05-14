@@ -28,7 +28,7 @@ import org.mockito.Mockito.{verify, when}
 import play.api.Application
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
-import utils.TestData.eori
+import utils.TestData.{day_20, eori, month_12, month_7, year_2019}
 
 class RequestTransactionControllerSpec extends SpecBase {
 
@@ -244,7 +244,7 @@ class RequestTransactionControllerSpec extends SpecBase {
   }
 
   val transactionDates: GuaranteeTransactionDates = GuaranteeTransactionDates(
-    start = LocalDate.of(2021, 3, 1),
-    end = LocalDate.of(2021, 10, 1)
+    start = LocalDate.of(year_2019, month_7, day_20),
+    end = LocalDate.of(year_2019, month_12, day_20)
   )
 }
