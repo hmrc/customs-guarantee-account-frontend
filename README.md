@@ -34,7 +34,7 @@ The easiest way to get started with these is via the service manager CLI - you c
 | --------                                         | ------- |
 | `sm2 --start CUSTOMS_FINANCIALS_ALL`             | Runs all dependencies |
 | `sm2 -s`                                         | Shows running services |
-| `sm2 --stop CUSTOMS_GUARENTEE_ACCOUNT_FRONTEND` | Stop the micro service  |
+| `sm2 --stop CUSTOMS_GUARANTEE_ACCOUNT_FRONTEND` | Stop the micro service  |
 | `sbt run`                                        | (from root dir) to compile the current service with your changes |
 
 
@@ -86,11 +86,6 @@ You can find a list of microservice specific routes here - `/conf/app.routes`
 
 Application entrypoint:  `/customs/payment-records` 
 
-| Path                            |
-| ----                            |
-| GET /transactions-unavailable   |
-| GET /account-unavailable        |
-
 ## Feature Switches
 
 > ### Caution!
@@ -105,22 +100,9 @@ Application entrypoint:  `/customs/payment-records`
 ### Available feature flags
 | Flag     | Description |
 | -------- | ------- |
-| `your-account-authorities-link-on-banner-enabled` | Enable link banner for your account authorities |
+| `delete-guarantee-account-cache-documents` | Clear cached documents |
 
 Different features can be enabled / disabled per-environment via the `app-config-<env>` project by setting `features.some-feature: true`
-
-In non-production environments,
-you can also toggle features on or off in a running microservice instance
-by performing a HTTP GET against
-
-    /customs-guarantee-account-frontend/test-only/feature/<feature>/<enable|disable>
-    
-> **Note:** Microservices must be running with test-only routes explicitly enabled,
-> via this switch in the `app-config-<env>`, the service manager microservice profile,
-> or just via `sbt run` locally:
->
->   "-Dapplication.router=testOnlyDoNotUseInAppConf.Routes"
-
 
 ## Helpful commands
 
