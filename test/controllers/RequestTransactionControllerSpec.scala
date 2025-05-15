@@ -16,22 +16,25 @@
 
 package controllers
 
+import models.GuaranteeTransactionDates
 import play.api.test.Helpers.*
 import utils.SpecBase
+
 import java.time.LocalDate
 import scala.concurrent.Future
 import utils.Utils.emptyString
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{verify, when}
 import play.api.Application
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
 import play.api.test.FakeRequest
+import utils.TestData.{day_20, eori, month_12, month_7, year_2019}
 
 class RequestTransactionControllerSpec extends SpecBase {
 
   "onPageLoad" should {
     "return OK with pre-populated data" in new Setup {
-      when(mockRequestedTransactionsCache.clear(any)).thenReturn(Future.successful(true))
+      when(mockRequestedTransactionsCache.get(eqTo(eori))).thenReturn(Future.successful(Some(transactionDates)))
 
       val request: FakeRequest[AnyContentAsEmpty.type] =
         fakeRequest(GET, routes.RequestTransactionsController.onPageLoad().url)
@@ -40,11 +43,12 @@ class RequestTransactionControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustBe OK
+        verify(mockRequestedTransactionsCache).get(eqTo(eori))
       }
     }
 
     "return OK with no cached data" in new Setup {
-      when(mockRequestedTransactionsCache.clear(any)).thenReturn(Future.successful(true))
+      when(mockRequestedTransactionsCache.get(eqTo(eori))).thenReturn(Future.successful(None))
 
       val request: FakeRequest[AnyContentAsEmpty.type] =
         fakeRequest(GET, routes.RequestTransactionsController.onPageLoad().url)
@@ -53,24 +57,21 @@ class RequestTransactionControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustBe OK
+        verify(mockRequestedTransactionsCache).get(eqTo(eori))
       }
     }
 
-    "return OK when clearing cache" in new Setup {
-      when(mockRequestedTransactionsCache.clear(any)).thenReturn(Future.successful(true))
+    "return OK when DB get throws exception" in new Setup {
+      when(mockRequestedTransactionsCache.get(eqTo(eori))).thenReturn(Future.failed(new Exception()))
 
-      val store: FakeRequest[AnyContentAsEmpty.type] =
-        fakeRequest(GET, routes.RequestTransactionsController.onSubmit().url)
-
-      val clear: FakeRequest[AnyContentAsEmpty.type] =
+      val request: FakeRequest[AnyContentAsEmpty.type] =
         fakeRequest(GET, routes.RequestTransactionsController.onPageLoad().url)
 
       running(application) {
-        val result = route(application, store).value
-        val test   = route(application, clear).value
+        val test = route(application, request).value
 
-        status(result) mustBe OK
         status(test) mustBe OK
+        verify(mockRequestedTransactionsCache).get(eqTo(eori))
       }
     }
   }
@@ -241,4 +242,9 @@ class RequestTransactionControllerSpec extends SpecBase {
       .configure("features.fixed-systemdate-for-tests" -> "true")
       .build()
   }
+
+  val transactionDates: GuaranteeTransactionDates = GuaranteeTransactionDates(
+    start = LocalDate.of(year_2019, month_7, day_20),
+    end = LocalDate.of(year_2019, month_12, day_20)
+  )
 }

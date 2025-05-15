@@ -19,7 +19,7 @@ package utils
 import com.codahale.metrics.MetricRegistry
 import controllers.actions.{FakeIdentifierAction, IdentifierAction}
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.OptionValues
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
@@ -31,6 +31,7 @@ import play.api.test.FakeRequest
 import repositories.{CacheRepository, RequestedTransactionsCache}
 import play.api.Application
 import config.AppConfig
+import org.mockito.Mockito.reset
 import play.api.i18n.{Messages, MessagesApi}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
@@ -50,12 +51,15 @@ trait SpecBase
     with MockitoSugar
     with OptionValues
     with ScalaFutures
-    with IntegrationPatience {
+    with IntegrationPatience
+    with BeforeAndAfterEach {
+
+  override def beforeEach(): Unit = reset(mockRequestedTransactionsCache)
 
   val mockCacheRepository: CacheRepository                       = mock[CacheRepository]
   val mockRequestedTransactionsCache: RequestedTransactionsCache = mock[RequestedTransactionsCache]
 
-  lazy val applicationBuilder: GuiceApplicationBuilder = new GuiceApplicationBuilder()
+  def applicationBuilder: GuiceApplicationBuilder = new GuiceApplicationBuilder()
     .overrides(
       bind[IdentifierAction].to[FakeIdentifierAction],
       bind[MetricRegistry].toInstance(new FakeMetrics),
