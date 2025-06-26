@@ -16,11 +16,11 @@
 
 package forms.mappings
 
-import java.time.{Clock, LocalDate, LocalDateTime}
+import java.time.{Clock, Duration, Instant, LocalDate, LocalDateTime, YearMonth, ZoneId}
 import org.scalatest.matchers.should.Matchers.*
 import play.api.data.validation.{Invalid, Valid, ValidationError, ValidationResult}
 import utils.SpecBase
-import utils.TestData.{dayOne, eighteen, month_7, twoThousand, year_2019}
+import utils.TestData.{dayOne, eighteen, month_7, seven, twoThousand, twoYearsInDays, year_2019}
 
 class ConstraintsSpec extends SpecBase with Constraints {
 
@@ -41,8 +41,9 @@ class ConstraintsSpec extends SpecBase with Constraints {
 
     "checkDates" must {
       "return Invalid taxYearErrorKey" in new Setup {
-        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey)(clock)
-          .apply(LocalDate.of(twoThousand, month_7, dayOne))
+        val sevenYearsAgo = LocalDate.now(futureClock).minusYears(seven)
+        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey)(futureClock)
+          .apply(sevenYearsAgo)
 
         result mustBe Invalid(List(ValidationError(List(taxYearErrorKey))))
       }
@@ -62,6 +63,10 @@ class ConstraintsSpec extends SpecBase with Constraints {
     val systemStartDateErrorKey: String = "You cannot enter a date before March 2019"
     val taxYearErrorKey: String         = "The from date cannot be older than 6 years from now"
 
-    implicit val clock: Clock = Clock.systemUTC()
+    private val fixedInstant = Instant.parse("2025-06-26T17:40:00Z")
+    private val zone         = ZoneId.of("UTC")
+
+    implicit val clock: Clock       = Clock.fixed(fixedInstant, zone)
+    implicit val futureClock: Clock = Clock.offset(clock, Duration.ofDays(twoYearsInDays))
   }
 }
