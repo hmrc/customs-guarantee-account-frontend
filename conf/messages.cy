@@ -177,20 +177,26 @@ cf.guarantee-account.transactions.result.search.again=Chwiliwch eto gydag ystod 
 cf.guarantee-account.transactions.result.no.transactions=Dim gwarantau cyfrif gwarant
 cf.guarantee-account.transactions.result.no.data=Nid oes gennym ddata o fewn y cyfnodau
 
+## Form Errors
+
 cf.form.error.start.date-too-far-in-past=Ni all y dyddiad ‘o’ fod yn fwy na 6 o flynyddoedd ers nawr.
 cf.form.error.end.date-too-far-in-past=Ni all y dyddiad ‘i’ fod yn fwy na 6 o flynyddoedd ers nawr.
 cf.form.error.startDate.date-earlier-than-system-start-date=Ni allwch nodi dyddiad cyn mis Hydref 2019
 cf.form.error.endDate.date-earlier-than-system-start-date=Mae’n rhaid i’r dyddiad ‘i’ fod ar neu ar ôl mis Hydref 2019
-cf.form.error.date.year.length = Mae’n rhaid i’r flwyddyn gynnwys pedwar rhif
 
-cf.form.error.start.month.date-number-invalid=Nodwch o ba fis yr ydych am chwilio
-cf.form.error.start.year.date-number-invalid=Nodwch o ba flwyddyn yr ydych am chwilio
-cf.form.error.end.month.date-number-invalid=Nodwch hyd at ba fis yr ydych am chwilio
-cf.form.error.end.year.date-number-invalid=Nodwch hyd at ba flwyddyn rydych am chwilio
+cf.form.error.start.month.date-number-missing=Nodwch o ba fis yr ydych am chwilio
+cf.form.error.start.year.date-number-missing=Nodwch o ba flwyddyn yr ydych am chwilio
 cf.form.error.start.date-missing=Nodwch o ba fis a blwyddyn yr ydych am chwilio
+cf.form.error.end.month.date-number-missing=Nodwch hyd at ba fis yr ydych am chwilio
+cf.form.error.end.year.date-number-missing=Nodwch hyd at ba flwyddyn rydych am chwilio
 cf.form.error.end.date-missing=Nodwch hyd at ba fis a blwyddyn rydych am chwilio
-cf.form.error.month.invalid=Nodwch rif rhwng 1 a 12
-cf.form.error.year.invalid=Nodwch flwyddyn go iawn
+
+cf.form.error.start.month.invalid=Nodwch fis rhwng 1 a 12 ar gyfer y dyddiad dechrau
+cf.form.error.end.month.invalid=Nodwch fis rhwng 1 a 12 ar gyfer y dyddiad dod i ben
+cf.form.error.start.year.invalid=Nodwch flwyddyn go iawn ar gyfer y dyddiad dechrau
+cf.form.error.end.year.invalid=Nodwch flwyddyn go iawn ar gyfer y dyddiad dod i ben
+cf.form.error.start.date.invalid=Nodwch ddyddiad go iawn ar gyfer y dyddiad dechrau
+cf.form.error.end.date.invalid=Nodwch ddyddiad go iawn ar gyfer y dyddiad dod i ben
 
 cf.form.error.start-future-date=Ni all y dyddiad ‘o’ fod yn y dyfodol
 cf.form.error.end-future-date=Mae’n rhaid i’r dyddiad rydych am chwilio hyd ato fod heddiw neu yn y gorffennol

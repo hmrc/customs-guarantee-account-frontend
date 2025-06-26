@@ -40,22 +40,15 @@ class ConstraintsSpec extends SpecBase with Constraints {
     }
 
     "checkDates" must {
-      "return Invalid year error" in new Setup {
-        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
-          .apply(LocalDate.of(eighteen, month_7, dayOne))
-
-        result mustBe Invalid(List(ValidationError(List(yearLengthError))))
-      }
-
       "return Invalid taxYearErrorKey" in new Setup {
-        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
+        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey)(clock)
           .apply(LocalDate.of(twoThousand, month_7, dayOne))
 
         result mustBe Invalid(List(ValidationError(List(taxYearErrorKey))))
       }
 
       "return Invalid constraint for year before 2019" in new Setup {
-        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
+        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey)(clock)
           .apply(LocalDate.of(year_2019, month_7, dayOne))
 
         result mustBe Invalid(List(ValidationError(List(systemStartDateErrorKey))))
@@ -68,7 +61,6 @@ class ConstraintsSpec extends SpecBase with Constraints {
 
     val systemStartDateErrorKey: String = "You cannot enter a date before March 2019"
     val taxYearErrorKey: String         = "The from date cannot be older than 6 years from now"
-    val yearLengthError: String         = "Year must include 4 numbers"
 
     implicit val clock: Clock = Clock.systemUTC()
   }

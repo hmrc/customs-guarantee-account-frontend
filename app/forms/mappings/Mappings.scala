@@ -24,28 +24,28 @@ import java.time.LocalDate
 trait Mappings extends Formatters with Constraints {
   // scalastyle:off
   protected def localDate(
-    invalidMonth: String,
-    invalidYear: String,
     emptyStartMonth: String,
     emptyStartYear: String,
     emptyEndMonth: String,
     emptyEndYear: String,
     emptyStartDate: String,
     emptyEndDate: String,
-    endOfMonth: Boolean,
-    args: Seq[String]
+    invalidMonth: String,
+    invalidYear: String,
+    invalidDate: String,
+    args: Seq[String] = Seq.empty
   ): FieldMapping[LocalDate] =
     of(
       new LocalDateFormatter(
-        invalidMonth,
-        invalidYear,
         emptyStartMonth,
         emptyStartYear,
         emptyEndMonth,
         emptyEndYear,
         emptyStartDate,
         emptyEndDate,
-        endOfMonth,
+        invalidMonth,
+        invalidYear,
+        invalidDate,
         args
       )
     )

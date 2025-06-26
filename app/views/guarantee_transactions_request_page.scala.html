@@ -14,8 +14,6 @@
  * limitations under the License.
  *@
 
- @import helpers.FormHelper.updateFormErrorKeyForStartAndEndDate
-
 @this(
         main_template: Layout,
         formHelper: FormWithCSRF,
@@ -33,7 +31,7 @@
 ) {
 
     @formHelper(action = controllers.routes.RequestTransactionsController.onSubmit(), Symbol("autoComplete") -> "off") {
-        @errorSummary(form.errors, None, isErrorKeyUpdateEnabled = true, Some(updateFormErrorKeyForStartAndEndDate()))
+        @errorSummary(form.errors, None))
         @h1("cf.guarantee-account.transactions.request.heading")
         @inputDate(
             form,
