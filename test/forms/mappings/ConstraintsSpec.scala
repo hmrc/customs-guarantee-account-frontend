@@ -41,7 +41,7 @@ class ConstraintsSpec extends SpecBase with Constraints {
 
     "checkDates" must {
       "return Invalid taxYearErrorKey" in new Setup {
-        val sevenYearsAgo = LocalDate.now(futureClock).minusYears(seven)
+        val sevenYearsAgo            = LocalDate.now(futureClock).minusYears(seven)
         val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey)(futureClock)
           .apply(sevenYearsAgo)
 
