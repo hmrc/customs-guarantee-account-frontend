@@ -16,11 +16,12 @@
 
 package forms.mappings
 
-import java.time.{Clock, Duration, Instant, LocalDate, LocalDateTime, YearMonth, ZoneId}
 import org.scalatest.matchers.should.Matchers.*
 import play.api.data.validation.{Invalid, Valid, ValidationError, ValidationResult}
 import utils.SpecBase
-import utils.TestData.{dayOne, eighteen, month_7, seven, twoThousand, twoYearsInDays, year_2019}
+import utils.TestData.*
+
+import java.time.*
 
 class ConstraintsSpec extends SpecBase with Constraints {
 
