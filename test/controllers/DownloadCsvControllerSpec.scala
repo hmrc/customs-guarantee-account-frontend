@@ -52,7 +52,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         .build()
 
       running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None).url)
         val result  = route(app, request).value
 
         contentAsString(result)                  must include(ganTransactions.head.movementReferenceNumber)
@@ -76,7 +76,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         .thenReturn(Future.successful(AuditResult.Success))
 
       running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None).url)
         val result  = route(app, request).value
 
         status(result) must be(Status.OK)
@@ -94,31 +94,11 @@ class DownloadCsvControllerSpec extends SpecBase {
         .thenReturn(Future.successful(AuditResult.Success))
 
       running(app) {
-        val request       = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+        val request       = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None).url)
         val result        = route(app, request).value
         val actualHeaders = headers(result)
 
         actualHeaders("Content-Disposition") must startWith("attachment")
-      }
-    }
-
-    "return any content disposition passed in (via query parameter)" in new Setup {
-      when(mockCustomsFinancialsApiConnector.getGuaranteeAccount(eqTo(eori))(any, any))
-        .thenReturn(Future.successful(Some(guaranteeAccount)))
-
-      when(mockCustomsFinancialsApiConnector.retrieveOpenGuaranteeTransactionsDetail(eqTo(someGan))(any))
-        .thenReturn(Future.successful(Right(ganTransactions)))
-
-      when(mockAuditingService.auditCsvDownload(any, any, any, any)(any, any))
-        .thenReturn(Future.successful(AuditResult.Success))
-
-      running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(disposition = Some("inline"), None).url)
-
-        val result        = route(app, request).value
-        val actualHeaders = headers(result)
-
-        actualHeaders("Content-Disposition") must startWith("inline")
       }
     }
 
@@ -130,7 +110,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         .thenReturn(Future.successful(Left(NoTransactionsAvailable)))
 
       running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None).url)
         val result  = route(app, request).value
 
         redirectLocation(result).value mustEqual routes.DownloadCsvController.showUnableToDownloadCSV(None).url
@@ -145,7 +125,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         .thenReturn(Future.successful(Left(TooManyTransactionsRequested)))
 
       running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None).url)
         val result  = route(app, request).value
 
         redirectLocation(result).value mustEqual routes.DownloadCsvController.showUnableToDownloadCSV(None).url
@@ -160,7 +140,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         .thenReturn(Future.successful(Left(UnknownException)))
 
       running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None).url)
         val result  = route(app, request).value
 
         redirectLocation(result).value mustEqual routes.DownloadCsvController.showUnableToDownloadCSV(None).url
@@ -174,7 +154,7 @@ class DownloadCsvControllerSpec extends SpecBase {
           .thenReturn(Future.successful(None))
 
         running(app) {
-          val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+          val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None).url)
           val result  = route(app, request).value
 
           status(result) must be(Status.NOT_FOUND)
@@ -198,7 +178,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         .build()
 
       running(app) {
-        val request       = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+        val request       = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None).url)
         val result        = route(app, request).value
         val actualHeaders = headers(result)
 
@@ -218,7 +198,7 @@ class DownloadCsvControllerSpec extends SpecBase {
           .thenReturn(Future.successful(AuditResult.Success))
 
         running(app) {
-          val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+          val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None).url)
           val result  = route(app, request).value
 
           status(result) mustEqual OK
@@ -236,7 +216,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         .build()
 
       running(app) {
-        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+        val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None).url)
         val result  = route(app, request).value
 
         status(result) must be(Status.INTERNAL_SERVER_ERROR)
@@ -261,7 +241,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       running(appRequested) {
         val request = FakeRequest(
           GET,
-          routes.DownloadCsvController.downloadRequestedCsv(None, "2019-10-10", "2019-10-30", None).url
+          routes.DownloadCsvController.downloadRequestedCsv("2019-10-10", "2019-10-30", None).url
         )
 
         val result = route(appRequested, request).value
@@ -274,7 +254,7 @@ class DownloadCsvControllerSpec extends SpecBase {
 
     "return Bad request when invalid dates are submitted" in new Setup {
       val request: FakeRequest[AnyContentAsEmpty.type] =
-        fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(None, "20-10-10", "2019-10-10", None).url)
+        fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv("20-10-10", "2019-10-10", None).url)
 
       running(appRequested) {
         val result = route(appRequested, request).value
@@ -294,7 +274,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       ).thenReturn(Future.successful(Left(NoTransactionsAvailable)))
 
       val request: FakeRequest[AnyContentAsFormUrlEncoded] =
-        fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(None, "2019-10-10", "2019-10-10", None).url)
+        fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv("2019-10-10", "2019-10-10", None).url)
           .withFormUrlEncodedBody(
             "start.month" -> "10",
             "start.year"  -> "2019",
@@ -324,7 +304,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       ).thenReturn(Future.successful(Left(TooManyTransactionsRequested)))
 
       val request: FakeRequest[AnyContentAsEmpty.type] =
-        fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(None, "2019-10-10", "2020-10-31", None).url)
+        fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv("2019-10-10", "2020-10-31", None).url)
 
       running(appRequested) {
         val result = route(appRequested, request).value
@@ -346,7 +326,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       ).thenReturn(Future.successful(Left(UnknownException)))
 
       val request: FakeRequest[AnyContentAsEmpty.type] =
-        fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(None, "2019-10-10", "2020-10-31", None).url)
+        fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv("2019-10-10", "2020-10-31", None).url)
 
       running(appRequested) {
         val result = route(appRequested, request).value
@@ -368,7 +348,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       ).thenReturn(Future.successful(Left(UnknownException)))
 
       val request: FakeRequest[AnyContentAsEmpty.type] =
-        fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv(None, "2019-10-10", "2020-10-31", None).url)
+        fakeRequest(GET, routes.DownloadCsvController.downloadRequestedCsv("2019-10-10", "2020-10-31", None).url)
 
       running(appRequested) {
         val result = route(appRequested, request).value
@@ -392,7 +372,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       running(app) {
         val request = FakeRequest(
           GET,
-          routes.DownloadCsvController.downloadRequestedCsv(None, fromDate.toString, toDate.toString, None).url
+          routes.DownloadCsvController.downloadRequestedCsv(fromDate.toString, toDate.toString, None).url
         )
 
         val result = route(app, request).value
@@ -416,7 +396,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       running(app) {
         val request = FakeRequest(
           GET,
-          routes.DownloadCsvController.downloadRequestedCsv(None, fromDate.toString, toDate.toString, None).url
+          routes.DownloadCsvController.downloadRequestedCsv(fromDate.toString, toDate.toString, None).url
         )
 
         val result = route(app, request).value
@@ -436,7 +416,7 @@ class DownloadCsvControllerSpec extends SpecBase {
         running(app) {
           val request = FakeRequest(
             GET,
-            routes.DownloadCsvController.downloadRequestedCsv(None, fromDate.toString, toDate.toString, None).url
+            routes.DownloadCsvController.downloadRequestedCsv(fromDate.toString, toDate.toString, None).url
           )
 
           val result = route(app, request).value
@@ -453,7 +433,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       running(appRequested) {
         val request = FakeRequest(
           GET,
-          routes.DownloadCsvController.downloadRequestedCsv(None, "2019-10-10", "2019-10-30", None).url
+          routes.DownloadCsvController.downloadRequestedCsv("2019-10-10", "2019-10-30", None).url
         )
 
         val result = route(appRequested, request).value
@@ -474,7 +454,7 @@ class DownloadCsvControllerSpec extends SpecBase {
       .thenReturn(Future.successful(AuditResult.Success))
 
     running(app) {
-      val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None, None).url)
+      val request = FakeRequest(GET, routes.DownloadCsvController.downloadCsv(None).url)
       val result  = route(app, request).value
 
       await(result)
@@ -515,7 +495,7 @@ class DownloadCsvControllerSpec extends SpecBase {
     running(app) {
       val request = FakeRequest(
         GET,
-        routes.DownloadCsvController.downloadRequestedCsv(None, fromDate.toString, toDate.toString, None).url
+        routes.DownloadCsvController.downloadRequestedCsv(fromDate.toString, toDate.toString, None).url
       )
 
       val result = route(app, request).value

@@ -30,7 +30,7 @@ case class GuaranteeAccountTransactionsViewModel(
 )(implicit val appConfig: AppConfig)
     extends Paginated {
 
-  val downloadUrl: String                        = routes.DownloadCsvController.downloadCsv(page = pageNumber, disposition = None).url
+  val downloadUrl: String                        = routes.DownloadCsvController.downloadCsv(page = pageNumber).url
   val allItems: Seq[GuaranteeAccountTransaction] = transactions
 
   implicit val localDateOrdering: Ordering[LocalDate] = Ordering.by(_.toEpochDay)

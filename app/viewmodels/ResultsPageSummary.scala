@@ -29,7 +29,7 @@ class ResultsPageSummary(from: LocalDate, to: LocalDate)(implicit messages: Mess
   def rows: SummaryListRow =
     guaranteeTransactionsResultRow(GuaranteeTransactionDates(from, to))
 
-  def guaranteeTransactionsResultRow(dates: GuaranteeTransactionDates): SummaryListRow =
+  private def guaranteeTransactionsResultRow(dates: GuaranteeTransactionDates): SummaryListRow =
     summaryListRow(
       value = HtmlFormat
         .escape(
@@ -40,7 +40,7 @@ class ResultsPageSummary(from: LocalDate, to: LocalDate)(implicit messages: Mess
         Seq(
           ActionItem(
             href = controllers.routes.DownloadCsvController
-              .downloadRequestedCsv(Some("attachment"), dates.start.toString, dates.end.toString, None)
+              .downloadRequestedCsv(dates.start.toString, dates.end.toString, None)
               .url,
             content = span(messages("cf.guarantee-account.detail.csv")),
             visuallyHiddenText = Some(messages("cf.guarantee-account.detail.csv-definition"))
