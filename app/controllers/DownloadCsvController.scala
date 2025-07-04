@@ -64,7 +64,7 @@ class DownloadCsvController @Inject() (
 
   val log: Logger = Logger(this.getClass)
 
-  def downloadCsv(disposition: Option[String], page: Option[Int]): Action[AnyContent] =
+  def downloadCsv(page: Option[Int]): Action[AnyContent] =
     (identify andThen checkEmailIsVerified).async { implicit request =>
 
       val eventualMaybeGuaranteeAccount = apiConnector.getGuaranteeAccount(request.eori)
@@ -82,7 +82,7 @@ class DownloadCsvController @Inject() (
                      val csvContent = convertToCSV(transactions)
 
                      val contentHeaders = "Content-Disposition" ->
-                       s"${disposition.getOrElse("attachment")}; filename=${filenameWithDateTime()}"
+                       s"attachment; filename=${filenameWithDateTime()}"
 
                      val _ = auditingService.auditCsvDownload(
                        request.eori,
@@ -102,7 +102,6 @@ class DownloadCsvController @Inject() (
     }
 
   def downloadRequestedCsv(
-    disposition: Option[String],
     from: String,
     to: String,
     page: Option[Int]
@@ -124,7 +123,7 @@ class DownloadCsvController @Inject() (
 
           result <- EitherT.liftF(
                       Future.successful(
-                        processTransactions(transactions, disposition, start, end, page, account.number, request.eori)
+                        processTransactions(transactions, start, end, page, account.number, request.eori)
                       )
                     )
         } yield result
@@ -138,7 +137,6 @@ class DownloadCsvController @Inject() (
 
   private def processTransactions(
     transactions: Either[GuaranteeResponses, Seq[GuaranteeTransaction]],
-    disposition: Option[String],
     start: LocalDate,
     end: LocalDate,
     page: Option[Int],
@@ -164,7 +162,7 @@ class DownloadCsvController @Inject() (
       case Right(transactions) =>
         val csvContent     = convertToCSV(transactions)
         val contentHeaders = "Content-Disposition" ->
-          s"${disposition.getOrElse("attachment")}; filename=${filenameWithRequestDates(start, end)}"
+          s"attachment; filename=${filenameWithRequestDates(start, end)}"
 
         auditingService.auditCsvDownload(
           eori,
