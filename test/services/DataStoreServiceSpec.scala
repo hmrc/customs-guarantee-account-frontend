@@ -27,7 +27,6 @@ import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HttpReads, ServiceUnavailableException, UpstreamErrorResponse}
 import utils.SpecBase
 import utils.Utils.emptyString
-import play.api.http.Status.NOT_FOUND
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
