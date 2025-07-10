@@ -21,7 +21,7 @@
 @(model: Paginated)(implicit messages: Messages)
 
 @if(!model.dataFitsOnOnePage) {
-    <nav class="govuk-pagination" id="pagination-label" role="table-pagination" aria-label="table-pagination">
+    <nav class="govuk-pagination" id="pagination-label" aria-label="table pagination">
         <p class="govuk-visually-hidden">Pagination navigation</p>
          @if(!model.isFirstPage) {
             @linkToPreviousPage
