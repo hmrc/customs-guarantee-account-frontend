@@ -16,11 +16,12 @@
 
 package forms.mappings
 
-import java.time.{Clock, LocalDate, LocalDateTime}
 import org.scalatest.matchers.should.Matchers.*
 import play.api.data.validation.{Invalid, Valid, ValidationError, ValidationResult}
 import utils.SpecBase
-import utils.TestData.{dayOne, eighteen, month_7, twoThousand, year_2019}
+import utils.TestData.*
+
+import java.time.*
 
 class ConstraintsSpec extends SpecBase with Constraints {
 
@@ -40,22 +41,16 @@ class ConstraintsSpec extends SpecBase with Constraints {
     }
 
     "checkDates" must {
-      "return Invalid year error" in new Setup {
-        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
-          .apply(LocalDate.of(eighteen, month_7, dayOne))
-
-        result mustBe Invalid(List(ValidationError(List(yearLengthError))))
-      }
-
       "return Invalid taxYearErrorKey" in new Setup {
-        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
-          .apply(LocalDate.of(twoThousand, month_7, dayOne))
+        val sevenYearsAgo            = LocalDate.now(futureClock).minusYears(seven)
+        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey)(futureClock)
+          .apply(sevenYearsAgo)
 
         result mustBe Invalid(List(ValidationError(List(taxYearErrorKey))))
       }
 
       "return Invalid constraint for year before 2019" in new Setup {
-        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey, yearLengthError)(clock)
+        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey)(clock)
           .apply(LocalDate.of(year_2019, month_7, dayOne))
 
         result mustBe Invalid(List(ValidationError(List(systemStartDateErrorKey))))
@@ -68,8 +63,11 @@ class ConstraintsSpec extends SpecBase with Constraints {
 
     val systemStartDateErrorKey: String = "You cannot enter a date before March 2019"
     val taxYearErrorKey: String         = "The from date cannot be older than 6 years from now"
-    val yearLengthError: String         = "Year must include 4 numbers"
 
-    implicit val clock: Clock = Clock.systemUTC()
+    private val fixedInstant = Instant.parse("2025-06-26T17:40:00Z")
+    private val zone         = ZoneId.of("UTC")
+
+    implicit val clock: Clock       = Clock.fixed(fixedInstant, zone)
+    implicit val futureClock: Clock = Clock.offset(clock, Duration.ofDays(twoYearsInDays))
   }
 }

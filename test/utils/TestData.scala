@@ -22,28 +22,31 @@ import uk.gov.hmrc.http.SessionId
 import java.time.{LocalDate, LocalDateTime, ZoneOffset}
 
 object TestData {
-  val year_2027  = 2027
-  val year_2024  = 2024
-  val year_2018  = 2018
-  val year_2019  = 2019
-  val month_12   = 12
-  val month_7    = 7
-  val day_20     = 20
-  val day_26     = 26
-  val day_29     = 29
-  val hour_12    = 12
-  val minutes_30 = 30
-  val seconds_55 = 55
-  val zero       = 0
-  val ten        = 10
+  val year_2027      = 2027
+  val year_2024      = 2024
+  val year_2018      = 2018
+  val year_2019      = 2019
+  val month_12       = 12
+  val month_7        = 7
+  val day_20         = 20
+  val day_26         = 26
+  val day_29         = 29
+  val hour_12        = 12
+  val minutes_30     = 30
+  val seconds_55     = 55
+  val twoYearsInDays = 730
+
+  val zero        = 0
+  val ten         = 10
+  val seven       = 7
+  val twoThousand = 2000
+  val eighteen    = 18
 
   val dayOne         = 1
   val dayTwenty      = 20
   val dayTwentyOne   = 21
   val dayTwentyTwo   = 22
   val dayTwentyThree = 23
-  val twoThousand    = 2000
-  val eighteen       = 18
 
   val eori                 = "GB001"
   val sessionId: SessionId = SessionId("session_1234")
@@ -59,9 +62,11 @@ object TestData {
   val date: LocalDate          = LocalDate.now()
   val dateTime: LocalDateTime  = LocalDateTime.now()
   val dateInMilliSeconds: Long = dateTime.atZone(ZoneOffset.UTC).toInstant.toEpochMilli
-  val dollar                   = "$"
   val fromDate: LocalDate      = LocalDate.parse("2020-10-20")
   val toDate: LocalDate        = LocalDate.parse("2020-12-22")
+
+  val dollar = "$"
+  val period = "."
 
   val localDateTime: LocalDateTime = LocalDateTime.of(year_2024, month_7, day_26, hour_12, ten, seconds_55)
   val localDate: LocalDate         = LocalDate.of(year_2024, month_7, day_29)

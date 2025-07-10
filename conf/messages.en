@@ -177,20 +177,26 @@ cf.guarantee-account.transactions.result.search.again=Search again with a shorte
 cf.guarantee-account.transactions.result.no.transactions=No guarantee account securities
 cf.guarantee-account.transactions.result.no.data=We have no data within the periods
 
+## Form Errors
+
 cf.form.error.start.date-too-far-in-past=The from date cannot be older than 6 years from now.
 cf.form.error.end.date-too-far-in-past=The to date cannot be older than 6 years from now.
 cf.form.error.startDate.date-earlier-than-system-start-date=You cannot enter a date before October 2019
 cf.form.error.endDate.date-earlier-than-system-start-date=The to date must be on or after October 2019
-cf.form.error.date.year.length = Year must include 4 numbers
 
-cf.form.error.start.month.date-number-invalid=Enter the month you want to search from
-cf.form.error.start.year.date-number-invalid=Enter the year you want to search from
+cf.form.error.start.month.date-number-missing=Enter the month you want to search from
+cf.form.error.start.year.date-number-missing=Enter the year you want to search from
 cf.form.error.start.date-missing=Enter the month and year you want to search from
-cf.form.error.end.month.date-number-invalid=Enter the month you want to search to
-cf.form.error.end.year.date-number-invalid=Enter the year you want to search to
+cf.form.error.end.month.date-number-missing=Enter the month you want to search to
+cf.form.error.end.year.date-number-missing=Enter the year you want to search to
 cf.form.error.end.date-missing=Enter the month and year you want to search to
-cf.form.error.month.invalid=Enter a number between 1 and 12
-cf.form.error.year.invalid=Enter a real year
+
+cf.form.error.start.month.invalid=Enter a month between 1 and 12 for the start date
+cf.form.error.end.month.invalid=Enter a month between 1 and 12 for the end date
+cf.form.error.start.year.invalid=Enter a real year for the start date
+cf.form.error.end.year.invalid=Enter a real year for the end date
+cf.form.error.start.date.invalid=Enter a real date for the start date
+cf.form.error.end.date.invalid=Enter a real date for the end date
 
 cf.form.error.start-future-date=The from date cannot be in the future
 cf.form.error.end-future-date=The date you want to search to must be today, or in the past
