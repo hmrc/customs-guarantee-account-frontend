@@ -32,5 +32,9 @@ class AppConfigSpec extends SpecBase {
       appConfig.helpMakeGovUkBetterUrl mustBe
         "https://survey.take-part-in-research.service.gov.uk/jfe/form/SV_74GjifgnGv6GsMC?Source=BannerList_HMRC_CDS_MIDVA"
     }
+
+    "contain the correct feedbackService url" in {
+      appConfig.feedbackService mustBe "http://localhost:9514/feedback/CDS-FIN"
+    }
   }
 }
