@@ -150,15 +150,18 @@ case class Limits(periodGuaranteeLimit: String, periodAccountLimit: String)
 case class DefermentBalances(periodAvailableGuaranteeBalance: String, periodAvailableAccountBalance: String)
 
 object AccountsAndBalancesResponseContainer {
-  implicit val returnParametersReads: Reads[ReturnParameters]                                         = Json.reads[ReturnParameters]
-  implicit val accountReads: Reads[Account]                                                           = Json.reads[Account]
-  implicit val limitsReads: Reads[Limits]                                                             = Json.reads[Limits]
-  implicit val balancesReads: Reads[DefermentBalances]                                                = Json.reads[DefermentBalances]
-  implicit val generalGuaranteeAccountReads: Reads[GeneralGuaranteeAccount]                           = Json.reads[GeneralGuaranteeAccount]
-  implicit val accountResponseDetailReads: Reads[AccountResponseDetail]                               = Json.reads[AccountResponseDetail]
-  implicit val accountResponseCommonReads: Reads[AccountResponseCommon]                               = Json.reads[AccountResponseCommon]
-  implicit val accountsAndBalancesResponseReads: Reads[AccountsAndBalancesResponse]                   =
+  implicit val returnParametersReads: Reads[ReturnParameters] = Json.reads[ReturnParameters]
+  implicit val accountReads: Reads[Account]                   = Json.reads[Account]
+  implicit val limitsReads: Reads[Limits]                     = Json.reads[Limits]
+  implicit val balancesReads: Reads[DefermentBalances]        = Json.reads[DefermentBalances]
+
+  implicit val generalGuaranteeAccountReads: Reads[GeneralGuaranteeAccount] = Json.reads[GeneralGuaranteeAccount]
+  implicit val accountResponseDetailReads: Reads[AccountResponseDetail]     = Json.reads[AccountResponseDetail]
+  implicit val accountResponseCommonReads: Reads[AccountResponseCommon]     = Json.reads[AccountResponseCommon]
+
+  implicit val accountsAndBalancesResponseReads: Reads[AccountsAndBalancesResponse] =
     Json.reads[AccountsAndBalancesResponse]
+
   implicit val accountsAndBalancesResponseContainerReads: Reads[AccountsAndBalancesResponseContainer] =
     Json.reads[AccountsAndBalancesResponseContainer]
 }

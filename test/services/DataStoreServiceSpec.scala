@@ -21,7 +21,7 @@ import models.UnverifiedEmail
 import org.joda.time.DateTime
 import org.mockito.invocation.InvocationOnMock
 import play.api.{Application, inject}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsSuccess, Json}
 import play.api.test.Helpers.*
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HttpReads, ServiceUnavailableException, UpstreamErrorResponse}
@@ -31,6 +31,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar.mock
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import utils.TestData.{day_26, month_7, year_2024}
 
 import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
@@ -129,6 +130,18 @@ class DataStoreServiceSpec extends SpecBase {
     }
   }
 
+  "EmailResponse.format" should {
+    "create the object correctly for Json Reads" in new Setup {
+      import EmailResponse.format
+
+      Json.fromJson(Json.parse(sampleEmailResponse)) mustBe JsSuccess(emailResponseObject)
+    }
+
+    "generate the correct output for Json Writes" in new Setup {
+      Json.toJson(emailResponseObject) mustBe Json.parse(sampleEmailResponse)
+    }
+  }
+
   trait Setup {
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
 
@@ -146,5 +159,51 @@ class DataStoreServiceSpec extends SpecBase {
       .thenAnswer { (i: InvocationOnMock) =>
         i.getArgument[Future[Email]](1)
       }
+
+    val sampleEmailResponse: String =
+      """{"address":"john.doe@example.com",
+        |"imestamp":"2023-12-15T23:25:25.000Z",
+        |"undeliverable":{
+        |"event":{
+        |"event":"someEvent",
+        |"emailAddress":"email@email.com",
+        |"code":12,
+        |"id":"example-id",
+        |"detected":"2021-05-14T10:59:45.811+01:00",
+        |"enrolment":"HMRC-CUS-ORG~EORINumber~GB744638982004",
+        |"reason":"Inbox full"
+        |},
+        |"subject":"subject-example",
+        |"timestamp":"2024-07-26T01:02:00.000+01:00",
+        |"eventId":"example-id",
+        |"groupId":"example-group-id"
+        |}
+        |}""".stripMargin
+
+    val eventCode = 12
+
+    val undelInfoEventOb: UndeliverableInformationEvent = UndeliverableInformationEvent(
+      "example-id",
+      "someEvent",
+      "email@email.com",
+      "2021-05-14T10:59:45.811+01:00",
+      Some(eventCode),
+      Some("Inbox full"),
+      "HMRC-CUS-ORG~EORINumber~GB744638982004"
+    )
+
+    val undelInfoOb: UndeliverableInformation = UndeliverableInformation(
+      "subject-example",
+      "example-id",
+      "example-group-id",
+      DateTime(year_2024, month_7, day_26, 1, 2),
+      undelInfoEventOb
+    )
+
+    val emailResponseObject: EmailResponse = EmailResponse(
+      address = Some("john.doe@example.com"),
+      imestamp = Some("2023-12-15T23:25:25.000Z"),
+      undeliverable = Some(undelInfoOb)
+    )
   }
 }

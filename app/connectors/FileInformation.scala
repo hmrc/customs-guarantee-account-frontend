@@ -26,8 +26,9 @@ case class MetadataItem(key: String, value: String)
 case class Metadata(items: Seq[MetadataItem])
 
 object FileInformation {
-  implicit val metadataItemReads: Reads[MetadataItem]   =
+  implicit val metadataItemReads: Reads[MetadataItem] =
     ((JsPath \ "metadata").read[String] and (JsPath \ "value").read[String])(MetadataItem.apply _)
+
   implicit val metadataReads: Reads[Metadata]           = __.read[List[MetadataItem]].map(Metadata.apply)
   implicit val metadataItemWrites: Writes[MetadataItem] = Json.writes[MetadataItem]
 

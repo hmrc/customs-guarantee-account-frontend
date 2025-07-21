@@ -16,7 +16,7 @@
 
 package connectors
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsResultException, JsSuccess, Json}
 import utils.SpecBase
 
 class FileInformationSpec extends SpecBase {
@@ -86,5 +86,65 @@ class FileInformationSpec extends SpecBase {
       val json = Json.toJson(fileInformation)
       json must be(Json.parse(expectedJson))
     }
+  }
+
+  "metadataItemReads" should {
+    "Read the object correctly" in new Setup {
+      import FileInformation.metadataItemReads
+
+      Json.fromJson(Json.parse(metaDataItemInputJsString)) mustBe JsSuccess(metaDataItemObject)
+    }
+
+    "throw exception for invalid Json" in {
+      import FileInformation.metadataItemReads
+      val invalidJson = "{ \"key1\": \"test_key\", \"value1\": \"test_event\" }"
+
+      intercept[JsResultException] {
+        Json.parse(invalidJson).as[MetadataItem]
+      }
+    }
+  }
+
+  "metadataItemWrites" should {
+    "Write the object correctly" in new Setup {
+      import FileInformation.metadataItemWrites
+
+      Json.toJson(metaDataItemObject) mustBe Json.parse(metaDataItemJsString)
+    }
+  }
+
+  "metadataReads" should {
+    "Read the object correctly" in new Setup {
+      import FileInformation.metadataReads
+
+      Json.fromJson(Json.parse(metaDataJsString)) mustBe JsSuccess(metaDataObject)
+    }
+
+    "throw exception for invalid Json" in {
+      import FileInformation.metadataReads
+      val invalidJson = "{ \"item\": \"test_key\" }"
+
+      intercept[JsResultException] {
+        Json.parse(invalidJson).as[Metadata]
+      }
+    }
+  }
+
+  "metadataWrites" should {
+    "Write the object correctly" in new Setup {
+      import FileInformation.metadataWrites
+
+      Json.toJson(metaDataObject) mustBe Json.parse(metaDataJsString)
+    }
+  }
+
+  trait Setup {
+    val metaDataItemObject: MetadataItem = MetadataItem("test_key", "test_key_value")
+
+    val metaDataItemJsString: String      = """{"key":"test_key","value":"test_key_value"}""".stripMargin
+    val metaDataItemInputJsString: String = """{"metadata":"test_key","value":"test_key_value"}""".stripMargin
+
+    val metaDataObject: Metadata = Metadata(Seq(MetadataItem("test_key", "test_value")))
+    val metaDataJsString: String = """[{"metadata":"test_key","value":"test_value"}]""".stripMargin
   }
 }

@@ -81,4 +81,16 @@ object TestData {
   val encryptedValue     = "sTe+0SVx5j5y509Nq8tIyflvnsRMfMC5Ae03fNUEarI="
   val nonceValue: String = "RosGoD7PB/RGTz9uYEvU86zB/LxuWRUGQ2ay9PYbqWBKgy1Jy+j+REmx+cp74VhtvTrfFttQv4ArHUc/1tMyl3" +
     "fGz3/cr8Tm1BHzanv659kI2MJqMynltIsY9fqdDpmO"
+
+  val testStatus     = "test_status"
+  val testStatusText = "test_status_text"
+
+  val dateString = "2020-07-28"
+
+  val originatingSystem = "ETMP"
+  val testAckRef        = "123dfeshsfgt34"
+  val testRegime        = "CDS"
+
+  val emailId       = "test@test.com"
+  val testReference = "123fghs7y#"
 }
