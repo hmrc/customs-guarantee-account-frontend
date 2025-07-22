@@ -138,7 +138,7 @@ class GuaranteeTransactionSpec extends SpecBase {
     }
 
     "return None when reasonForSecurity and taxTypeGroups are empty " in new Setup {
-      ddNoTaxTypeGroups.copy(reasonForSecurity = None, taxTypeGroups = None).securityReason mustBe empty
+      ddNoTaxTypeGroups.copy(reasonForSecurity = None, taxTypeGroups = Seq()).securityReason mustBe empty
     }
   }
 

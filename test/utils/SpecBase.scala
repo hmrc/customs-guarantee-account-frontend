@@ -72,6 +72,8 @@ trait SpecBase
   def fakeRequest(method: String = emptyString, path: String = emptyString): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(method, path).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
+  def fakeRequestWithRequestHeader: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
   implicit lazy val messages: Messages = instanceOf[MessagesApi].preferred(fakeRequest(emptyString, singleSpace))
 
   lazy val application: Application = applicationBuilder.build()
@@ -80,7 +82,7 @@ trait SpecBase
 
   lazy implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(sessionId))
 
-  lazy val bodyParsers = applicationBuilder.injector().instanceOf[BodyParsers.Default]
+  lazy val bodyParsers: BodyParsers.Default = applicationBuilder.injector().instanceOf[BodyParsers.Default]
 
   lazy val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
 
