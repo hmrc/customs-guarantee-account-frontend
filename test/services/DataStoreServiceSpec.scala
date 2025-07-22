@@ -21,7 +21,7 @@ import models.UnverifiedEmail
 import org.joda.time.DateTime
 import org.mockito.invocation.InvocationOnMock
 import play.api.{Application, inject}
-import play.api.libs.json.{JsSuccess, Json}
+import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HttpReads, ServiceUnavailableException, UpstreamErrorResponse}
