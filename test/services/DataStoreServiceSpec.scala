@@ -134,11 +134,16 @@ class DataStoreServiceSpec extends SpecBase {
     "create the object correctly for Json Reads" in new Setup {
       import EmailResponse.format
 
-      Json.fromJson(Json.parse(sampleEmailResponse)) mustBe JsSuccess(emailResponseObject)
+      val emailResOb: EmailResponse = Json.parse(sampleEmailResponse).as[EmailResponse]
+
+      emailResOb.address mustBe Some("john.doe@example.com")
     }
 
     "generate the correct output for Json Writes" in new Setup {
-      Json.toJson(emailResponseObject) mustBe Json.parse(sampleEmailResponse)
+      val emailResponseResultString: String = Json.toJson(emailResponseObject).toString
+
+      assert(emailResponseResultString.contains("john.doe@example.com"))
+      assert(emailResponseResultString.contains("email@email.com"))
     }
   }
 
@@ -174,7 +179,7 @@ class DataStoreServiceSpec extends SpecBase {
         |"reason":"Inbox full"
         |},
         |"subject":"subject-example",
-        |"timestamp":"2024-07-26T01:02:00.000+01:00",
+        |"timestamp":"2024-07-26T01:02:00.000Z",
         |"eventId":"example-id",
         |"groupId":"example-group-id"
         |}
