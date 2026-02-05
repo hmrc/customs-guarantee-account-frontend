@@ -24,7 +24,7 @@
 
 @(summary: ResultsPageSummary)(implicit request: Request[_], messages: Messages)
 
-@main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")),
+@main_template(pageTitle = Some(messages("cf.guarantee-account.transactions.result.no.transactions")),
     backLink = Some(controllers.routes.RequestTransactionsController.onPageLoad().url)) {
 
     @h1("cf.guarantee-account.transactions.result.no.transactions")
