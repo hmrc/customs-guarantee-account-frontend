@@ -28,7 +28,7 @@
 
 @(accountModel: GuaranteeAccountViewModel, transaction: GuaranteeTransaction, pageNumber: Option[Int])(implicit request: Request[_], messages: Messages)
 
-@main_template(pageTitle = Some(messages("cf.guarantee-account.detail.title")), backLink = Some(routes.GuaranteeAccountController.showAccountDetails(page = pageNumber).url)) {
+@main_template(pageTitle = Some(messages("cf.guarantee-account.your-security.heading")), backLink = Some(routes.GuaranteeAccountController.showAccountDetails(page = pageNumber).url)) {
 
     @security_header(accountModel)
 
