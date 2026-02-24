@@ -186,10 +186,10 @@ cf.form.error.endDate.date-earlier-than-system-start-date=The to date must be on
 
 cf.form.error.start.month.date-number-missing=Enter the month you want to search from
 cf.form.error.start.year.date-number-missing=Enter the year you want to search from
-cf.form.error.start.date-missing=Enter the month and year you want to search from
+cf.form.error.start.date-missing=Enter the start date you want to search from
 cf.form.error.end.month.date-number-missing=Enter the month you want to search to
 cf.form.error.end.year.date-number-missing=Enter the year you want to search to
-cf.form.error.end.date-missing=Enter the month and year you want to search to
+cf.form.error.end.date-missing=Enter the end date you want to search to
 
 cf.form.error.start.month.invalid=Enter a month between 1 and 12 for the start date
 cf.form.error.end.month.invalid=Enter a month between 1 and 12 for the end date
