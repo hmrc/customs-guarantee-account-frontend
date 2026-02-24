@@ -186,10 +186,10 @@ cf.form.error.endDate.date-earlier-than-system-start-date=Mae’n rhaid i’r dy
 
 cf.form.error.start.month.date-number-missing=Nodwch o ba fis yr ydych am chwilio
 cf.form.error.start.year.date-number-missing=Nodwch o ba flwyddyn yr ydych am chwilio
-cf.form.error.start.date-missing=Nodwch o ba fis a blwyddyn yr ydych am chwilio
+cf.form.error.start.date-missing=Nodwch o ba ddyddiad yr hoffech ddechrau chwilio
 cf.form.error.end.month.date-number-missing=Nodwch hyd at ba fis yr ydych am chwilio
 cf.form.error.end.year.date-number-missing=Nodwch hyd at ba flwyddyn rydych am chwilio
-cf.form.error.end.date-missing=Nodwch hyd at ba fis a blwyddyn rydych am chwilio
+cf.form.error.end.date-missing=Nodwch hyd at ba ddyddiad yr hoffech chwilio
 
 cf.form.error.start.month.invalid=Nodwch fis rhwng 1 a 12 ar gyfer y dyddiad dechrau
 cf.form.error.end.month.invalid=Nodwch fis rhwng 1 a 12 ar gyfer y dyddiad dod i ben
