@@ -19,9 +19,9 @@
 @(accountModel: GuaranteeAccountViewModel)(implicit messages: Messages)
 
     <header class="hmrc-page-heading govuk-!-margin-bottom-0" id="account-summary">
-        <h2 class="govuk-caption-xl hmrc-caption-xl" id="account-number">
+        <span class="govuk-caption-xl hmrc-caption-xl" id="account-number">
              @messages("cf.guarantee-account.detail.account-number", accountModel.account.number)
-        </h2>
+        </span>
         <h1 class="govuk-heading-xl">
             @messages("cf.guarantee-account.your-security.heading")
         </h1>
