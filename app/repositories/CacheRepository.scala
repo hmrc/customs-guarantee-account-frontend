@@ -16,15 +16,14 @@
 
 package repositories
 
-import crypto._
-import models._
-import org.mongodb.scala.ToSingleObservablePublisher
-import org.mongodb.scala.SingleObservableFuture
+import crypto.*
+import models.*
+import org.mongodb.scala.{SingleObservableFuture, ToSingleObservablePublisher}
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Indexes.ascending
 import org.mongodb.scala.model.{IndexModel, IndexOptions, ReplaceOptions}
 import play.api.Configuration
-import play.api.libs.json._
+import play.api.libs.json.*
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
