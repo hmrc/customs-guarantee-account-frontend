@@ -85,9 +85,9 @@ class RequestTransactionControllerSpec extends SpecBase {
         fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
           .withFormUrlEncodedBody(
             "start.month" -> "10",
-            "start.year"  -> "2019",
-            "end.month"   -> "10",
-            "end.year"    -> "2019"
+            "start.year"  -> "2024",
+            "end.month"   -> "11",
+            "end.year"    -> "2025"
           )
 
       running(application) {

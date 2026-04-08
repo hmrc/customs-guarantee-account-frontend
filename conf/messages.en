@@ -8,6 +8,7 @@ service.name = Manage import duties and VAT accounts
 site.error = Error
 
 # Guarantee Account Detail View
+# ----------------------------------------------------------
 cf.guarantee-account.detail.title=General guarantee account
 cf.guarantee-account.detail.heading=General guarantee account
 cf.guarantee-account.detail.balance-available={0} available
@@ -46,6 +47,7 @@ cf.guarantee-account.detail.amount=Amount
 cf.guarantee-account.detail.c18=C18
 
 # Guarantee Account CSV headings (mapped dynamically from case class fields)
+# ----------------------------------------------------------
 cf.guarantee-account.csv.movementReferenceNumber=MRN
 cf.guarantee-account.csv.date=Date
 cf.guarantee-account.csv.uniqueConsignmentReference=UCR
@@ -65,6 +67,7 @@ cf.guarantee-account.csv.balance=Balance
 cf.guarantee-account.csv.lastUpdated=Last updated
 
 # Other CSV content
+# ----------------------------------------------------------
 cf.guarantee-account.csv.unknown=Unknown
 cf.guarantee-account.csv.security-reason=Security reason ({0} of {1})
 cf.guarantee-account.csv.filename=Open_Guarantees_{0}.CSV
@@ -72,6 +75,7 @@ cf.guarantee-account.requested.csv.filename=Open_Guarantees_{0}-{1}.CSV
 cf.guarantee-account.csv.guidance=Guarantee account guidance, including an explanation of tax codes, can be found at {0}
 
 # Pager
+# ----------------------------------------------------------
 cf.pager.prev=Previous
 cf.pager.next=Next
 cf.pager.items=results
@@ -120,10 +124,8 @@ cf.error.not-found.message.go-to-home-page-text1=You can go
 cf.error.not-found.message.go-to-home-page-text2=back to manage import duties and VAT accounts
 cf.accounts.view-customs-account=manage import duties and VAT accounts
 
-
 # Date Format
 # ----------------------------------------------------------
-
 month.abbr.1 = Jan
 month.abbr.2 = Feb
 month.abbr.3 = Mar
@@ -152,6 +154,7 @@ month.12 = December
 
 # Guarantee Transactions Request
 # -------------------------------------------------
+cf.guarantee-account.detail.csv=Download CSV
 cf.guarantee-account.transactions.request.link.heading = Search open and closed securities
 cf.guarantee-account.transactions.request.link = Search for and download a CSV of all securities
 cf.guarantee-account.transactions.request.link.text = If you need help
@@ -164,12 +167,8 @@ cf.guarantee-account.transactions.request.startDate.hint = Start date must be af
 cf.guarantee-account.transactions.request.endDate.hint = For example, 3 2021.
 cf.guarantee-account.transactions.request.to = End date
 cf.guarantee-account.transactions.request.continue = Continue
-date.month=Month
-date.year=Year
-date.range = {0} to {1}
 cf.guarantee-account.transactions.result.transaction=Your guarantee account securities
 cf.guarantee-account.transactions.result.download.transactions=Download the CSV file of your requested securities before you close this browser window.
-cf.guarantee-account.detail.csv=Download CSV
 cf.guarantee-account.transactions.request.link.label=Back to Manage import duties and VAT accounts homepage
 cf.guarantee-account.transactions.result.too.many.results=Your search returned too many results
 cf.guarantee-account.transactions.result.between=You requested guarantee account securities between
@@ -177,8 +176,15 @@ cf.guarantee-account.transactions.result.search.again=Search again with a shorte
 cf.guarantee-account.transactions.result.no.transactions=No guarantee account securities
 cf.guarantee-account.transactions.result.no.data=We have no data within the periods
 
-## Form Errors
+# Dates
+# -------------------------------------------------
+date.month=Month
+date.year=Year
+date.range = {0} to {1}
+# -------------------------------------------------
 
+## Form Errors
+# ----------------------------------------------------------
 cf.form.error.start.date-too-far-in-past=The from date cannot be older than 6 years from now.
 cf.form.error.end.date-too-far-in-past=The to date cannot be older than 6 years from now.
 cf.form.error.startDate.date-earlier-than-system-start-date=You cannot enter a date before October 2019
@@ -204,10 +210,12 @@ cf.form.error.start-after-end=The from date cannot be after the to date
 cf.form.error.end-before-start=The to date cannot be before the from date
 
 # Error Summary
+# ----------------------------------------------------------
 error.summary.title = There is a problem
 error.browser.title.prefix = Error:
 
 # Transaction Security Reason Details
+# ----------------------------------------------------------
 cf.guarantee-account.detail.security-reason.tax-code=Security reason/Tax code
 cf.guarantee-account.detail.taxtype=Tax type
 cf.guarantee-account.detail.taxcode=Tax code
@@ -215,18 +223,22 @@ cf.guarantee-account.detail.multiple-expiry.dates.1=Security has multiple expiry
 cf.guarantee-account.detail.multiple-expiry.dates.2=Next expiry date: {0}
 
 # Security Header
+# ----------------------------------------------------------
 cf.guarantee-account.your-security.heading=Your security
 
 # Guarantee C18 Reference
+# ----------------------------------------------------------
 cf.guarantee-account.detail.paid=Paid
 cf.guarantee-account.detail.c18-issued=You have a C18 issued on the {0}
 cf.guarantee-account.detail.linked=Linked to MRN  {0} made on the {1}
 cf.guarantee-account.detail.remaining=Remaining
 
 # Transaction Security Reason Details
+# ----------------------------------------------------------
 cf.guarantee-account.detail.security-reason.tax-code.heading=Security reason/tax code breakdown {0}
 
 # Individual Transactions
+# ----------------------------------------------------------
 cf.guarantee-account.detail.importDate=Date of import
 cf.guarantee-account.detail.multiple-expiry.dates=This security has multiple expiry dates
 cf.guarantee-account.detail.expiry-dates=Expiry dates
@@ -236,6 +248,7 @@ cf.guarantee-account.your-securities.p=Listed by date of import.
 cf.guarantee-account.transactions.hidden-text= has {0} securities
 
 # Verify Your Email Address
+# ----------------------------------------------------------
 cf.verify.your.email.title=Verify your email address for the Customs Declaration Service
 cf.verify.your.email.heading=Verify your email address for the Customs Declaration Service
 cf.verify.your.email.p1=You need to verify the email address you use for the Customs Declaration Service.

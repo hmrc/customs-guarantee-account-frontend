@@ -8,6 +8,7 @@ service.name=Rheoli tollau mewnforio a chyfrifon TAW
 site.error = Gwall
 
 # Guarantee Account Detail View
+# ----------------------------------------------------------
 cf.guarantee-account.detail.title=Cyfrif gwarant cyffredinol
 cf.guarantee-account.detail.heading=Cyfrif gwarant cyffredinol
 cf.guarantee-account.detail.balance-available={0} ar gael
@@ -46,6 +47,7 @@ cf.guarantee-account.detail.amount=Swm
 cf.guarantee-account.detail.c18=C18
 
 # Guarantee Account CSV headings (mapped dynamically from case class fields)
+# ----------------------------------------------------------
 cf.guarantee-account.csv.movementReferenceNumber=Cyfeirnod Symud (MRN)
 cf.guarantee-account.csv.date=Dyddiad
 cf.guarantee-account.csv.uniqueConsignmentReference=Cyfeirnod Unigryw y Llwyth (UCR)
@@ -65,6 +67,7 @@ cf.guarantee-account.csv.balance=Balans
 cf.guarantee-account.csv.lastUpdated=Diweddarwyd ddiwethaf
 
 # Other CSV content
+# ----------------------------------------------------------
 cf.guarantee-account.csv.unknown=Anhysbys
 cf.guarantee-account.csv.security-reason=Rheswm dros y warant ({0} o {1})
 cf.guarantee-account.csv.filename=Gwarantau_Sydd_Ar_Agor_{0}.CSV
@@ -72,6 +75,7 @@ cf.guarantee-account.requested.csv.filename=Gwarantau_Sydd_Ar_Agor_{0}-{1}.CSV
 cf.guarantee-account.csv.guidance=Mae arweiniad ar gyfrifon gwarantau, gan gynnwys esboniad o’r codau treth, i’w weld yn {0}
 
 # Pager
+# ----------------------------------------------------------
 cf.pager.prev=Blaenorol
 cf.pager.next=Nesaf
 cf.pager.items=canlyniadau
@@ -120,10 +124,8 @@ cf.error.not-found.message.go-to-home-page-text1=Gallwch fynd
 cf.error.not-found.message.go-to-home-page-text2=yn ôl i reoli tollau mewnforio a chyfrifon TAW
 cf.accounts.view-customs-account=rheoli tollau mewnforio a chyfrifon TAW
 
-
 # Date Format
 # ----------------------------------------------------------
-
 month.abbr.1=Ion
 month.abbr.2=Chwef
 month.abbr.3=Maw
@@ -152,6 +154,7 @@ month.12=Rhagfyr
 
 # Guarantee Transactions Request
 # -------------------------------------------------
+cf.guarantee-account.detail.csv=Lawrlwytho CSV
 cf.guarantee-account.transactions.request.link.heading = Chwilio am warantau agored a chaeedig
 cf.guarantee-account.transactions.request.link.text = Os oes angen help
 cf.guarantee-account.transactions.request.link.url = arnoch cysylltwch â CThEM ynghylch cyfrifon gwarant cyffredinol (yn agor tab newydd)
@@ -164,12 +167,8 @@ cf.guarantee-account.transactions.request.startDate.hint = Mae’n rhaid i’r d
 cf.guarantee-account.transactions.request.endDate.hint = Er enghraifft, 3 2021.
 cf.guarantee-account.transactions.request.to = Dyddiad dod i ben
 cf.guarantee-account.transactions.request.continue = Yn eich blaen
-date.month=Mis
-date.year=Blwyddyn
-date.range = {0} i fis {1}
 cf.guarantee-account.transactions.result.transaction=Gwarantau eich cyfrif gwarant
 cf.guarantee-account.transactions.result.download.transactions=Lawrlwythwch y ffeil CSV o’r gwarantau y gofynnwyd amdanynt cyn i chi gau’r ffenestr porwr hon.
-cf.guarantee-account.detail.csv=Lawrlwytho CSV
 cf.guarantee-account.transactions.request.link.label=Yn ôl i hafan ‘Rheoli tollau mewnforio a chyfrifon TAW’
 cf.guarantee-account.transactions.result.too.many.results=Mae gormod o ganlyniadau yn sgil eich chwiliad
 cf.guarantee-account.transactions.result.between=Gwnaethoch ofyn am warantau cyfrif gwarant rhwng
@@ -177,8 +176,15 @@ cf.guarantee-account.transactions.result.search.again=Chwiliwch eto gydag ystod 
 cf.guarantee-account.transactions.result.no.transactions=Dim gwarantau cyfrif gwarant
 cf.guarantee-account.transactions.result.no.data=Nid oes gennym ddata o fewn y cyfnodau
 
-## Form Errors
+# Dates
+# -------------------------------------------------
+date.month=Mis
+date.year=Blwyddyn
+date.range = {0} i fis {1}
+# -------------------------------------------------
 
+## Form Errors
+# ----------------------------------------------------------
 cf.form.error.start.date-too-far-in-past=Ni all y dyddiad ‘o’ fod yn fwy na 6 o flynyddoedd ers nawr.
 cf.form.error.end.date-too-far-in-past=Ni all y dyddiad ‘i’ fod yn fwy na 6 o flynyddoedd ers nawr.
 cf.form.error.startDate.date-earlier-than-system-start-date=Ni allwch nodi dyddiad cyn mis Hydref 2019
@@ -204,10 +210,12 @@ cf.form.error.start-after-end=Ni all y dyddiad ‘o’ fod ar ôl y dyddiad ‘i
 cf.form.error.end-before-start=Ni all y dyddiad ‘i’ fod cyn y dyddiad ‘o’
 
 # Error Summary
+# ----------------------------------------------------------
 error.summary.title = Mae problem wedi codi
 error.browser.title.prefix = Gwall:
 
 # Transaction Security Reason Details
+# ----------------------------------------------------------
 cf.guarantee-account.detail.security-reason.tax-code=Rheswm dros warant/Cod treth
 cf.guarantee-account.detail.taxtype=Math o dreth
 cf.guarantee-account.detail.taxcode=Cod treth
@@ -215,18 +223,22 @@ cf.guarantee-account.detail.multiple-expiry.dates.1=Mae gan warant nifer o ddydd
 cf.guarantee-account.detail.multiple-expiry.dates.2=Dyddiad dod i ben nesaf: {0}
 
 # Security Header
+# ----------------------------------------------------------
 cf.guarantee-account.your-security.heading=Eich diogelwch
 
 # Guarantee C18 Reference
+# ----------------------------------------------------------
 cf.guarantee-account.detail.paid=Talwyd
 cf.guarantee-account.detail.c18-issued =Mae gennych C18 wedi’i roi ar {0}
 cf.guarantee-account.detail.linked=Cysylltiad i Gyfeirnod Symud {0} wedi’i wneud ar {1}
 cf.guarantee-account.detail.remaining=Yn weddill
 
 # Transaction Security Reason Details
+# ----------------------------------------------------------
 cf.guarantee-account.detail.security-reason.tax-code.heading=Rheswm dros warant/dadansoddiad o god treth {0}
 
 # Individual Transactions
+# ----------------------------------------------------------
 cf.guarantee-account.detail.importDate=Dyddiad mewnforio
 cf.guarantee-account.detail.multiple-expiry.dates=Mae gan y warant hon nifer o ddyddiadau dod i ben
 cf.guarantee-account.detail.expiry-dates=Dyddiadau dod i ben
@@ -236,6 +248,7 @@ cf.guarantee-account.your-securities.p=Rhestrwyd yn ôl dyddiad mewnforio.
 cf.guarantee-account.transactions.hidden-text=Mae gan {0} gwarant
 
 # Verify Your Email Address
+# ----------------------------------------------------------
 cf.verify.your.email.title=Cadarnhau’ch cyfeiriad e-bost ar gyfer y Gwasanaeth Datganiadau Tollau
 cf.verify.your.email.heading=Cadarnhau’ch cyfeiriad e-bost ar gyfer y Gwasanaeth Datganiadau Tollau
 cf.verify.your.email.p1=Mae angen i chi gadarnhau’r cyfeiriad e-bost rydych yn ei ddefnyddio ar gyfer y Gwasanaeth Datganiadau Tollau.
