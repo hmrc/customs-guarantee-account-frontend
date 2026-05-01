@@ -23,6 +23,8 @@
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.backlink.BackLink
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigation
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import views.html.helper.CSPNonce
 @import utils.Utils.emptyString
 
@@ -36,58 +38,68 @@
         backLink: Option[String] = None,
         helpAndSupport: Boolean = true,
         deskpro: Boolean = true,
-        welshToggle: Boolean = true,
         dutyDeferment: Boolean = false
 )(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
 
-    @phaseBannerContent = {
-    @messages("feedback.before")
-        <a class='govuk-link' href='/contact/beta-feedback-unauthenticated?service=CDS-FIN'>@messages("feedback.link")</a>
-    @messages("feedback.after")
-    }
+@phaseBannerLink = {
+    <a class="govuk-link"
+       href="/contact/beta-feedback-unauthenticated?service=CDS-FIN"
+       target="_blank">
+        @messages("feedback.link")
+    </a>
+}
 
-    @fullPageTitle = @{
-        pageTitle match {
-            case Some(text) => Some(s"$text - ${messages("service.name")} - GOV.UK")
-            case _ => Some(s"${messages("service.name")} - GOV.UK")
-        }
-    }
+@phaseBannerContent = {
+    @Html(messages("feedback.text", phaseBannerLink))
+}
 
-    @additionalHead = {
-      <link @{CSPNonce.attr} href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css"/>
-      @hmrcTimeoutDialog(TimeoutDialog(
-          title = Some(messages("timeout.title")),
-          timeout = Some(appConfig.timeout),
-          countdown = Some(appConfig.countdown),
-          keepAliveUrl = Some(request.uri),
-          signOutUrl = Some(routes.LogoutController.logout.url),
-          timeoutUrl = Some(routes.LogoutController.logoutNoSurvey.url)))
+@fullPageTitle = @{
+    pageTitle match {
+        case Some(text) => Some(s"$text - ${messages("service.name")} - GOV.UK")
+        case _ => Some(s"${messages("service.name")} - GOV.UK")
     }
+}
 
-    @mainContent = {
-        @contentBlock
+@additionalHead = {
+  <link @{CSPNonce.attr} href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css"/>
+  @hmrcTimeoutDialog(TimeoutDialog(
+      title = Some(messages("timeout.title")),
+      timeout = Some(appConfig.timeout),
+      countdown = Some(appConfig.countdown),
+      keepAliveUrl = Some(request.uri),
+      signOutUrl = Some(routes.LogoutController.logout.url),
+      timeoutUrl = Some(routes.LogoutController.logoutNoSurvey.url)))
+}
 
-        @if(deskpro) {
-            @hmrcReportTechnicalIssueHelper()
-        }
+@mainContent = {
+    @contentBlock
+
+    @if(deskpro) {
+        @hmrcReportTechnicalIssueHelper()
     }
+}
 
 @hmrcStandardPage(
-  HmrcStandardPageParams(
-    pageTitle = fullPageTitle,
-    serviceURLs = ServiceURLs(
-      serviceUrl = Some(appConfig.customsFinancialsFrontendHomepage),
-      signOutUrl = Some(routes.LogoutController.logout.url),
-      accessibilityStatementUrl = Some("/accessibility-statement/customs-financials")
-    ),
-    backLink = Some(BackLink(href = backLink.getOrElse(emptyString))),
-    templateOverrides = TemplateOverrides(
-      additionalHeadBlock = Some(additionalHead),
-    ),
-    banners = Banners(
-      phaseBanner = Some(PhaseBanner(tag = Some(Tag(content = Text("BETA"))), content = HtmlContent(phaseBannerContent))),
-      userResearchBanner = Some(UserResearchBanner(url = appConfig.helpMakeGovUkBetterUrl))
-    ),
-    isWelshTranslationAvailable = welshToggle
-  )
+    HmrcStandardPageParams(
+        pageTitle = fullPageTitle,
+        serviceName = Some(""),
+        serviceURLs = ServiceURLs(
+            signOutUrl = Some(routes.LogoutController.logout.url),
+            accessibilityStatementUrl = Some("/accessibility-statement/customs-financials")
+        ),
+        serviceNavigation = Some(
+            ServiceNavigation(
+                serviceName = Some(messages("service.name")),
+                serviceUrl = Some(appConfig.customsFinancialsFrontendHomepage)
+            ).withLanguageToggle()
+        ),
+        backLink = Some(BackLink(href = backLink.getOrElse(emptyString))),
+        templateOverrides = TemplateOverrides(
+            additionalHeadBlock = Some(additionalHead),
+        ),
+        banners = Banners(
+            phaseBanner = Some(PhaseBanner(tag = Some(Tag(content = Text("Beta"))), content = HtmlContent(phaseBannerContent))),
+            userResearchBanner = Some(UserResearchBanner(url = appConfig.helpMakeGovUkBetterUrl))
+        )
+    )
 )(mainContent)
