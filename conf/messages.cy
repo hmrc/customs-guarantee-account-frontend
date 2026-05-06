@@ -86,9 +86,8 @@ cf.pager.summary.accessibility=set o dudalennau
 
 # BETA Banner
 # ----------------------------------------------------------
-feedback.before=Gwasanaeth newydd yw hwn – bydd eich
-feedback.link=adborth
-feedback.after=yn ein helpu iíw wella.
+feedback.text = Gwasanaeth newydd yw hwn. Rhowch help i ni ei wella, a {0}.
+feedback.link = rhoi eich adborth (yn agor tab newydd)
 
 help.heading=Help a chymorth
 unauthorised.title=Ni allwch gael mynediad at y gwasanaeth hwn gydaír cyfrif hwn
