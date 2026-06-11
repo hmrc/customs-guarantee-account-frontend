@@ -1,11 +1,10 @@
 $govuk-assets-path: "/customs/guarantee-account/assets/lib/govuk-frontend/govuk/assets/";
 $hmrc-assets-path: "/customs/guarantee-account/assets/lib/hmrc-frontend/hmrc/";
 
-$govuk-suppressed-warnings: (libsass);
+$govuk-suppressed-warnings: (libssl);
 
 @import "lib/govuk-frontend/dist/govuk/base";
 
-@import "utils/custom";
-
-@import "components/table";
-@import "components/pager";
+@import "../stylesheets/custom";
+@import "../stylesheets/table";
+@import "../stylesheets/pager";
