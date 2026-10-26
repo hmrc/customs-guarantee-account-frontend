@@ -26,7 +26,7 @@ import utils.SpecBase
 import views.html.guarantee_transactions_request_page
 import forms.GuaranteeTransactionsRequestPageFormProvider
 
-import java.time.Clock
+import java.time.{Clock, LocalDate}
 
 class GuaranteeTransactionsRequestPageSpec extends SpecBase {
 
@@ -38,13 +38,23 @@ class GuaranteeTransactionsRequestPageSpec extends SpecBase {
       view.getElementsByTag("h1").text() mustBe messages("cf.guarantee-account.transactions.request.heading")
 
       textDoc.contains(messages("cf.guarantee-account.transactions.request.from")) mustBe true
-      textDoc.contains(messages("cf.guarantee-account.transactions.request.startDate.hint")) mustBe true
-      textDoc.contains(messages("cf.guarantee-account.transactions.request.endDate.hint")) mustBe true
+      view.getElementById("start-hint").text() mustBe
+        messages("cf.guarantee-account.transactions.request.startDate.hint", "9", "2025")
+      view.getElementById("end-hint").text() mustBe
+        messages("cf.guarantee-account.transactions.request.endDate.hint", "9", "2025")
       textDoc.contains(messages("cf.guarantee-account.transactions.request.to")) mustBe true
+    }
+
+    "display the earliest requestable year inset text below the heading" in new Setup {
+      view.getElementById("earliest-requestable-year").text() mustBe
+        messages("cf.form.error.date-too-far-in-past", "2020")
+
+      view.select("h1 + #earliest-requestable-year").size() mustBe 1
     }
 
     "not display previous or incorrect guidance and text" in new Setup {
 
+      textDoc.contains("October 2019") mustBe false
       textDoc.contains("For example, 3 2019.") mustBe false
       textDoc.contains("You can request guarantee account securities dating back to October 2019") mustBe false
       textDoc.contains("what end date do you need securities?") mustBe false
@@ -56,9 +66,14 @@ class GuaranteeTransactionsRequestPageSpec extends SpecBase {
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
     implicit val clock: Clock                                 = Clock.systemUTC()
 
+    val earliestRequestableYear    = 2020
+    val hintExampleDate: LocalDate = LocalDate.of(2025, 9, 1)
+
     val form: Form[GuaranteeTransactionDates] = new GuaranteeTransactionsRequestPageFormProvider().apply()
 
-    val view: Document = Jsoup.parse(instanceOf[guarantee_transactions_request_page].apply(form).body)
+    val view: Document = Jsoup.parse(
+      instanceOf[guarantee_transactions_request_page].apply(form, earliestRequestableYear, hintExampleDate).body
+    )
     val textDoc        = view.text()
   }
 }

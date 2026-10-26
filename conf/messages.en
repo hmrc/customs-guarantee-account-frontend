@@ -162,8 +162,8 @@ cf.guarantee-account.transactions.request.link.post = from a specific period of 
 cf.guarantee-account.transactions.request.title = Which guarantee account securities do you need?
 cf.guarantee-account.transactions.request.heading = Which guarantee account securities do you need?
 cf.guarantee-account.transactions.request.from = Start date
-cf.guarantee-account.transactions.request.startDate.hint = Start date must be after October 2019. For example, 3 2021.
-cf.guarantee-account.transactions.request.endDate.hint = For example, 3 2021.
+cf.guarantee-account.transactions.request.startDate.hint = For example, {0} {1}.
+cf.guarantee-account.transactions.request.endDate.hint = For example, {0} {1}.
 cf.guarantee-account.transactions.request.to = End date
 cf.guarantee-account.transactions.request.continue = Continue
 cf.guarantee-account.transactions.result.transaction=Your guarantee account securities
@@ -184,10 +184,9 @@ date.range = {0} to {1}
 
 ## Form Errors
 # ----------------------------------------------------------
-cf.form.error.start.date-too-far-in-past=The from date cannot be older than 6 years from now.
-cf.form.error.end.date-too-far-in-past=The to date cannot be older than 6 years from now.
-cf.form.error.startDate.date-earlier-than-system-start-date=You cannot enter a date before October 2019
-cf.form.error.endDate.date-earlier-than-system-start-date=The to date must be on or after October 2019
+cf.form.error.date-too-far-in-past=You can only request securities issued since April {0}
+cf.form.error.start.date-too-far-in-past=Start date must be after April {0}
+cf.form.error.end.date-too-far-in-past=End date must be after April {0}
 
 cf.form.error.start.month.date-number-missing=Enter the month you want to search from
 cf.form.error.start.year.date-number-missing=Enter the year you want to search from

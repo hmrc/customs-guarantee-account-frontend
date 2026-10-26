@@ -22,12 +22,14 @@ import models.GuaranteeTransactionDates
 import play.api.Logger
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
+import play.twirl.api.Html
 import repositories.RequestedTransactionsCache
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html._
 import utils.Utils.{comma, hyphen, singleSpace}
 
+import java.time.{Clock, LocalDate, LocalDateTime}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,6 +39,7 @@ class RequestTransactionsController @Inject() (
   formProvider: GuaranteeTransactionsRequestPageFormProvider,
   view: guarantee_transactions_request_page,
   cache: RequestedTransactionsCache,
+  clock: Clock,
   implicit val mcc: MessagesControllerComponents
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc)
@@ -54,8 +57,8 @@ class RequestTransactionsController @Inject() (
         None
       }
       .map {
-        case Some(cachedData) => Ok(view(form.fill(cachedData)))
-        case None             => Ok(view(form))
+        case Some(cachedData) => Ok(requestPage(form.fill(cachedData)))
+        case None             => Ok(requestPage(form))
       }
   }
 
@@ -65,13 +68,13 @@ class RequestTransactionsController @Inject() (
       .fold(
         formWithErrors => {
           logMessageForAnalytics(request.eori, formWithErrors)
-          Future.successful(BadRequest(view(formWithErrors)))
+          Future.successful(BadRequest(requestPage(formWithErrors)))
         },
         value =>
           customValidation(value, form) match {
             case Some(formWithErrors) =>
               logMessageForAnalytics(request.eori, formWithErrors)
-              Future.successful(BadRequest(view(formWithErrors)))
+              Future.successful(BadRequest(requestPage(formWithErrors)))
             case None                 =>
               cache.set(request.eori, value).map { _ =>
                 Redirect(routes.RequestedTransactionsController.onPageLoad())
@@ -79,6 +82,11 @@ class RequestTransactionsController @Inject() (
           }
       )
   }
+
+  private def requestPage(form: Form[GuaranteeTransactionDates])(implicit request: Request[_]): Html =
+    view(form, formProvider.earliestRequestableYear, hintExampleDate)
+
+  private def hintExampleDate: LocalDate = LocalDateTime.now(clock).toLocalDate.minusYears(1)
 
   private def customValidation(
     dates: GuaranteeTransactionDates,
@@ -100,7 +108,7 @@ class RequestTransactionsController @Inject() (
   private def logMessageForAnalytics(eori: String, formWithErrors: Form[GuaranteeTransactionDates])(implicit
     messages: Messages
   ): Unit = {
-    val errorMessages = formWithErrors.errors.map(e => messages(e.message)).mkString(comma)
+    val errorMessages = formWithErrors.errors.map(e => messages(e.message, e.args: _*)).mkString(comma)
 
     val startDate = formWithErrors.data.getOrElse("start.year", singleSpace) + hyphen +
       formWithErrors.data.getOrElse("start.month", singleSpace)

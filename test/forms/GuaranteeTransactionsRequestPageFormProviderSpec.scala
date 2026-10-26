@@ -43,7 +43,25 @@ class GuaranteeTransactionsRequestPageFormProviderSpec extends SpecBase {
       formAfterBinding.hasErrors mustBe false
     }
 
-    "throw error when start date is before 2019-10-1" in new Setup {
+    "throw error on both dates when both are before April of the CY-6 year" in new Setup {
+      val form: Form[GuaranteeTransactionDates] = histDateReqPageForm()
+
+      val formAfterBinding: Form[GuaranteeTransactionDates] = form.bind(
+        Map(
+          "start.year"  -> s"$year2019",
+          "start.month" -> s"$month3",
+          "end.year"    -> s"$year2019",
+          "end.month"   -> s"$month3"
+        )
+      )
+
+      formAfterBinding.errors mustBe Seq(
+        FormError("start", List("cf.form.error.start.date-too-far-in-past"), List("2019")),
+        FormError("end", List("cf.form.error.end.date-too-far-in-past"), List("2019"))
+      )
+    }
+
+    "throw error only on the start date when only the start date is before April of the CY-6 year" in new Setup {
       val form: Form[GuaranteeTransactionDates] = histDateReqPageForm()
 
       val formAfterBinding: Form[GuaranteeTransactionDates] = form.bind(
@@ -55,17 +73,29 @@ class GuaranteeTransactionsRequestPageFormProviderSpec extends SpecBase {
         )
       )
 
-      formAfterBinding.hasErrors mustBe true
+      formAfterBinding.errors mustBe Seq(
+        FormError("start", List("cf.form.error.start.date-too-far-in-past"), List("2019"))
+      )
+    }
 
-      formAfterBinding.errors.contains(
-        FormError(
-          "start",
-          List(
-            "cf.form.error.startDate.date-earlier-than-system-start-date"
-          ),
-          List()
+    "bind without errors when the start date is April of the CY-6 year" in new Setup {
+      val form: Form[GuaranteeTransactionDates] = histDateReqPageForm()
+
+      val formAfterBinding: Form[GuaranteeTransactionDates] = form.bind(
+        Map(
+          "start.year"  -> s"$year2019",
+          "start.month" -> s"$month4",
+          "end.year"    -> s"$year2019",
+          "end.month"   -> s"$month10"
         )
-      ) mustBe true
+      )
+
+      formAfterBinding.hasErrors mustBe false
+    }
+
+    "return the CY-6 year as the earliest requestable year" in new Setup {
+      histDateReqPageForm.earliestRequestableYear mustBe year2019
+      futureHistDateReqPageForm.earliestRequestableYear mustBe year2021
     }
 
     "throw error when start date is more than 6 years ago" in new Setup {
@@ -90,7 +120,7 @@ class GuaranteeTransactionsRequestPageFormProviderSpec extends SpecBase {
           List(
             "cf.form.error.start.date-too-far-in-past"
           ),
-          List()
+          List("2021")
         )
       ) mustBe true
     }
@@ -274,9 +304,5 @@ class GuaranteeTransactionsRequestPageFormProviderSpec extends SpecBase {
     val month3  = 3
     val month4  = 4
     val month10 = 10
-
-    val day12 = 12
-    val day10 = 10
-    val day1  = 1
   }
 }

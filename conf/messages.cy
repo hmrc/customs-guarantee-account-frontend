@@ -162,8 +162,8 @@ cf.guarantee-account.transactions.request.link.post = o gyfnod penodol o amser a
 cf.guarantee-account.transactions.request.title = Pa warantau cyfrif gwarant sydd eu hangen arnoch?
 cf.guarantee-account.transactions.request.heading = Pa warantau cyfrif gwarant sydd eu hangen arnoch?
 cf.guarantee-account.transactions.request.from = Dyddiad dechrau
-cf.guarantee-account.transactions.request.startDate.hint = Mae’n rhaid i’r dyddiad dechrau fod ar ôl Hydref 2019. Er enghraifft, 3 2021.
-cf.guarantee-account.transactions.request.endDate.hint = Er enghraifft, 3 2021.
+cf.guarantee-account.transactions.request.startDate.hint = Er enghraifft, {0} {1}.
+cf.guarantee-account.transactions.request.endDate.hint = Er enghraifft, {0} {1}.
 cf.guarantee-account.transactions.request.to = Dyddiad dod i ben
 cf.guarantee-account.transactions.request.continue = Yn eich blaen
 cf.guarantee-account.transactions.result.transaction=Gwarantau eich cyfrif gwarant
@@ -184,10 +184,9 @@ date.range = {0} i fis {1}
 
 ## Form Errors
 # ----------------------------------------------------------
-cf.form.error.start.date-too-far-in-past=Ni all y dyddiad ‘o’ fod yn fwy na 6 o flynyddoedd ers nawr.
-cf.form.error.end.date-too-far-in-past=Ni all y dyddiad ‘i’ fod yn fwy na 6 o flynyddoedd ers nawr.
-cf.form.error.startDate.date-earlier-than-system-start-date=Ni allwch nodi dyddiad cyn mis Hydref 2019
-cf.form.error.endDate.date-earlier-than-system-start-date=Mae’n rhaid i’r dyddiad ‘i’ fod ar neu ar ôl mis Hydref 2019
+cf.form.error.date-too-far-in-past=Gallwch ond gofyn am warantau a gyhoeddwyd ers mis Ebrill {0}
+cf.form.error.start.date-too-far-in-past=Mae’n rhaid i’r dyddiad dechrau fod ar ôl mis Ebrill {0}
+cf.form.error.end.date-too-far-in-past=Mae’n rhaid i’r dyddiad dod i ben fod ar ôl mis Ebrill {0}
 
 cf.form.error.start.month.date-number-missing=Nodwch o ba fis yr ydych am chwilio
 cf.form.error.start.year.date-number-missing=Nodwch o ba flwyddyn yr ydych am chwilio
