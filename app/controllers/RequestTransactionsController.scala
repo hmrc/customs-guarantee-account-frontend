@@ -20,12 +20,14 @@ import controllers.actions.{EmailAction, IdentifierAction}
 import forms.GuaranteeTransactionsRequestPageFormProvider
 import models.GuaranteeTransactionDates
 import play.api.Logger
-import play.api.data.Form
+import play.api.data.{Form, FormError}
 import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import repositories.RequestedTransactionsCache
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.time.TaxYear
+import uk.gov.hmrc.time.TaxYear.taxYearFor
 import views.html._
 import utils.Utils.{comma, hyphen, singleSpace}
 
@@ -84,26 +86,49 @@ class RequestTransactionsController @Inject() (
   }
 
   private def requestPage(form: Form[GuaranteeTransactionDates])(implicit request: Request[_]): Html =
-    view(form, formProvider.earliestRequestableYear, hintExampleDate)
+    view(form, minTaxYear.startYear, hintExampleDate)
 
-  private def hintExampleDate: LocalDate = LocalDateTime.now(clock).toLocalDate.minusYears(1)
+  private def hintExampleDate: LocalDate = today.minusYears(1)
 
   private def customValidation(
     dates: GuaranteeTransactionDates,
     form: Form[GuaranteeTransactionDates]
   ): Option[Form[GuaranteeTransactionDates]] = {
-    def populateErrors(startMessage: String, endMessage: String): Form[GuaranteeTransactionDates] =
-      form
-        .withError("start", startMessage)
-        .withError("end", endMessage)
-        .fill(dates)
+    val GuaranteeTransactionDates(start, end) = dates
 
-    dates match {
-      case GuaranteeTransactionDates(start, end) if start.isAfter(end) =>
-        Some(populateErrors("cf.form.error.start-after-end", "cf.form.error.end-before-start"))
-      case _                                                           => None
-    }
+    val futureDateErrors   = Seq(futureDateError("start", start), futureDateError("end", end)).flatten
+    val tooFarInPastErrors = Seq(tooFarInPastError("start", start), tooFarInPastError("end", end)).flatten
+
+    val errors: Seq[FormError] =
+      if (futureDateErrors.nonEmpty) {
+        futureDateErrors
+      } else if (end.isBefore(start)) {
+        Seq(FormError("end", "cf.form.error.end-before-start"))
+      } else {
+        tooFarInPastErrors
+      }
+
+    if (errors.isEmpty) None else Some(errors.foldLeft(form)(_.withError(_)).fill(dates))
   }
+
+  private def futureDateError(field: String, date: LocalDate): Option[FormError] =
+    if (date.isAfter(today)) Some(FormError(field, s"cf.form.error.$field-future-date")) else None
+
+  private def tooFarInPastError(field: String, date: LocalDate): Option[FormError] =
+    if (date.withDayOfMonth(dayOfMonthThatTaxYearStartsOn).isBefore(minTaxYear.starts)) {
+      Some(FormError(field, s"cf.form.error.$field.date-too-far-in-past", Seq(minTaxYear.startYear.toString)))
+    } else {
+      None
+    }
+
+  private def today: LocalDate = LocalDateTime.now(clock).toLocalDate
+
+  private def minTaxYear: TaxYear = {
+    val maximumNumberOfYears = 6
+    taxYearFor(today).back(maximumNumberOfYears)
+  }
+
+  private val dayOfMonthThatTaxYearStartsOn = 6
 
   private def logMessageForAnalytics(eori: String, formWithErrors: Form[GuaranteeTransactionDates])(implicit
     messages: Messages
