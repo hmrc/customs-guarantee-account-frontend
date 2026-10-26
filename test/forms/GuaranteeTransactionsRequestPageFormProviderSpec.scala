@@ -19,10 +19,8 @@ package forms
 import models.GuaranteeTransactionDates
 import play.api.data.{Form, FormError}
 import utils.SpecBase
-import utils.TestData.{period, seven, twoYearsInDays}
+import utils.TestData.period
 import utils.Utils.emptyString
-
-import java.time.{Clock, Duration, Instant, YearMonth, ZoneId}
 
 class GuaranteeTransactionsRequestPageFormProviderSpec extends SpecBase {
 
@@ -43,7 +41,7 @@ class GuaranteeTransactionsRequestPageFormProviderSpec extends SpecBase {
       formAfterBinding.hasErrors mustBe false
     }
 
-    "throw error on both dates when both are before April of the CY-6 year" in new Setup {
+    "not apply date range checks when binding" in new Setup {
       val form: Form[GuaranteeTransactionDates] = histDateReqPageForm()
 
       val formAfterBinding: Form[GuaranteeTransactionDates] = form.bind(
@@ -55,74 +53,7 @@ class GuaranteeTransactionsRequestPageFormProviderSpec extends SpecBase {
         )
       )
 
-      formAfterBinding.errors mustBe Seq(
-        FormError("start", List("cf.form.error.start.date-too-far-in-past"), List("2019")),
-        FormError("end", List("cf.form.error.end.date-too-far-in-past"), List("2019"))
-      )
-    }
-
-    "throw error only on the start date when only the start date is before April of the CY-6 year" in new Setup {
-      val form: Form[GuaranteeTransactionDates] = histDateReqPageForm()
-
-      val formAfterBinding: Form[GuaranteeTransactionDates] = form.bind(
-        Map(
-          "start.year"  -> s"$year2019",
-          "start.month" -> s"$month3",
-          "end.year"    -> s"$year2019",
-          "end.month"   -> s"$month10"
-        )
-      )
-
-      formAfterBinding.errors mustBe Seq(
-        FormError("start", List("cf.form.error.start.date-too-far-in-past"), List("2019"))
-      )
-    }
-
-    "bind without errors when the start date is April of the CY-6 year" in new Setup {
-      val form: Form[GuaranteeTransactionDates] = histDateReqPageForm()
-
-      val formAfterBinding: Form[GuaranteeTransactionDates] = form.bind(
-        Map(
-          "start.year"  -> s"$year2019",
-          "start.month" -> s"$month4",
-          "end.year"    -> s"$year2019",
-          "end.month"   -> s"$month10"
-        )
-      )
-
       formAfterBinding.hasErrors mustBe false
-    }
-
-    "return the CY-6 year as the earliest requestable year" in new Setup {
-      histDateReqPageForm.earliestRequestableYear mustBe year2019
-      futureHistDateReqPageForm.earliestRequestableYear mustBe year2021
-    }
-
-    "throw error when start date is more than 6 years ago" in new Setup {
-      val form: Form[GuaranteeTransactionDates] = futureHistDateReqPageForm()
-
-      val sevenYearsAgo = YearMonth.now(futureClock).minusYears(seven)
-
-      val formAfterBinding: Form[GuaranteeTransactionDates] = form.bind(
-        Map(
-          "start.year"  -> s"${sevenYearsAgo.getYear}",
-          "start.month" -> s"${sevenYearsAgo.getMonthValue}",
-          "end.year"    -> s"$year2024",
-          "end.month"   -> s"$month10"
-        )
-      )
-
-      formAfterBinding.hasErrors mustBe true
-
-      formAfterBinding.errors.contains(
-        FormError(
-          "start",
-          List(
-            "cf.form.error.start.date-too-far-in-past"
-          ),
-          List("2021")
-        )
-      ) mustBe true
     }
 
     "throw error for empty start and end dates" in new Setup {
@@ -288,21 +219,11 @@ class GuaranteeTransactionsRequestPageFormProviderSpec extends SpecBase {
   }
 
   trait Setup {
-    private val fixedInstant = Instant.parse("2025-06-26T17:40:00Z")
-    private val zone         = ZoneId.of("UTC")
-
-    implicit val clock: Clock       = Clock.fixed(fixedInstant, zone)
-    implicit val futureClock: Clock = Clock.offset(clock, Duration.ofDays(twoYearsInDays))
-
-    val histDateReqPageForm       = new GuaranteeTransactionsRequestPageFormProvider()(clock)
-    val futureHistDateReqPageForm = new GuaranteeTransactionsRequestPageFormProvider()(futureClock)
+    val histDateReqPageForm = new GuaranteeTransactionsRequestPageFormProvider()
 
     val year2021 = 2021
-    val year2024 = 2024
     val year2019 = 2019
-
-    val month3  = 3
-    val month4  = 4
-    val month10 = 10
+    val month3   = 3
+    val month10  = 10
   }
 }

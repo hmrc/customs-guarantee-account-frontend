@@ -184,28 +184,27 @@ date.range = {0} i fis {1}
 
 ## Form Errors
 # ----------------------------------------------------------
-cf.form.error.date-too-far-in-past=Gallwch ond gofyn am warantau a gyhoeddwyd ers mis Ebrill {0}
+cf.form.error.date-too-far-in-past=Gallwch ond gofyn am warantau a gyhoeddwyd ers mis Ebrill {0}.
 cf.form.error.start.date-too-far-in-past=Mae’n rhaid i’r dyddiad dechrau fod ar ôl mis Ebrill {0}
 cf.form.error.end.date-too-far-in-past=Mae’n rhaid i’r dyddiad dod i ben fod ar ôl mis Ebrill {0}
 
-cf.form.error.start.month.date-number-missing=Nodwch o ba fis yr ydych am chwilio
-cf.form.error.start.year.date-number-missing=Nodwch o ba flwyddyn yr ydych am chwilio
-cf.form.error.start.date-missing=Nodwch o ba ddyddiad yr hoffech ddechrau chwilio
-cf.form.error.end.month.date-number-missing=Nodwch hyd at ba fis yr ydych am chwilio
-cf.form.error.end.year.date-number-missing=Nodwch hyd at ba flwyddyn rydych am chwilio
-cf.form.error.end.date-missing=Nodwch hyd at ba ddyddiad yr hoffech chwilio
+cf.form.error.start.month.date-number-missing=Mae’n rhaid i’r dyddiad dechrau gynnwys mis
+cf.form.error.start.year.date-number-missing=Mae’n rhaid i’r dyddiad dechrau gynnwys blwyddyn
+cf.form.error.start.date-missing=Nodwch fis a blwyddyn dechrau
+cf.form.error.end.month.date-number-missing=Mae’n rhaid i’r dyddiad dod i ben gynnwys mis
+cf.form.error.end.year.date-number-missing=Mae’n rhaid i’r dyddiad dod i ben gynnwys blwyddyn
+cf.form.error.end.date-missing=Nodwch fis a blwyddyn dod i ben
 
-cf.form.error.start.month.invalid=Nodwch fis rhwng 1 a 12 ar gyfer y dyddiad dechrau
-cf.form.error.end.month.invalid=Nodwch fis rhwng 1 a 12 ar gyfer y dyddiad dod i ben
+cf.form.error.start.month.invalid=Mae’n rhaid i fis y dyddiad dechrau fod yn rhif rhwng 1 a 12
+cf.form.error.end.month.invalid=Mae’n rhaid i fis y dyddiad dod i ben fod yn rhif rhwng 1 a 12
 cf.form.error.start.year.invalid=Nodwch flwyddyn go iawn ar gyfer y dyddiad dechrau
 cf.form.error.end.year.invalid=Nodwch flwyddyn go iawn ar gyfer y dyddiad dod i ben
-cf.form.error.start.date.invalid=Nodwch ddyddiad go iawn ar gyfer y dyddiad dechrau
-cf.form.error.end.date.invalid=Nodwch ddyddiad go iawn ar gyfer y dyddiad dod i ben
+cf.form.error.start.date.invalid=Mae’n rhaid i fis y dyddiad dechrau fod yn rhif rhwng 1 a 12, ac mae’n rhaid i’r flwyddyn fod yn flwyddyn go iawn
+cf.form.error.end.date.invalid=Mae’n rhaid i fis y dyddiad dod i ben fod yn rhif rhwng 1 a 12, ac mae’n rhaid i’r flwyddyn fod yn flwyddyn go iawn
 
-cf.form.error.start-future-date=Ni all y dyddiad ‘o’ fod yn y dyfodol
-cf.form.error.end-future-date=Mae’n rhaid i’r dyddiad rydych am chwilio hyd ato fod heddiw neu yn y gorffennol
-cf.form.error.start-after-end=Ni all y dyddiad ‘o’ fod ar ôl y dyddiad ‘i’
-cf.form.error.end-before-start=Ni all y dyddiad ‘i’ fod cyn y dyddiad ‘o’
+cf.form.error.start-future-date=Mae’n rhaid i’r dyddiad dechrau fod yn y gorffennol
+cf.form.error.end-future-date=Mae’n rhaid i’r dyddiad dod i ben fod yn y gorffennol
+cf.form.error.end-before-start=Mae’n rhaid i’r dyddiad dod i ben fod naill ai ar neu ar ôl y dyddiad dechrau
 
 # Error Summary
 # ----------------------------------------------------------

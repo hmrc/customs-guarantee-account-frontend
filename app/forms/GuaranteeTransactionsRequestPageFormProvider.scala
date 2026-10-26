@@ -20,12 +20,10 @@ import forms.mappings.Mappings
 import models.GuaranteeTransactionDates
 import play.api.data.Form
 import play.api.data.Forms.mapping
-import java.time.Clock
+
 import javax.inject.Inject
 
-class GuaranteeTransactionsRequestPageFormProvider @Inject() (implicit clock: Clock) extends Mappings {
-
-  def earliestRequestableYear: Int = minTaxYear().startYear
+class GuaranteeTransactionsRequestPageFormProvider @Inject() extends Mappings {
 
   def apply(): Form[GuaranteeTransactionDates] =
     Form(
@@ -41,8 +39,7 @@ class GuaranteeTransactionsRequestPageFormProvider @Inject() (implicit clock: Cl
           invalidYear = "cf.form.error.start.year.invalid",
           invalidDate = "cf.form.error.start.date.invalid",
           args = Seq.empty
-        ).verifying(equalToOrBeforeToday("cf.form.error.start-future-date"))
-          .verifying(checkDates("cf.form.error.start.date-too-far-in-past")),
+        ),
         "end"   -> localDate(
           emptyStartMonth = "cf.form.error.start.month.date-number-missing",
           emptyStartYear = "cf.form.error.start.year.date-number-missing",
@@ -54,8 +51,7 @@ class GuaranteeTransactionsRequestPageFormProvider @Inject() (implicit clock: Cl
           invalidYear = "cf.form.error.end.year.invalid",
           invalidDate = "cf.form.error.end.date.invalid",
           args = Seq.empty
-        ).verifying(equalToOrBeforeToday("cf.form.error.end-future-date"))
-          .verifying(checkDates("cf.form.error.end.date-too-far-in-past"))
+        )
       )(GuaranteeTransactionDates.apply)(GuaranteeTransactionDates.unapply)
     )
 }

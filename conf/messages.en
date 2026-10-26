@@ -184,28 +184,27 @@ date.range = {0} to {1}
 
 ## Form Errors
 # ----------------------------------------------------------
-cf.form.error.date-too-far-in-past=You can only request securities issued since April {0}
+cf.form.error.date-too-far-in-past=You can only request securities issued since April {0}.
 cf.form.error.start.date-too-far-in-past=Start date must be after April {0}
 cf.form.error.end.date-too-far-in-past=End date must be after April {0}
 
-cf.form.error.start.month.date-number-missing=Enter the month you want to search from
-cf.form.error.start.year.date-number-missing=Enter the year you want to search from
-cf.form.error.start.date-missing=Enter the start date you want to search from
-cf.form.error.end.month.date-number-missing=Enter the month you want to search to
-cf.form.error.end.year.date-number-missing=Enter the year you want to search to
-cf.form.error.end.date-missing=Enter the end date you want to search to
+cf.form.error.start.month.date-number-missing=Start date must include a month
+cf.form.error.start.year.date-number-missing=Start date must include a year
+cf.form.error.start.date-missing=Enter a start month and year
+cf.form.error.end.month.date-number-missing=End date must include a month
+cf.form.error.end.year.date-number-missing=End date must include a year
+cf.form.error.end.date-missing=Enter an end month and year
 
-cf.form.error.start.month.invalid=Enter a month between 1 and 12 for the start date
-cf.form.error.end.month.invalid=Enter a month between 1 and 12 for the end date
+cf.form.error.start.month.invalid=The month of your start date must be a number between 1 and 12
+cf.form.error.end.month.invalid=The month of your end date must be a number between 1 and 12
 cf.form.error.start.year.invalid=Enter a real year for the start date
 cf.form.error.end.year.invalid=Enter a real year for the end date
-cf.form.error.start.date.invalid=Enter a real date for the start date
-cf.form.error.end.date.invalid=Enter a real date for the end date
+cf.form.error.start.date.invalid=The month of your start date must be a number between 1 and 12 and the year must be a real year
+cf.form.error.end.date.invalid=The month of your end date must be a number between 1 and 12 and the year must be a real year
 
-cf.form.error.start-future-date=The from date cannot be in the future
-cf.form.error.end-future-date=The date you want to search to must be today, or in the past
-cf.form.error.start-after-end=The from date cannot be after the to date
-cf.form.error.end-before-start=The to date cannot be before the from date
+cf.form.error.start-future-date=Start date must be in the past
+cf.form.error.end-future-date=End date must be in the past
+cf.form.error.end-before-start=End date must be on or after the start date
 
 # Error Summary
 # ----------------------------------------------------------

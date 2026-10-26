@@ -48,6 +48,8 @@ class GuaranteeTransactionsRequestPageSpec extends SpecBase {
     "display the earliest requestable year inset text below the heading" in new Setup {
       view.getElementById("earliest-requestable-year").text() mustBe
         messages("cf.form.error.date-too-far-in-past", "2020")
+      view.getElementById("earliest-requestable-year").text() mustBe
+        "You can only request securities issued since April 2020."
 
       view.select("h1 + #earliest-requestable-year").size() mustBe 1
     }

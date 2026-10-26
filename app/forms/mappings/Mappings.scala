@@ -21,7 +21,7 @@ import play.api.data.Forms.of
 
 import java.time.LocalDate
 
-trait Mappings extends Formatters with Constraints {
+trait Mappings extends Formatters {
   // scalastyle:off
   protected def localDate(
     emptyStartMonth: String,

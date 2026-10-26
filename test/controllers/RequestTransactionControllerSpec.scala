@@ -179,6 +179,126 @@ class RequestTransactionControllerSpec extends SpecBase {
       }
     }
 
+    "return BAD_REQUEST with the end before start error only on the end date" in new Setup {
+      val app: Application = applicationWithFixedDate("2026-09-25T00:00:00Z")
+
+      val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+        fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
+          .withFormUrlEncodedBody(
+            "start.month" -> "6",
+            "start.year"  -> "2025",
+            "end.month"   -> "3",
+            "end.year"    -> "2025"
+          )
+
+      running(app) {
+        val result = route(app, request).value
+        status(result) mustBe BAD_REQUEST
+
+        val doc = Jsoup.parse(contentAsString(result))
+
+        doc.getElementById("end-error").text() must include(messages("cf.form.error.end-before-start"))
+        Option(doc.getElementById("start-error")) mustBe None
+      }
+    }
+
+    "return BAD_REQUEST with the end before start error when the end date is also before April of CY-6" in new Setup {
+      val app: Application = applicationWithFixedDate("2026-09-25T00:00:00Z")
+
+      val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+        fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
+          .withFormUrlEncodedBody(
+            "start.month" -> "1",
+            "start.year"  -> "2021",
+            "end.month"   -> "11",
+            "end.year"    -> "2019"
+          )
+
+      running(app) {
+        val result = route(app, request).value
+        status(result) mustBe BAD_REQUEST
+
+        val doc = Jsoup.parse(contentAsString(result))
+
+        doc.getElementById("end-error").text() must include(messages("cf.form.error.end-before-start"))
+        doc.getElementById("end-error").text() must not include messages(
+          "cf.form.error.end.date-too-far-in-past",
+          "2020"
+        )
+        Option(doc.getElementById("start-error")) mustBe None
+      }
+    }
+
+    "return BAD_REQUEST with only the end before start error when both dates are also before April of CY-6" in
+      new Setup {
+        val app: Application = applicationWithFixedDate("2026-09-25T00:00:00Z")
+
+        val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+          fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
+            .withFormUrlEncodedBody(
+              "start.month" -> "3",
+              "start.year"  -> "2020",
+              "end.month"   -> "1",
+              "end.year"    -> "2020"
+            )
+
+        running(app) {
+          val result = route(app, request).value
+          status(result) mustBe BAD_REQUEST
+
+          val doc = Jsoup.parse(contentAsString(result))
+
+          doc.getElementById("end-error").text() must include(messages("cf.form.error.end-before-start"))
+          Option(doc.getElementById("start-error")) mustBe None
+        }
+      }
+
+    "return BAD_REQUEST with only the start date future error when the start date is in the future" in new Setup {
+      val nextYear: String = LocalDate.now().plusYears(1).getYear.toString
+
+      val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+        fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
+          .withFormUrlEncodedBody(
+            "start.month" -> "11",
+            "start.year"  -> nextYear,
+            "end.month"   -> "9",
+            "end.year"    -> "2025"
+          )
+
+      running(application) {
+        val result = route(application, request).value
+        status(result) mustBe BAD_REQUEST
+
+        val doc = Jsoup.parse(contentAsString(result))
+
+        doc.getElementById("start-error").text() must include(messages("cf.form.error.start-future-date"))
+        Option(doc.getElementById("end-error")) mustBe None
+      }
+    }
+
+    "return BAD_REQUEST with a future error on both dates when both dates are in the future" in new Setup {
+      val nextYear: String = LocalDate.now().plusYears(1).getYear.toString
+
+      val request: FakeRequest[AnyContentAsFormUrlEncoded] =
+        fakeRequest(POST, routes.RequestTransactionsController.onSubmit().url)
+          .withFormUrlEncodedBody(
+            "start.month" -> "11",
+            "start.year"  -> nextYear,
+            "end.month"   -> "12",
+            "end.year"    -> nextYear
+          )
+
+      running(application) {
+        val result = route(application, request).value
+        status(result) mustBe BAD_REQUEST
+
+        val doc = Jsoup.parse(contentAsString(result))
+
+        doc.getElementById("start-error").text() must include(messages("cf.form.error.start-future-date"))
+        doc.getElementById("end-error").text()   must include(messages("cf.form.error.end-future-date"))
+      }
+    }
+
     "redirect when the start date is April of the CY-6 year" in new Setup {
       when(mockRequestedTransactionsCache.set(any, any)).thenReturn(Future.successful(true))
 
