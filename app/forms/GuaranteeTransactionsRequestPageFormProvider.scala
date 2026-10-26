@@ -25,6 +25,8 @@ import javax.inject.Inject
 
 class GuaranteeTransactionsRequestPageFormProvider @Inject() (implicit clock: Clock) extends Mappings {
 
+  def earliestRequestableYear: Int = minTaxYear().startYear
+
   def apply(): Form[GuaranteeTransactionDates] =
     Form(
       mapping(
@@ -40,12 +42,7 @@ class GuaranteeTransactionsRequestPageFormProvider @Inject() (implicit clock: Cl
           invalidDate = "cf.form.error.start.date.invalid",
           args = Seq.empty
         ).verifying(equalToOrBeforeToday("cf.form.error.start-future-date"))
-          .verifying(
-            checkDates(
-              "cf.form.error.startDate.date-earlier-than-system-start-date",
-              "cf.form.error.start.date-too-far-in-past"
-            )
-          ),
+          .verifying(checkDates("cf.form.error.start.date-too-far-in-past")),
         "end"   -> localDate(
           emptyStartMonth = "cf.form.error.start.month.date-number-missing",
           emptyStartYear = "cf.form.error.start.year.date-number-missing",
@@ -58,12 +55,7 @@ class GuaranteeTransactionsRequestPageFormProvider @Inject() (implicit clock: Cl
           invalidDate = "cf.form.error.end.date.invalid",
           args = Seq.empty
         ).verifying(equalToOrBeforeToday("cf.form.error.end-future-date"))
-          .verifying(
-            checkDates(
-              "cf.form.error.endDate.date-earlier-than-system-start-date",
-              "cf.form.error.end.date-too-far-in-past"
-            )
-          )
+          .verifying(checkDates("cf.form.error.end.date-too-far-in-past"))
       )(GuaranteeTransactionDates.apply)(GuaranteeTransactionDates.unapply)
     )
 }

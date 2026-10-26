@@ -41,19 +41,43 @@ class ConstraintsSpec extends SpecBase with Constraints {
     }
 
     "checkDates" must {
-      "return Invalid taxYearErrorKey" in new Setup {
+      "return Invalid taxYearErrorKey with the CY-6 year" in new Setup {
         val sevenYearsAgo            = LocalDate.now(futureClock).minusYears(seven)
-        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey)(futureClock)
+        val result: ValidationResult = checkDates(taxYearErrorKey)(futureClock)
           .apply(sevenYearsAgo)
 
-        result mustBe Invalid(List(ValidationError(List(taxYearErrorKey))))
+        result mustBe Invalid(List(ValidationError(List(taxYearErrorKey), "2021")))
       }
 
-      "return Invalid constraint for year before 2019" in new Setup {
-        val result: ValidationResult = checkDates(systemStartDateErrorKey, taxYearErrorKey)(clock)
-          .apply(LocalDate.of(year_2019, month_7, dayOne))
+      "return Invalid taxYearErrorKey for a date before April of the CY-6 year" in new Setup {
+        val result: ValidationResult = checkDates(taxYearErrorKey)(clock)
+          .apply(LocalDate.of(year_2019, month_3, dayOne))
 
-        result mustBe Invalid(List(ValidationError(List(systemStartDateErrorKey))))
+        result mustBe Invalid(List(ValidationError(List(taxYearErrorKey), "2019")))
+      }
+
+      "return Valid for April of the CY-6 year" in new Setup {
+        val result: ValidationResult = checkDates(taxYearErrorKey)(clock)
+          .apply(LocalDate.of(year_2019, month_4, dayOne))
+
+        result mustBe Valid
+      }
+
+      "recalculate the CY-6 year across the 6 April tax year boundary" in new Setup {
+        val march2019: LocalDate = LocalDate.of(year_2019, month_3, dayOne)
+
+        Seq(
+          "2026-03-31T00:00:00Z" -> "2019",
+          "2026-04-05T00:00:00Z" -> "2019",
+          "2026-04-06T00:00:00Z" -> "2020",
+          "2027-04-05T00:00:00Z" -> "2020",
+          "2027-04-06T00:00:00Z" -> "2021"
+        ).foreach { case (systemDate, expectedYear) =>
+          val fixedClock: Clock = Clock.fixed(Instant.parse(systemDate), ZoneId.of("UTC"))
+
+          checkDates(taxYearErrorKey)(fixedClock).apply(march2019) mustBe
+            Invalid(List(ValidationError(List(taxYearErrorKey), expectedYear)))
+        }
       }
     }
   }
@@ -61,8 +85,10 @@ class ConstraintsSpec extends SpecBase with Constraints {
   trait Setup {
     def ld: LocalDate = LocalDateTime.now().toLocalDate
 
-    val systemStartDateErrorKey: String = "You cannot enter a date before March 2019"
-    val taxYearErrorKey: String         = "The from date cannot be older than 6 years from now"
+    val taxYearErrorKey: String = "cf.form.error.start.date-too-far-in-past"
+
+    val month_3 = 3
+    val month_4 = 4
 
     private val fixedInstant = Instant.parse("2025-06-26T17:40:00Z")
     private val zone         = ZoneId.of("UTC")

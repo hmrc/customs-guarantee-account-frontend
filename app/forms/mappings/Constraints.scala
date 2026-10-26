@@ -20,16 +20,10 @@ import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import uk.gov.hmrc.time.TaxYear
 import uk.gov.hmrc.time.TaxYear.taxYearFor
 
-import java.time.{Clock, LocalDate, LocalDateTime, Period}
+import java.time.{Clock, LocalDate, LocalDateTime}
 
 trait Constraints {
 
-  val year  = 2019
-  val month = 10
-  val day   = 1
-  val zero  = 0
-
-  private lazy val etmpStatementsDate: LocalDate = LocalDate.of(year, month, day)
   private lazy val currentDate: LocalDate        = LocalDateTime.now().toLocalDate
   private lazy val dayOfMonthThatTaxYearStartsOn = 6
 
@@ -41,22 +35,17 @@ trait Constraints {
     case _ => Valid
   }
 
-  private def minTaxYear()(implicit clock: Clock): TaxYear = {
+  protected def minTaxYear()(implicit clock: Clock): TaxYear = {
     lazy val currentDate: LocalDate = LocalDateTime.now(clock).toLocalDate
     val maximumNumberOfYears        = 6
 
     taxYearFor(currentDate).back(maximumNumberOfYears)
   }
 
-  def checkDates(systemStartDateErrorKey: String, taxYearErrorKey: String)(implicit
-    clock: Clock
-  ): Constraint[LocalDate] = Constraint {
-
-    case request if Period.between(request, etmpStatementsDate).toTotalMonths > zero =>
-      Invalid(ValidationError(systemStartDateErrorKey))
+  def checkDates(taxYearErrorKey: String)(implicit clock: Clock): Constraint[LocalDate] = Constraint {
 
     case request if minTaxYear().starts.isAfter(request.withDayOfMonth(dayOfMonthThatTaxYearStartsOn)) =>
-      Invalid(ValidationError(taxYearErrorKey))
+      Invalid(ValidationError(taxYearErrorKey, minTaxYear().startYear.toString))
 
     case _ => Valid
   }
